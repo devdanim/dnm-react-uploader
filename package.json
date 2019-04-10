@@ -1,0 +1,21 @@
+{
+  "name": "dnm-react-uploader",
+  "version": "1.0.0",
+  "description": "React file uploader",
+  "main": "index.js",
+  "scripts": {
+    "git": "git add . && git commit -m",
+    "postgit": "git push -u"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devdanim/dnm-react-uploader.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devdanim/dnm-react-uploader/issues"
+  },
+  "homepage": "https://github.com/devdanim/dnm-react-uploader#readme"
+}
