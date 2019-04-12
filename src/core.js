@@ -1,4 +1,7 @@
-export default class SmartCroppr extends React.Component {
+import React from 'react';
+import PropTypes from 'prop-types';
+
+export default class Uploader extends React.Component {
     constructor(props) {
         super(props);
 
@@ -335,7 +338,7 @@ export default class SmartCroppr extends React.Component {
     }
 }
 
-SmartCroppr.propTypes = {
+Uploader.propTypes = {
     // optional
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
@@ -357,7 +360,7 @@ SmartCroppr.propTypes = {
     withURLInput: PropTypes.bool,
 };
 
-SmartCroppr.defaultProps = {
+Uploader.defaultProps = {
     backgroundColor: 'transparent',
     backgroundSize: 'cover',
     croppable: false,
