@@ -1,5 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+const _ = {
+    camelCase: require('lodash/camelCase'),
+    get: require('lodash/get'),
+    last: require('lodash/last'),
+    upperFirst: require('lodash/upperFirst'),
+    split: require('lodash/split'),
+};
 
 export default class Uploader extends React.Component {
     constructor(props) {
@@ -342,6 +349,17 @@ Uploader.propTypes = {
     // optional
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
+    catalogue: (props, propName, componentName) => {
+        let error;
+        const prop = props[propName];
+        React.Children.forEach(prop, (child) => {
+            // type.name seems to work for both Class and Functional components
+            if (child.type.name !== 'Option') {
+                error = new Error(`\`${componentName}\` only accepts children of type \`Option\`.`,);
+            }
+        });
+        return error;
+    },
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     feedback: PropTypes.string, // todo: remove
