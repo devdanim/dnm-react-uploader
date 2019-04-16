@@ -1,7 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+const validator = {
+    isURL: require('validator').isURL
+};
+const Svg = require('./svg/index.js');
+const FileManager = require('./file-manager.js').default;
 const _ = {
     camelCase: require('lodash/camelCase'),
+    difference: require('lodash/difference'),
     get: require('lodash/get'),
     last: require('lodash/last'),
     upperFirst: require('lodash/upperFirst'),
@@ -21,6 +27,21 @@ export default class Uploader extends React.Component {
             url: '',
             width: null,
         };
+
+        this.change = this.change.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+        this.handleCropClick = this.handleCropClick.bind(this);
+        this.handleDragLeave = this.handleDragLeave.bind(this);
+        this.handleDragOver = this.handleDragOver.bind(this);
+        this.handleDrop = this.handleDrop.bind(this);
+        this.handleInjectURLClick = this.handleInjectURLClick.bind(this);
+        this.handleLoad = this.handleLoad.bind(this);
+        this.handleRemoveClick = this.handleRemoveClick.bind(this);
+        this.handleURLChange = this.handleURLChange.bind(this);
+        this.get = this.get.bind(this);
+        this.injectURL = this.injectURL.bind(this);
+        this.change = this.change.bind(this);
     }
 
     componentDidMount() {
@@ -29,17 +50,8 @@ export default class Uploader extends React.Component {
 
     change(file, callback = data => null) {
         let maxSize = this.props.maxSize;
-        if (! maxSize && this.props.src) maxSize = root.state.constants[`${_.upperFirst(_.camelCase(guessFileType(this.props.src)))}File`].MAX_SIZE.value;
-        if (guessFileType(file) !== this.props.fileType)
-            addFlash({
-                type: 'danger',
-                message: trans('front.uploader.invalid_file_extension', {}, 'bridge-general', this.context.locale.catalogue)
-            });
-        else if (maxSize && file.size >= maxSize)
-            addFlash({
-                type: 'danger',
-                message: trans('front.uploader.file_too_large', {max_size: humanSize(maxSize)}, 'bridge-general', this.context.locale.catalogue)
-            });
+        if (FileManager.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();
+        else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();
         else this.props.onChange(file);
 
         callback(file);
@@ -104,17 +116,16 @@ export default class Uploader extends React.Component {
         return new Promise((resolve, reject) => {
             let xhr = new XMLHttpRequest();
 
-            xhr.withCredentials = true;
             xhr.responseType = 'blob';
 
-            xhr.open('GET', url);
+            xhr.open('GET', url, true);
 
             xhr.onload = () => {
                 if (xhr.status === 200) resolve(xhr.response);
                 else reject(Error(xhr.statusText));
             };
 
-            xhr.onerror = () => reject(Error("Network Error"));
+            xhr.onerror = () => reject(Error('Network Error'));
 
             xhr.send();
         });
@@ -122,10 +133,7 @@ export default class Uploader extends React.Component {
 
     injectURL(url, validate = false, callback = data => null) {
         if (validate && ! validator.isURL(url)) {
-            addFlash({
-                type: 'danger',
-                message: trans('front.uploader.url.invalid', {}, 'bridge-general', this.context.locale.catalogue)
-            });
+            this.props.onInvalidURLError();
 
             return;
         }
@@ -133,14 +141,10 @@ export default class Uploader extends React.Component {
         this.get(url)
             .then(response => {
                 let name = _.last(_.split(url, '/')),
-                    file = new File([response.data], name, {type: response.data.type});
+                    file = new File([response], name, {type: response.type});
                 this.change(file, callback);
             }).catch(error => {
-                cl(error.message);
-                addFlash({
-                    type: 'danger',
-                    message: trans('front.uploader.url.error', {}, 'bridge-general', this.context.locale.catalogue)
-                });
+                this.props.onURLInjectionError();
             });
     }
 
@@ -151,7 +155,8 @@ export default class Uploader extends React.Component {
             withControls = this.props.src && (this.props.removable || this.props.croppable);
 
         if (this.props.src) {
-            switch (guessFileType(this.props.src)) {
+            const fileType = this.props.fileType || FileManager.guessFileType(this.props.src);
+            switch (fileType) {
                 case 'image':
                     if (this.state.loaded && this.state.mounted && this.props.imageCrop) {
                         let zoneWidth = this.refs.zone.offsetWidth,
@@ -178,7 +183,7 @@ export default class Uploader extends React.Component {
 
                         media = (
                             <img
-                                alt
+                                alt=''
                                 ref="img"
                                 src={this.props.src}
                                 onLoad={this.handleLoad}
@@ -214,11 +219,15 @@ export default class Uploader extends React.Component {
                                 height: '100%',
                             }}>
                                 <img
-                                    alt
+                                    alt=''
                                     ref="img"
-                                    className="hidden"
                                     src={this.props.src}
                                     onLoad={this.handleLoad}
+                                    style={{
+                                        position: 'fixed',
+                                        top: '-9999px',
+                                        left: '-9999px',
+                                    }}
                                 />
                             </div>
                         );
@@ -244,10 +253,10 @@ export default class Uploader extends React.Component {
 
         switch (this.props.fileType) {
             case 'image':
-                icon = <App.Svg.PhotoCamera className="uploader-zone-fog-img" /> ;
+                icon = <Svg.PhotoCamera className="uploader-zone-fog-img" /> ;
                 break;
             case 'video':
-                icon = <App.Svg.VideoCamera className="uploader-zone-fog-img" /> ;
+                icon = <Svg.VideoCamera className="uploader-zone-fog-img" /> ;
                 break;
         }
 
@@ -263,12 +272,6 @@ export default class Uploader extends React.Component {
                     ${withControls ? 'uploader/withControls' : ''}
                 `}
             >
-                { (this.props.label || '') !== '' &&
-                <label className="uploader-label">{this.props.label}</label>
-                }
-                { (this.props.feedback || '') !== '' &&
-                <div className={`uploader-feedback ${this.props.valid !== null ? `uploader-feedback/${this.props.valid ? 'valid' : 'invalid'}` : ''}`}>{this.props.feedback}</div>
-                }
                 <input data-attr="input" ref="input" type="file" className="uploader-input" onChange={this.handleChange} />
                 <div
                     ref="zone"
@@ -283,33 +286,28 @@ export default class Uploader extends React.Component {
                     { media }
                     <div className="uploader-zone-fog" onClick={this.handleClick}>
                         { this.state.beingDropTarget
-                            ? <App.Svg.CloudComputing className="uploader-zone-fog-img" />
+                            ? <Svg.CloudComputing className="uploader-zone-fog-img" />
                             : icon
                         }
                         <div className="uploader-zone-fog-caption">
                             { this.props.fetching
-                                ? trans('front.uploader.loading', {}, 'bridge-general', this.context.locale.catalogue)
-                                : (
-                                    <React.Fragment>
-                                        { trans('front.uploader.call_to_action.part_1', {}, 'bridge-general', this.context.locale.catalogue) }
-                                        { this.props.withURLInput === true && trans('front.uploader.call_to_action.part_2', {}, 'bridge-general', this.context.locale.catalogue) }
-                                    </React.Fragment>
-                                )
+                                ? this.props.catalogue.loading
+                                : this.props.catalogue.callToAction
                             }
                         </div>
                         { withControls === true &&
                         <React.Fragment>
-                            <App.Or text={trans('front.uploader.or', {}, 'bridge-general', this.context.locale.catalogue)} />
+                            <span className="uploader-zone-fog-or">––––– { this.props.catalogue.or } –––––</span>
                             <div className="uploader-zone-fog-controls">
-                                { this.props.croppable === true &&
-                                <App.TooltipBox caption={trans('front.uploader.controls.crop', {}, 'bridge-general', this.context.locale.catalogue)} positionStyle={{left: '50%', bottom: 'calc(100% + 0.5rem)', transform: 'translateX(-50%)'}}>
-                                    <App.Svg.Crop className="uploader-zone-fog-controls-control" onClick={this.handleCropClick} />
-                                </App.TooltipBox>
+                                {this.props.croppable === true &&
+                                <span className="uploader-zone-fog-controls-control" onClick={this.handleCropClick}>
+                                    {this.props.cropIcon || <Svg.Crop />}
+                                </span>
                                 }
-                                { this.props.removable === true &&
-                                <App.TooltipBox caption={trans('front.uploader.controls.remove', {}, 'bridge-general', this.context.locale.catalogue)} positionStyle={{left: '50%', bottom: 'calc(100% + 0.5rem)', transform: 'translateX(-50%)'}}>
-                                    <App.Svg.Garbage className="uploader-zone-fog-controls-control" onClick={this.handleRemoveClick} />
-                                </App.TooltipBox>
+                                {this.props.removable === true &&
+                                <span className="uploader-zone-fog-controls-control" onClick={this.handleRemoveClick}>
+                                    {this.props.removeIcon || <Svg.Garbage />}
+                                </span>
                                 }
                             </div>
                         </React.Fragment>
@@ -317,12 +315,12 @@ export default class Uploader extends React.Component {
                     </div>
                 </div>
                 { this.props.withURLInput === true &&
-                <Strap.InputGroup className="uploader-url">
-                    <Strap.Input
+                <div className="uploader-url">
+                    <input
                         className="uploader-url-input"
                         name="url"
                         value={this.state.url}
-                        placeholder={trans('front.uploader.url.placeholder', {}, 'bridge-general', this.context.locale.catalogue)}
+                        placeholder={this.props.catalogue.urlInputPlaceholder}
                         type="text"
                         onChange={this.handleURLChange}
                         onKeyPress={ev => {
@@ -332,13 +330,11 @@ export default class Uploader extends React.Component {
                             }
                         }}
                     />
-                    <Strap.InputGroupAddon addonType="append" onClick={this.handleInjectURLClick}>
-                        <Strap.InputGroupText>
-                            <Fa.Icon icon="globe" />
-                            {trans('front.uploader.url.submit', {}, 'bridge-general', this.context.locale.catalogue)}
-                        </Strap.InputGroupText>
-                    </Strap.InputGroupAddon>
-                </Strap.InputGroup>
+                    <span className="uploader-url-addon" onClick={this.handleInjectURLClick}>
+                        <Svg.InternetGlobe className="uploader-url-addon-icon" />
+                        {this.props.catalogue.urlSubmitText}
+                    </span>
+                </div>
                 }
             </div>
         );
@@ -350,51 +346,62 @@ Uploader.propTypes = {
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
     catalogue: (props, propName, componentName) => {
-        let error;
-        const prop = props[propName];
-        React.Children.forEach(prop, (child) => {
-            // type.name seems to work for both Class and Functional components
-            if (child.type.name !== 'Option') {
-                error = new Error(`\`${componentName}\` only accepts children of type \`Option\`.`,);
-            }
-        });
-        return error;
+        const givenCatalogue = props[propName],
+            givenPropsKeys = Object.keys(props[propName]),
+            expectedPropsKeys = Object.keys(Uploader.defaultProps[propName]);
+
+        if (!givenCatalogue || typeof givenCatalogue !== 'object') throw new Error('Catalogue must be an object.');
+
+        const diffKeys = _.difference(expectedPropsKeys, givenPropsKeys);
+
+        if (diffKeys.length) throw new Error('Given catalogue is insufficient. Missing keys: ' + JSON.stringify(diffKeys));
     },
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
-    feedback: PropTypes.string, // todo: remove
     fetching: PropTypes.bool,
     fileType: PropTypes.oneOf(['image', 'video']), // expected file type
-    label: PropTypes.string, // todo: remove
     imageCrop: PropTypes.object,
     maxSize: PropTypes.number,
     onChange: PropTypes.func,
     onCropClick: PropTypes.func,
+    onFileTooLargeError: PropTypes.func,
     onFirstLoad: PropTypes.func,
+    onInvalidFileExtensionError: PropTypes.func,
+    onInvalidURLError: PropTypes.func,
     onRemoveClick: PropTypes.func,
+    onURLInjectionError: PropTypes.func,
     removable: PropTypes.bool,
     src: PropTypes.string,
-    valid: PropTypes.bool, // todo: remove
     withURLInput: PropTypes.bool,
 };
 
 Uploader.defaultProps = {
     backgroundColor: 'transparent',
     backgroundSize: 'cover',
+    catalogue: {
+        callToAction: null,
+        loading: null,
+        or: null,
+        urlInputPlaceholder: null,
+        urlSubmitText: null,
+    },
     croppable: false,
+    cropIcon: null, // if let null, it will be default one
     customAttributes: {},
-    feedback: '',
     fetching: false,
     fileType: 'image',
     imageCrop: null,
-    label: '',
-    maxSize: null,
+    maxSize: 10 * 1000 * 1000,
     onChange: file => null,
     onCropClick: () => null,
+    onFileTooLargeError: () => null,
     onFirstLoad: () => null,
+    onInvalidFileExtensionError: () => null,
+    onInvalidURLError: () => null,
     onRemoveClick: () => null,
+    onURLInjectionError: () => null,
     removable: false,
+    removeIcon: null, // if let null, it will be default one
     src: null,
-    valid: null,
     withURLInput: false,
 };

@@ -15,30 +15,11 @@
 .uploader\/fetching .uploader-zone-fog-img {
     animation: app_uploader_fog_camera_pulse 2s linear infinite;
 }
-.uploader\/withUrl label {
-    text-align: left !important;
-}
-.uploader\/withUrl .uploader-feedback {
-    text-align: left;
-}
 .uploader\/withUrl .uploader-zone {
     border-top-left-radius: 0.25rem !important;
     border-top-right-radius: 0.25rem !important;
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
-}
-.uploader\/withControls .or {
-    width: 100%;
-    color: white;
-    font-size: 80%;
-    position: relative;
-    bottom: 0.3rem;
-}
-.uploader\/withControls .or * {
-    border-color: white;
-}
-.uploader\/withControls .or-body {
-    padding: 0.2rem 0.3rem;
 }
 .uploader\/withControls .uploader-zone-fog-caption {
     margin-top: 0;
@@ -56,11 +37,15 @@
     position: relative;
     bottom: 0.3rem;
 }
+.uploader\/withControls .uploader-zone-fog-or {
+    font-size: 80%;
+}
 .uploader\/withControls .uploader-zone-fog-controls > * {
     margin: 0 0.3rem;
 }
 .uploader\/withControls .uploader-zone-fog-controls-control {
     height: 1.6rem;
+    width: 1.6rem;
     fill: white;
 }
 .uploader img {
@@ -69,22 +54,65 @@
     height: auto;
     width: auto;
 }
+.uploader-url-addon {
+    display: flex;
+    align-items: center;
+    padding: .375rem .75rem;
+    margin-bottom: 0;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-left-width: 0;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: .25rem;
+}
+.uploader-url-addon svg {
+    margin-right: 0.6rem;
+    fill: #495057;
+    height: 1.4rem;
+}
 .uploader-url-input {
-    border-top-left-radius: 0 !important;
+    display: block;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    position: relative;
+    flex-grow: 1;
+    margin-bottom: 0;
 }
-.uploader-url .input-group-text {
+.uploader-url-input:focus {
+    outline: none;
+}
+.uploader-url {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-flow: row;
     cursor: pointer;
-    border-top-right-radius: 0 !important;
-}
-.uploader-url .input-group-text svg {
-    margin-right: 0.4rem;
 }
 .uploader-zone {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-flow: row wrap;
-    width: 14rem;
+    width: 100%;
     height: 14rem;
     overflow: hidden;
     position: relative;
@@ -109,7 +137,6 @@
 }
 .uploader-zone-fog-caption {
     width: 80%;
-    font-size: 80%;
     text-align: center;
     position: relative;
     bottom: 1rem;
@@ -121,23 +148,6 @@
     fill: white;
     position: relative;
     top: 1rem;
-}
-.uploader label {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 0.3rem;
-}
-.uploader-feedback {
-    width: 100%;
-    text-align: center;
-    font-size: 80%;
-    margin-bottom: 0.3rem;
-}
-.uploader-feedback\/invalid {
-    color: #dc3545;
-}
-.uploader-feedback\/valid {
-    color: limegreen;
 }
 .uploader-input {
     position: fixed;
