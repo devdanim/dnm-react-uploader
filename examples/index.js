@@ -53,7 +53,7 @@ render(
             onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
             onInvalidURLError={() => alert('onInvalidURLError')}
             onURLInjectionError={() => alert('onURLInjectionError')}
-            removeIcon={<Svg.Erase onClick={() => console.log('removeIconClick')} />}
+            removeIcon={<Svg.Erase />}
         />
     </React.Fragment>,
     document.getElementById('root')

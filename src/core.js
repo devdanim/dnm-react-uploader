@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 const validator = {
-    isURL: require('validator').isURL
+    isURL: require('validator/isURL')
 };
 const Svg = require('./svg/index.js');
 const FileManager = require('./file-manager.js').default;
@@ -46,6 +46,8 @@ export default class Uploader extends React.Component {
 
     componentDidMount() {
         this.setState({mounted: true});
+
+        FileManager.initializeDrag();
     }
 
     change(file, callback = data => null) {

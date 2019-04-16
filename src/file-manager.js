@@ -11,15 +11,17 @@ const _ = {
     upperCase: require('lodash/upperCase'),
 };
 
-// avoid browser drop management
-window.addEventListener('dragover', ev => {
-    ev = ev || event;
-    ev.preventDefault();
-}, false);
-window.addEventListener('drop', ev => {
-    ev = ev || event;
-    ev.preventDefault();
-}, false);
+FileManager.initializeDrag = () => {
+    // avoid browser drop management
+        window.addEventListener('dragover', ev => {
+            ev = ev || event;
+            ev.preventDefault();
+        }, false);
+        window.addEventListener('drop', ev => {
+            ev = ev || event;
+            ev.preventDefault();
+        }, false);
+};
 
 /**
  * From Base64 dataURL to MIME Type
