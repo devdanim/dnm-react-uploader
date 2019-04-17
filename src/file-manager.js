@@ -13,14 +13,14 @@ const _ = {
 
 FileManager.initializeDrag = () => {
     // avoid browser drop management
-        window.addEventListener('dragover', ev => {
-            ev = ev || event;
-            ev.preventDefault();
-        }, false);
-        window.addEventListener('drop', ev => {
-            ev = ev || event;
-            ev.preventDefault();
-        }, false);
+    window.addEventListener('dragover', ev => {
+        ev = ev || event;
+        ev.preventDefault();
+    }, false);
+    window.addEventListener('drop', ev => {
+        ev = ev || event;
+        ev.preventDefault();
+    }, false);
 };
 
 /**

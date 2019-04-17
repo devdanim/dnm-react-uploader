@@ -29,6 +29,6 @@ const rollupConfig = {
             extensions: ['.css']
         })
     ]
-}
+};
 
 export default rollupConfig;
