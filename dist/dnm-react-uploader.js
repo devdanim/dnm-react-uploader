@@ -109,7 +109,7 @@
   }
 
   var validator = {
-    isURL: require('validator/isURL')
+    isURL: require('validator/lib/isURL')
   };
 
   var Svg = require('./svg/index.js');

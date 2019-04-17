@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 const validator = {
-    isURL: require('validator/isURL')
+    isURL: require('validator/lib/isURL')
 };
 const Svg = require('./svg/index.js');
 const FileManager = require('./file-manager.js').default;
