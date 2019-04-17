@@ -109,7 +109,7 @@
   }
 
   var validator = {
-    isURL: require('validator').isURL
+    isURL: require('validator/isURL')
   };
 
   var Svg = require('./svg/index.js');
@@ -168,6 +168,7 @@
         this.setState({
           mounted: true
         });
+        FileManager.initializeDrag();
       }
     }, {
       key: "change",
