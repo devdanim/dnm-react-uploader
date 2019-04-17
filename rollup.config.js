@@ -3,8 +3,8 @@ import postcss from 'rollup-plugin-postcss';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 
-const moduleName = 'SmartCroppr';
-const distName = 'dnm-react-smartcroppr';
+const moduleName = 'Uploader';
+const distName = 'dnm-react-uploader';
 
 const rollupConfig = {
     input: 'src/index.js',

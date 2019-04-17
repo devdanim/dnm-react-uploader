@@ -19,7 +19,11 @@
     "url": "git+https://github.com/devdanim/dnm-react-uploader.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "devdanim",
+  "contributors": [
+    "keywinf",
+    "fadrien"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/devdanim/dnm-react-uploader/issues"
