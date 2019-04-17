@@ -7,7 +7,7 @@ const moduleName = 'Uploader';
 const distName = 'dnm-react-uploader';
 
 const external = {
-    "es": [
+    es: [
         'react', 
         'react-dom', 
         'prop-types', 
@@ -24,16 +24,16 @@ const external = {
         'lodash-es/split',
         'validator/lib/isURL'
     ],
-    "umd": ['react', 'react-dom', 'prop-types']
+    umd: ['react', 'react-dom', 'prop-types']
 };
 
-const rollupConfig = ["es", "umd"].map(format => ({
+const rollupConfig = ['es', 'umd'].map(format => ({
     input: 'src/index.js',
     output: {
         file: `dist/${distName}.${format}`,
         format,
         name: moduleName,
-        globals: format === "umd" ? {
+        globals: format === 'umd' ? {
             react: 'React',
             'react-dom': 'ReactDOM',
             'prop-types': 'PropTypes',
