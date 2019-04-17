@@ -6,19 +6,40 @@ import commonjs from 'rollup-plugin-commonjs';
 const moduleName = 'Uploader';
 const distName = 'dnm-react-uploader';
 
-const rollupConfig = {
+const external = {
+    "es": [
+        'react', 
+        'react-dom', 
+        'prop-types', 
+        'lodash-es/camelCase',
+        'lodash-es/concat',
+        'lodash-es/difference',
+        'lodash-es/get',
+        'lodash-es/isString',
+        'lodash-es/last',
+        'lodash-es/map',
+        'lodash-es/round',
+        'lodash-es/upperCase',
+        'lodash-es/upperFirst',
+        'lodash-es/split',
+        'validator/lib/isURL'
+    ],
+    "umd": ['react', 'react-dom', 'prop-types']
+};
+
+const rollupConfig = ["es", "umd"].map(format => ({
     input: 'src/index.js',
     output: {
-        file: `dist/${distName}`,
-        format: 'umd',
+        file: `dist/${distName}.${format}`,
+        format,
         name: moduleName,
-        globals: {
+        globals: format === "umd" ? {
             react: 'React',
             'react-dom': 'ReactDOM',
             'prop-types': 'PropTypes',
-        }
+        } : null
     },
-    external: ['react', 'react-dom', 'prop-types'],
+    external: external[format],
     plugins: [
         resolve(),
         babel({
@@ -29,6 +50,6 @@ const rollupConfig = {
             extensions: ['.css']
         })
     ]
-};
+}));
 
 export default rollupConfig;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Uploader from '../src';
+import Uploader from '../dist/dnm-react-uploader.es';
 import * as Svg from '../src/svg';
 
 render(

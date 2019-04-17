@@ -2,21 +2,21 @@ var FileManager = {};
 
 import Constants from './constants';
 // lodash
-import _concat from 'lodash/concat';
-import _isString from 'lodash/isString';
-import _last from 'lodash/last';
-import _map from 'lodash/map';
-import _round from 'lodash/round';
-import _split from 'lodash/split';
-import _upperCase from 'lodash/upperCase';
+import concat from 'lodash-es/concat';
+import isString from 'lodash-es/isString';
+import last from 'lodash-es/last';
+import map from 'lodash-es/map';
+import round from 'lodash-es/round';
+import split from 'lodash-es/split';
+import upperCase from 'lodash-es/upperCase';
 const _ = {
-    concat: _concat,
-    isString: _isString,
-    last: _last,
-    map: _map,
-    round: _round,
-    split: _split,
-    upperCase: _upperCase,
+    concat,
+    isString,
+    last,
+    map,
+    round,
+    split,
+    upperCase,
 };
 
 FileManager.initializeDrag = () => {
