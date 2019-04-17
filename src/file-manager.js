@@ -1,14 +1,22 @@
 var FileManager = {};
 
-const Constants = require('./constants.js').default;
+import Constants from './constants';
+// lodash
+import _concat from 'lodash/concat';
+import _isString from 'lodash/isString';
+import _last from 'lodash/last';
+import _map from 'lodash/map';
+import _round from 'lodash/round';
+import _split from 'lodash/split';
+import _upperCase from 'lodash/upperCase';
 const _ = {
-    concat: require('lodash/concat'),
-    isString: require('lodash/isString'),
-    last: require('lodash/last'),
-    map: require('lodash/map'),
-    round: require('lodash/round'),
-    split: require('lodash/split'),
-    upperCase: require('lodash/upperCase'),
+    concat: _concat,
+    isString: _isString,
+    last: _last,
+    map: _map,
+    round: _round,
+    split: _split,
+    upperCase: _upperCase,
 };
 
 FileManager.initializeDrag = () => {

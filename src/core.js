@@ -1,17 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _isURL from 'validator/lib/isURL';
 const validator = {
-    isURL: require('validator/lib/isURL')
+    isURL: _isURL
 };
-const Svg = require('./svg/index.js');
-const FileManager = require('./file-manager.js').default;
+import * as Svg from './svg/index';
+import FileManager from './file-manager';
+// lodash
+import _camelCase from 'lodash/camelCase';
+import _difference from 'lodash/difference';
+import _get from 'lodash/get';
+import _last from 'lodash/last';
+import _upperFirst from 'lodash/upperFirst';
+import _split from 'lodash/split';
 const _ = {
-    camelCase: require('lodash/camelCase'),
-    difference: require('lodash/difference'),
-    get: require('lodash/get'),
-    last: require('lodash/last'),
-    upperFirst: require('lodash/upperFirst'),
-    split: require('lodash/split'),
+    camelCase: _camelCase,
+    difference: _difference,
+    get: _get,
+    last: _last,
+    upperFirst: _upperFirst,
+    split: _split,
 };
 
 export default class Uploader extends React.Component {

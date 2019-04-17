@@ -31814,18 +31814,34 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _constants = _interopRequireDefault(require("./constants"));
+
+var _concat2 = _interopRequireDefault(require("lodash/concat"));
+
+var _isString2 = _interopRequireDefault(require("lodash/isString"));
+
+var _last2 = _interopRequireDefault(require("lodash/last"));
+
+var _map2 = _interopRequireDefault(require("lodash/map"));
+
+var _round2 = _interopRequireDefault(require("lodash/round"));
+
+var _split2 = _interopRequireDefault(require("lodash/split"));
+
+var _upperCase2 = _interopRequireDefault(require("lodash/upperCase"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var FileManager = {};
-
-var Constants = require('./constants.js').default;
-
 var _ = {
-  concat: require('lodash/concat'),
-  isString: require('lodash/isString'),
-  last: require('lodash/last'),
-  map: require('lodash/map'),
-  round: require('lodash/round'),
-  split: require('lodash/split'),
-  upperCase: require('lodash/upperCase')
+  concat: _concat2.default,
+  isString: _isString2.default,
+  last: _last2.default,
+  map: _map2.default,
+  round: _round2.default,
+  split: _split2.default,
+  upperCase: _upperCase2.default
 };
 
 FileManager.initializeDrag = function () {
@@ -31877,9 +31893,9 @@ FileManager.fileType = function (input) {
 
   if (isExtension) {
     var extensions = {
-      video: Constants.video.extensions,
-      image: Constants.image.extensions,
-      compressedFile: Constants.compressedFile.extensions
+      video: _constants.default.video.extensions,
+      image: _constants.default.image.extensions,
+      compressedFile: _constants.default.compressedFile.extensions
     };
 
     for (var k in extensions) {
@@ -31892,9 +31908,9 @@ FileManager.fileType = function (input) {
     }
   } else {
     var mimeTypes = {
-      video: Constants.video.mimeTypes,
-      image: Constants.image.mimeTypes,
-      compressedFile: Constants.compressedFile.mimeTypes
+      video: _constants.default.video.mimeTypes,
+      image: _constants.default.image.mimeTypes,
+      compressedFile: _constants.default.compressedFile.mimeTypes
     };
 
     for (var _k in mimeTypes) {
@@ -31934,7 +31950,7 @@ FileManager.humanSize = function (size) {
 
 var _default = FileManager;
 exports.default = _default;
-},{"./constants.js":"../src/constants.js","lodash/concat":"../node_modules/lodash/concat.js","lodash/isString":"../node_modules/lodash/isString.js","lodash/last":"../node_modules/lodash/last.js","lodash/map":"../node_modules/lodash/map.js","lodash/round":"../node_modules/lodash/round.js","lodash/split":"../node_modules/lodash/split.js","lodash/upperCase":"../node_modules/lodash/upperCase.js"}],"../node_modules/lodash/_createCaseFirst.js":[function(require,module,exports) {
+},{"./constants":"../src/constants.js","lodash/concat":"../node_modules/lodash/concat.js","lodash/isString":"../node_modules/lodash/isString.js","lodash/last":"../node_modules/lodash/last.js","lodash/map":"../node_modules/lodash/map.js","lodash/round":"../node_modules/lodash/round.js","lodash/split":"../node_modules/lodash/split.js","lodash/upperCase":"../node_modules/lodash/upperCase.js"}],"../node_modules/lodash/_createCaseFirst.js":[function(require,module,exports) {
 var castSlice = require('./_castSlice'),
     hasUnicode = require('./_hasUnicode'),
     stringToArray = require('./_stringToArray'),
@@ -32530,6 +32546,26 @@ var _react = _interopRequireDefault(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
+var _isURL2 = _interopRequireDefault(require("validator/lib/isURL"));
+
+var Svg = _interopRequireWildcard(require("./svg/index"));
+
+var _fileManager = _interopRequireDefault(require("./file-manager"));
+
+var _camelCase2 = _interopRequireDefault(require("lodash/camelCase"));
+
+var _difference2 = _interopRequireDefault(require("lodash/difference"));
+
+var _get2 = _interopRequireDefault(require("lodash/get"));
+
+var _last2 = _interopRequireDefault(require("lodash/last"));
+
+var _upperFirst2 = _interopRequireDefault(require("lodash/upperFirst"));
+
+var _split2 = _interopRequireDefault(require("lodash/split"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -32553,20 +32589,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 var validator = {
-  isURL: require('validator/lib/isURL')
+  isURL: _isURL2.default
 };
-
-var Svg = require('./svg/index.js');
-
-var FileManager = require('./file-manager.js').default;
-
 var _ = {
-  camelCase: require('lodash/camelCase'),
-  difference: require('lodash/difference'),
-  get: require('lodash/get'),
-  last: require('lodash/last'),
-  upperFirst: require('lodash/upperFirst'),
-  split: require('lodash/split')
+  camelCase: _camelCase2.default,
+  difference: _difference2.default,
+  get: _get2.default,
+  last: _last2.default,
+  upperFirst: _upperFirst2.default,
+  split: _split2.default
 };
 
 var Uploader =
@@ -32612,7 +32643,8 @@ function (_React$Component) {
       this.setState({
         mounted: true
       });
-      FileManager.initializeDrag();
+
+      _fileManager.default.initializeDrag();
     }
   }, {
     key: "change",
@@ -32621,7 +32653,7 @@ function (_React$Component) {
         return null;
       };
       var maxSize = this.props.maxSize;
-      if (FileManager.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();else this.props.onChange(file);
+      if (_fileManager.default.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();else this.props.onChange(file);
       callback(file);
       this.refs.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
     }
@@ -32755,7 +32787,7 @@ function (_React$Component) {
           withControls = this.props.src && (this.props.removable || this.props.croppable);
 
       if (this.props.src) {
-        var fileType = this.props.fileType || FileManager.guessFileType(this.props.src);
+        var fileType = this.props.fileType || _fileManager.default.guessFileType(this.props.src);
 
         switch (fileType) {
           case 'image':
@@ -32997,6 +33029,7 @@ Uploader.defaultProps = {
   src: null,
   withURLInput: false
 };
+<<<<<<< Updated upstream
 },{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","validator/lib/isURL":"../node_modules/validator/lib/isURL.js","./svg/index.js":"../src/svg/index.js","./file-manager.js":"../src/file-manager.js","lodash/camelCase":"../node_modules/lodash/camelCase.js","lodash/difference":"../node_modules/lodash/difference.js","lodash/get":"../node_modules/lodash/get.js","lodash/last":"../node_modules/lodash/last.js","lodash/upperFirst":"../node_modules/lodash/upperFirst.js","lodash/split":"../node_modules/lodash/split.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
@@ -33352,6 +33385,365 @@ function hmrAcceptCheck(bundle, id) {
   });
 }
 
+=======
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","validator/lib/isURL":"../node_modules/validator/lib/isURL.js","./svg/index":"../src/svg/index.js","./file-manager":"../src/file-manager.js","lodash/camelCase":"../node_modules/lodash/camelCase.js","lodash/difference":"../node_modules/lodash/difference.js","lodash/get":"../node_modules/lodash/get.js","lodash/last":"../node_modules/lodash/last.js","lodash/upperFirst":"../node_modules/lodash/upperFirst.js","lodash/split":"../node_modules/lodash/split.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
+  };
+
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+
+    cssTimeout = null;
+  }, 50);
+}
+
+module.exports = reloadCSS;
+},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"../assets/styles.css":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../src/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _core = _interopRequireDefault(require("./core"));
+
+require("../assets/styles.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = _core.default;
+exports.default = _default;
+},{"./core":"../src/core.js","../assets/styles.css":"../assets/styles.css"}],"index.js":[function(require,module,exports) {
+"use strict";
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactDom = require("react-dom");
+
+var _src = _interopRequireDefault(require("../src"));
+
+var Svg = _interopRequireWildcard(require("../src/svg"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(0, _reactDom.render)(_react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_src.default, {
+  customAttributes: {
+    root: {
+      id: 'first-uploader'
+    }
+  },
+  fetching: true,
+  catalogue: {
+    callToAction: 'Custom call to action',
+    loading: 'Custom loading caption',
+    or: 'Custom OR',
+    urlInputPlaceholder: 'Custom URL input',
+    urlSubmitText: 'Custom URL submit'
+  },
+  maxSize: 50 * 1000 * 1000,
+  onChange: function onChange(file) {
+    return console.log('onChange', file);
+  },
+  onFirstLoad: function onFirstLoad() {
+    return console.log('onFirstLoad');
+  },
+  withURLInput: true,
+  onFileTooLargeError: function onFileTooLargeError() {
+    return alert('onFileTooLargeError');
+  },
+  onInvalidFileExtensionError: function onInvalidFileExtensionError() {
+    return alert('onInvalidFileExtensionError');
+  },
+  onInvalidURLError: function onInvalidURLError() {
+    return alert('onInvalidURLError');
+  },
+  onURLInjectionError: function onURLInjectionError() {
+    return alert('onURLInjectionError');
+  }
+}), _react.default.createElement(_src.default, {
+  src: "https://images.unsplash.com/photo-1554676187-e9a89ddb659e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9",
+  customAttributes: {
+    root: {
+      id: 'second-uploader'
+    }
+  },
+  catalogue: {
+    callToAction: 'Custom call to action',
+    loading: 'Custom loading caption',
+    or: 'Custom OR',
+    urlInputPlaceholder: 'Custom URL input',
+    urlSubmitText: 'Custom URL submit'
+  },
+  removable: true,
+  onRemoveClick: function onRemoveClick() {
+    return alert('onRemoveClick');
+  },
+  croppable: true,
+  onCropClick: function onCropClick() {
+    return alert('onCropClick');
+  },
+  maxSize: 500 * 1000 * 1000,
+  onChange: function onChange(file) {
+    return console.log('onChange', file);
+  },
+  onFirstLoad: function onFirstLoad() {
+    return console.log('onFirstLoad');
+  },
+  onFileTooLargeError: function onFileTooLargeError() {
+    return alert('onFileTooLargeError');
+  },
+  onInvalidFileExtensionError: function onInvalidFileExtensionError() {
+    return alert('onInvalidFileExtensionError');
+  },
+  onInvalidURLError: function onInvalidURLError() {
+    return alert('onInvalidURLError');
+  },
+  onURLInjectionError: function onURLInjectionError() {
+    return alert('onURLInjectionError');
+  },
+  removeIcon: _react.default.createElement(Svg.Erase, null)
+})), document.getElementById('root'));
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","../src":"../src/index.js","../src/svg":"../src/svg/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var global = arguments[3];
+var OVERLAY_ID = '__parcel__error__overlay__';
+var OldModule = module.bundle.Module;
+
+function Module(moduleName) {
+  OldModule.call(this, moduleName);
+  this.hot = {
+    data: module.bundle.hotData,
+    _acceptCallbacks: [],
+    _disposeCallbacks: [],
+    accept: function (fn) {
+      this._acceptCallbacks.push(fn || function () {});
+    },
+    dispose: function (fn) {
+      this._disposeCallbacks.push(fn);
+    }
+  };
+  module.bundle.hotData = null;
+}
+
+module.bundle.Module = Module;
+var checkedAssets, assetsToAccept;
+var parent = module.bundle.parent;
+
+if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
+  var hostname = "" || location.hostname;
+  var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "1235" + '/');
+
+  ws.onmessage = function (event) {
+    checkedAssets = {};
+    assetsToAccept = [];
+    var data = JSON.parse(event.data);
+
+    if (data.type === 'update') {
+      var handled = false;
+      data.assets.forEach(function (asset) {
+        if (!asset.isNew) {
+          var didAccept = hmrAcceptCheck(global.parcelRequire, asset.id);
+
+          if (didAccept) {
+            handled = true;
+          }
+        }
+      }); // Enable HMR for CSS by default.
+
+      handled = handled || data.assets.every(function (asset) {
+        return asset.type === 'css' && asset.generated.js;
+      });
+
+      if (handled) {
+        console.clear();
+        data.assets.forEach(function (asset) {
+          hmrApply(global.parcelRequire, asset);
+        });
+        assetsToAccept.forEach(function (v) {
+          hmrAcceptRun(v[0], v[1]);
+        });
+      } else {
+        window.location.reload();
+      }
+    }
+
+    if (data.type === 'reload') {
+      ws.close();
+
+      ws.onclose = function () {
+        location.reload();
+      };
+    }
+
+    if (data.type === 'error-resolved') {
+      console.log('[parcel] ✨ Error resolved');
+      removeErrorOverlay();
+    }
+
+    if (data.type === 'error') {
+      console.error('[parcel] 🚨  ' + data.error.message + '\n' + data.error.stack);
+      removeErrorOverlay();
+      var overlay = createErrorOverlay(data);
+      document.body.appendChild(overlay);
+    }
+  };
+}
+
+function removeErrorOverlay() {
+  var overlay = document.getElementById(OVERLAY_ID);
+
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function createErrorOverlay(data) {
+  var overlay = document.createElement('div');
+  overlay.id = OVERLAY_ID; // html encode message and stack trace
+
+  var message = document.createElement('div');
+  var stackTrace = document.createElement('pre');
+  message.innerText = data.error.message;
+  stackTrace.innerText = data.error.stack;
+  overlay.innerHTML = '<div style="background: black; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; opacity: 0.85; font-family: Menlo, Consolas, monospace; z-index: 9999;">' + '<span style="background: red; padding: 2px 4px; border-radius: 2px;">ERROR</span>' + '<span style="top: 2px; margin-left: 5px; position: relative;">🚨</span>' + '<div style="font-size: 18px; font-weight: bold; margin-top: 20px;">' + message.innerHTML + '</div>' + '<pre>' + stackTrace.innerHTML + '</pre>' + '</div>';
+  return overlay;
+}
+
+function getParents(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return [];
+  }
+
+  var parents = [];
+  var k, d, dep;
+
+  for (k in modules) {
+    for (d in modules[k][1]) {
+      dep = modules[k][1][d];
+
+      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
+        parents.push(k);
+      }
+    }
+  }
+
+  if (bundle.parent) {
+    parents = parents.concat(getParents(bundle.parent, id));
+  }
+
+  return parents;
+}
+
+function hmrApply(bundle, asset) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (modules[asset.id] || !bundle.parent) {
+    var fn = new Function('require', 'module', 'exports', asset.generated.js);
+    asset.isNew = !modules[asset.id];
+    modules[asset.id] = [fn, asset.deps];
+  } else if (bundle.parent) {
+    hmrApply(bundle.parent, asset);
+  }
+}
+
+function hmrAcceptCheck(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (!modules[id] && bundle.parent) {
+    return hmrAcceptCheck(bundle.parent, id);
+  }
+
+  if (checkedAssets[id]) {
+    return;
+  }
+
+  checkedAssets[id] = true;
+  var cached = bundle.cache[id];
+  assetsToAccept.push([bundle, id]);
+
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    return true;
+  }
+
+  return getParents(global.parcelRequire, id).some(function (id) {
+    return hmrAcceptCheck(global.parcelRequire, id);
+  });
+}
+
+>>>>>>> Stashed changes
 function hmrAcceptRun(bundle, id) {
   var cached = bundle.cache[id];
   bundle.hotData = {};

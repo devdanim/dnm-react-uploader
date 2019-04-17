@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Uploader from '../src';
-const Svg = require('../src/svg/index.js');
+import * as Svg from '../src/svg';
 
 render(
     <React.Fragment>
