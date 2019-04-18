@@ -38,7 +38,23 @@
     bottom: 0.3rem;
 }
 .uploader\/withControls .uploader-zone-fog-or {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: row;
     font-size: 80%;
+    width: 100%;
+}
+.uploader\/withControls .uploader-zone-fog-or-wing {
+    flex-grow: 1;
+    height: 0;
+    border-style: solid;
+    border-width: .06rem 0 0 0;
+    border-color: white;
+}
+.uploader\/withControls .uploader-zone-fog-or-body {
+    padding: 0.5rem 0.7rem;
+    user-select: none;
 }
 .uploader\/withControls .uploader-zone-fog-controls > * {
     margin: 0 0.3rem;

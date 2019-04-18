@@ -3,6 +3,16 @@ import { render } from 'react-dom';
 import Uploader from '../dist/dnm-react-uploader.es';
 import * as Svg from '../src/svg';
 
+const catalogue = {
+    click: 'Custom: Click',
+    drop: 'Drop',
+    typeURL: 'Type URL',
+    loading: 'Custom loading caption',
+    or: 'Custom OR',
+    urlInputPlaceholder: 'Custom URL input',
+    urlSubmitText: 'Custom URL submit',
+};
+
 render(
     <React.Fragment>
         <Uploader
@@ -12,13 +22,7 @@ render(
                 }
             }}
             fetching={true}
-            catalogue={{
-                callToAction: 'Custom call to action',
-                loading: 'Custom loading caption',
-                or: 'Custom OR',
-                urlInputPlaceholder: 'Custom URL input',
-                urlSubmitText: 'Custom URL submit',
-            }}
+            catalogue={catalogue}
             maxSize={50 * 1000 * 1000}
             onChange={file => console.log('onChange', file)}
             onFirstLoad={() => console.log('onFirstLoad')}
@@ -35,13 +39,7 @@ render(
                     id: 'second-uploader'
                 }
             }}
-            catalogue={{
-                callToAction: 'Custom call to action',
-                loading: 'Custom loading caption',
-                or: 'Custom OR',
-                urlInputPlaceholder: 'Custom URL input',
-                urlSubmitText: 'Custom URL submit',
-            }}
+            catalogue={catalogue}
             removable={true}
             onRemoveClick={() => alert('onRemoveClick')}
             croppable={true}

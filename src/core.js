@@ -300,12 +300,16 @@ export default class Uploader extends React.Component {
                         <div className="uploader-zone-fog-caption">
                             { this.props.fetching
                                 ? this.props.catalogue.loading
-                                : this.props.catalogue.callToAction
+                                : `${this.props.catalogue.click}/${this.props.catalogue.drop}${this.props.withURLInput ? `/${this.props.catalogue.typeURL}` : ''}`
                             }
                         </div>
                         { withControls === true &&
                         <React.Fragment>
-                            <span className="uploader-zone-fog-or">––––– { this.props.catalogue.or } –––––</span>
+                            <div className="uploader-zone-fog-or">
+                                <div className="uploader-zone-fog-or-wing" />
+                                <div className="uploader-zone-fog-or-body">{ this.props.catalogue.or }</div>
+                                <div className="uploader-zone-fog-or-wing" />
+                            </div>
                             <div className="uploader-zone-fog-controls">
                                 {this.props.croppable === true &&
                                 <span className="uploader-zone-fog-controls-control" onClick={this.handleCropClick}>
@@ -387,7 +391,9 @@ Uploader.defaultProps = {
     backgroundColor: 'transparent',
     backgroundSize: 'cover',
     catalogue: {
-        callToAction: null,
+        click: null,
+        drop: null,
+        typeURL: null,
         loading: null,
         or: null,
         urlInputPlaceholder: null,
