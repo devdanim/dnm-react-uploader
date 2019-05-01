@@ -12,8 +12,7 @@
     "build:prod": "rollup --config rollup/rollup.config.prod.js",
     "watch": "npm run build:dev && onchange \"src/**/*.*\" -v -- npm run build:dev",
     "dist": "rm -rf examples/dev && npm run build:dev && npm run build:prod",
-    "login:nint": "npm-login-noninteractive",
-    "pkg": "npm run dist && npm publish"
+    "login:nint": "npm-login-noninteractive"
   },
   "repository": {
     "type": "git",
@@ -52,7 +51,7 @@
     "rollup-plugin-babel": "^4.2.0",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-postcss": "^1.6.3",
+    "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-terser": "^4.0.4"
   },
   "dependencies": {
