@@ -437,6 +437,8 @@ function (_React$Component) {
           loaded: true
         });
       }
+
+      this.props.onLoad();
     }
   }, {
     key: "handleRemoveClick",
@@ -699,6 +701,7 @@ Uploader.propTypes = {
   onFirstLoad: PropTypes.func,
   onInvalidFileExtensionError: PropTypes.func,
   onInvalidURLError: PropTypes.func,
+  onLoad: PropTypes.func,
   onRemoveClick: PropTypes.func,
   onURLInjectionError: PropTypes.func,
   removable: PropTypes.bool,
@@ -741,6 +744,9 @@ Uploader.defaultProps = {
     return null;
   },
   onInvalidURLError: function onInvalidURLError() {
+    return null;
+  },
+  onLoad: function onLoad() {
     return null;
   },
   onRemoveClick: function onRemoveClick() {
