@@ -26,6 +26,7 @@ render(
             maxSize={50 * 1000 * 1000}
             onChange={file => console.log('onChange', file)}
             onFirstLoad={() => console.log('onFirstLoad')}
+            onLoad={() => console.log('onLoad')}
             withURLInput={true}
             onFileTooLargeError={() => alert('onFileTooLargeError')}
             onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
@@ -47,6 +48,7 @@ render(
             maxSize={500 * 1000 * 1000}
             onChange={file => console.log('onChange', file)}
             onFirstLoad={() => console.log('onFirstLoad')}
+            onLoad={() => console.log('onLoad')}
             onFileTooLargeError={() => alert('onFileTooLargeError')}
             onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
             onInvalidURLError={() => alert('onInvalidURLError')}

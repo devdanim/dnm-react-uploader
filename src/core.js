@@ -107,6 +107,7 @@ export default class Uploader extends React.Component {
             this.props.onFirstLoad();
             this.setState({loaded: true});
         }
+        this.props.onLoad();
     }
 
     handleRemoveClick(ev) {
@@ -380,6 +381,7 @@ Uploader.propTypes = {
     onFirstLoad: PropTypes.func,
     onInvalidFileExtensionError: PropTypes.func,
     onInvalidURLError: PropTypes.func,
+    onLoad: PropTypes.func,
     onRemoveClick: PropTypes.func,
     onURLInjectionError: PropTypes.func,
     removable: PropTypes.bool,
@@ -412,6 +414,7 @@ Uploader.defaultProps = {
     onFirstLoad: () => null,
     onInvalidFileExtensionError: () => null,
     onInvalidURLError: () => null,
+    onLoad: () => null,
     onRemoveClick: () => null,
     onURLInjectionError: () => null,
     removable: false,
