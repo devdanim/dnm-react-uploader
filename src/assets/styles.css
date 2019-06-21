@@ -1,4 +1,4 @@
-@keyframes app_uploader_fog_camera_pulse {
+@keyframes pulse {
     from {
         transform: scale(0.7);
     }
@@ -13,7 +13,7 @@
     position: relative;
 }
 .uploader\/fetching .uploader-zone-fog-img {
-    animation: app_uploader_fog_camera_pulse 2s linear infinite;
+    animation: pulse 2s linear infinite;
 }
 .uploader\/withUrl .uploader-zone {
     border-top-left-radius: 0.25rem !important;
