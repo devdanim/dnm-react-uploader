@@ -4,8 +4,8 @@ import Uploader from '../dist/dnm-react-uploader.es';
 import * as Svg from '../src/svg';
 
 const catalogue = {
-    click: 'Custom: Click',
-    drop: 'Drop',
+    click: 'Custom: Click!',
+    drop: null,
     typeURL: 'Type URL',
     loading: 'Custom loading caption',
     or: 'Custom OR',

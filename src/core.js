@@ -301,7 +301,7 @@ export default class Uploader extends React.Component {
                         <div className="uploader-zone-fog-caption">
                             { this.props.fetching
                                 ? this.props.catalogue.loading
-                                : `${this.props.catalogue.click}/${this.props.catalogue.drop}${this.props.withURLInput ? `/${this.props.catalogue.typeURL}` : ''}`
+                                : `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withURLInput ? `/${this.props.catalogue.typeURL}` : ''}`
                             }
                         </div>
                         { withControls === true &&
