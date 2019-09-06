@@ -21,6 +21,7 @@ render(
                     id: 'first-uploader'
                 }
             }}
+            compact={true}
             fetching={true}
             catalogue={catalogue}
             maxSize={50 * 1000 * 1000}
@@ -41,6 +42,7 @@ render(
                 }
             }}
             catalogue={catalogue}
+            compact={true}
             removable={true}
             onRemoveClick={() => alert('onRemoveClick')}
             croppable={true}

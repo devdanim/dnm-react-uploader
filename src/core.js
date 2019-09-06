@@ -294,23 +294,29 @@ export default class Uploader extends React.Component {
                 >
                     { media }
                     <div className="uploader-zone-fog" onClick={this.handleClick}>
-                        { this.state.beingDropTarget
-                            ? <Svg.CloudComputing className="uploader-zone-fog-img" />
-                            : icon
-                        }
-                        <div className="uploader-zone-fog-caption">
-                            { this.props.fetching
-                                ? this.props.catalogue.loading
-                                : `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withURLInput ? `/${this.props.catalogue.typeURL}` : ''}`
-                            }
-                        </div>
+                        { !this.props.compact || !this.props.src ? (       
+                            <React.Fragment>
+                                { this.state.beingDropTarget
+                                    ? <Svg.CloudComputing className="uploader-zone-fog-img" />
+                                    : icon
+                                }
+                                <div className="uploader-zone-fog-caption">
+                                    { this.props.fetching
+                                        ? this.props.catalogue.loading
+                                        : `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withURLInput ? `/${this.props.catalogue.typeURL}` : ''}`
+                                    }
+                                </div>
+                            </React.Fragment>
+                        ) : null }
                         { withControls === true &&
                         <React.Fragment>
-                            <div className="uploader-zone-fog-or">
-                                <div className="uploader-zone-fog-or-wing" />
-                                <div className="uploader-zone-fog-or-body">{ this.props.catalogue.or }</div>
-                                <div className="uploader-zone-fog-or-wing" />
-                            </div>
+                            { !this.props.compact ? (
+                                <div className="uploader-zone-fog-or">
+                                    <div className="uploader-zone-fog-or-wing" />
+                                    <div className="uploader-zone-fog-or-body">{ this.props.catalogue.or }</div>
+                                    <div className="uploader-zone-fog-or-wing" />
+                                </div>
+                            ) : null }
                             <div className="uploader-zone-fog-controls">
                                 {this.props.croppable === true &&
                                 <span className="uploader-zone-fog-controls-control" onClick={this.handleCropClick}>
@@ -369,6 +375,7 @@ Uploader.propTypes = {
 
         if (diffKeys.length) throw new Error('Given catalogue is insufficient. Missing keys: ' + JSON.stringify(diffKeys));
     },
+    compact: PropTypes.bool,
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     fetching: PropTypes.bool,
@@ -401,6 +408,7 @@ Uploader.defaultProps = {
         urlInputPlaceholder: null,
         urlSubmitText: null,
     },
+    compact: true,
     croppable: false,
     cropIcon: null, // if let null, it will be default one
     customAttributes: {},
