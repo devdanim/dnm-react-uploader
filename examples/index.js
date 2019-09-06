@@ -23,6 +23,7 @@ render(
             }}
             compact={true}
             fetching={true}
+            fileType="image"
             catalogue={catalogue}
             maxSize={50 * 1000 * 1000}
             onChange={file => console.log('onChange', file)}

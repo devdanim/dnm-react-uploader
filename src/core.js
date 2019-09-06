@@ -262,10 +262,10 @@ export default class Uploader extends React.Component {
 
         switch (this.props.fileType) {
             case 'image':
-                icon = <Svg.PhotoCamera className="uploader-zone-fog-img" /> ;
+                icon = <Svg.Image className="uploader-zone-fog-img" /> ;
                 break;
             case 'video':
-                icon = <Svg.VideoCamera className="uploader-zone-fog-img" /> ;
+                icon = <Svg.Video className="uploader-zone-fog-img" /> ;
                 break;
         }
 
