@@ -294,7 +294,7 @@ export default class Uploader extends React.Component {
                 >
                     { media }
                     <div className="uploader-zone-fog" onClick={this.handleClick}>
-                        { !this.props.compact || !this.props.src ? (       
+                        { !this.props.compact || (!this.props.removable && !this.props.croppable) || !this.props.src ? (       
                             <React.Fragment>
                                 { this.state.beingDropTarget
                                     ? <Svg.CloudComputing className="uploader-zone-fog-img" />

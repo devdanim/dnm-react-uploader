@@ -620,7 +620,7 @@ function (_React$Component) {
       }, media, React.createElement("div", {
         className: "uploader-zone-fog",
         onClick: this.handleClick
-      }, !this.props.compact || !this.props.src ? React.createElement(React.Fragment, null, this.state.beingDropTarget ? React.createElement(CloudComputing, {
+      }, !this.props.compact || !this.props.removable && !this.props.croppable || !this.props.src ? React.createElement(React.Fragment, null, this.state.beingDropTarget ? React.createElement(CloudComputing, {
         className: "uploader-zone-fog-img"
       }) : icon, React.createElement("div", {
         className: "uploader-zone-fog-caption"
