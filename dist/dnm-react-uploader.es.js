@@ -502,12 +502,12 @@ function (_React$Component) {
           icon = null,
           withControls = this.props.src && (this.props.removable || this.props.croppable);
 
-      if (this.props.src && this.refs.zone && this.refs.img) {
+      if (this.props.src) {
         var fileType = this.props.fileType || FileManager.guessFileType(this.props.src);
 
         switch (fileType) {
           case 'image':
-            if (this.state.loaded && this.state.mounted && this.props.imageCrop) {
+            if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.refs.zone && this.refs.img) {
               var zoneWidth = this.refs.zone.offsetWidth,
                   zoneHeight = this.refs.zone.offsetHeight,
                   displayWidth = this.refs.img.offsetWidth,
