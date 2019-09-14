@@ -163,7 +163,7 @@ export default class Uploader extends React.Component {
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable);
 
-        if (this.props.src) {
+        if (this.props.src && this.refs.zone && this.refs.img) {
             const fileType = this.props.fileType || FileManager.guessFileType(this.props.src);
             switch (fileType) {
                 case 'image':
