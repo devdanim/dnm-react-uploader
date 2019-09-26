@@ -12,6 +12,7 @@ import camelCase from 'lodash-es/camelCase';
 import difference from 'lodash-es/difference';
 import get from 'lodash-es/get';
 import upperFirst from 'lodash-es/upperFirst';
+import debounce from 'lodash-es/debounce';
 
 function _typeof(obj) {
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -313,7 +314,8 @@ var _$1 = {
   get: get,
   last: last,
   upperFirst: upperFirst,
-  split: split
+  split: split,
+  debounce: debounce
 };
 
 var Uploader =
@@ -334,7 +336,8 @@ function (_React$Component) {
       loaded: true,
       mounted: false,
       url: '',
-      width: null
+      width: null,
+      counter: 0
     };
     _this.change = _this.change.bind(_assertThisInitialized(_this));
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
@@ -350,6 +353,8 @@ function (_React$Component) {
     _this.get = _this.get.bind(_assertThisInitialized(_this));
     _this.injectURL = _this.injectURL.bind(_assertThisInitialized(_this));
     _this.change = _this.change.bind(_assertThisInitialized(_this));
+    _this._forceUpdate = _this._forceUpdate.bind(_assertThisInitialized(_this));
+    _this.forceUpdate = _$1.debounce(_this._forceUpdate, 100);
     return _this;
   }
 
@@ -360,6 +365,15 @@ function (_React$Component) {
         mounted: true
       });
       FileManager.initializeDrag();
+      window.onresize = this.forceUpdate;
+    } // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
+
+  }, {
+    key: "_forceUpdate",
+    value: function _forceUpdate() {
+      this.setState({
+        counter: this.state.counter++
+      });
     }
   }, {
     key: "change",
