@@ -354,7 +354,7 @@ function (_React$Component) {
     _this.injectURL = _this.injectURL.bind(_assertThisInitialized(_this));
     _this.change = _this.change.bind(_assertThisInitialized(_this));
     _this._forceUpdate = _this._forceUpdate.bind(_assertThisInitialized(_this));
-    _this.forceUpdate = _$1.debounce(_this._forceUpdate, 100);
+    _this.forceUpdateOnResize = _$1.debounce(_this._forceUpdate, 500);
     return _this;
   }
 
@@ -365,13 +365,19 @@ function (_React$Component) {
         mounted: true
       });
       FileManager.initializeDrag();
-      window.onresize = this.forceUpdate;
+      window.addEventListener("resize", this.forceUpdateOnResize);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      window.removeEventListener("resize", this.forceUpdateOnResize);
     } // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
 
   }, {
     key: "_forceUpdate",
     value: function _forceUpdate() {
-      this.setState({
+      var src = this.state.src;
+      if (src) this.setState({
         counter: this.state.counter++
       });
     }

@@ -52,20 +52,23 @@ export default class Uploader extends React.Component {
         this.injectURL = this.injectURL.bind(this);
         this.change = this.change.bind(this);
         this._forceUpdate = this._forceUpdate.bind(this);
-        this.forceUpdate = _.debounce(this._forceUpdate, 100);
+        this.forceUpdateOnResize = _.debounce(this._forceUpdate, 500);
     }
 
     componentDidMount() {
         this.setState({mounted: true});
-
         FileManager.initializeDrag();
+        window.addEventListener("resize", this.forceUpdateOnResize);
+    }
 
-        window.onresize = this.forceUpdate;
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.forceUpdateOnResize);
     }
     
     // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
     _forceUpdate() {
-        this.setState({ counter: this.state.counter++ });
+        const { src } = this.state;
+        if(src) this.setState({ counter: this.state.counter++ });
     }
 
     change(file, callback = data => null) {
