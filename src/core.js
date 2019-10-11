@@ -79,7 +79,7 @@ export default class Uploader extends React.Component {
 
         callback(file);
 
-        this.refs.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
+        this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
     }
 
     handleChange(ev) {
@@ -88,7 +88,7 @@ export default class Uploader extends React.Component {
     }
 
     handleClick(ev) {
-        this.refs.input.click();
+        this.input.click();
     }
 
     handleCropClick(ev) {
@@ -182,13 +182,13 @@ export default class Uploader extends React.Component {
             const fileType = this.props.fileType || FileManager.guessFileType(this.props.src);
             switch (fileType) {
                 case 'image':
-                    if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.refs.zone && this.refs.img) {
-                        let zoneWidth = this.refs.zone.offsetWidth,
-                            zoneHeight = this.refs.zone.offsetHeight,
-                            displayWidth = this.refs.img.offsetWidth,
-                            displayHeight = this.refs.img.offsetHeight,
-                            realWidth = this.refs.img.naturalWidth,
-                            realHeight = this.refs.img.naturalHeight,
+                    if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone && this.img) {
+                        let zoneWidth = this.zone.offsetWidth,
+                            zoneHeight = this.zone.offsetHeight,
+                            displayWidth = this.img.offsetWidth,
+                            displayHeight = this.img.offsetHeight,
+                            realWidth = this.img.naturalWidth,
+                            realHeight = this.img.naturalHeight,
                             displayCropX = displayWidth * this.props.imageCrop.x / realWidth,
                             displayCropY = displayHeight * this.props.imageCrop.y / realHeight,
                             displayCropWidth = displayWidth * this.props.imageCrop.width / realWidth,
@@ -208,7 +208,7 @@ export default class Uploader extends React.Component {
                         media = (
                             <img
                                 alt=''
-                                ref="img"
+                                ref={obj => this.img = obj}
                                 src={this.props.src}
                                 onLoad={this.handleLoad}
                                 style={{
@@ -244,7 +244,7 @@ export default class Uploader extends React.Component {
                             }}>
                                 <img
                                     alt=''
-                                    ref="img"
+                                    ref={obj => this.img = obj}
                                     src={this.props.src}
                                     onLoad={this.handleLoad}
                                     style={{
@@ -296,9 +296,9 @@ export default class Uploader extends React.Component {
                     ${withControls ? 'uploader/withControls' : ''}
                 `}
             >
-                <input data-attr="input" ref="input" type="file" className="uploader-input" onChange={this.handleChange} />
+                <input data-attr="input" ref={obj => this.input = obj} type="file" className="uploader-input" onChange={this.handleChange} />
                 <div
-                    ref="zone"
+                    ref={obj => this.zone = obj}
                     className={`
                         uploader-zone
                         ${this.props.withURLInput ? 'uploader-zone/withUrl' : ''}
