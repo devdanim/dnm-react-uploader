@@ -390,7 +390,7 @@ function (_React$Component) {
       var maxSize = this.props.maxSize;
       if (FileManager.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();else this.props.onChange(file);
       callback(file);
-      this.refs.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
+      this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
     }
   }, {
     key: "handleChange",
@@ -402,7 +402,7 @@ function (_React$Component) {
   }, {
     key: "handleClick",
     value: function handleClick(ev) {
-      this.refs.input.click();
+      this.input.click();
     }
   }, {
     key: "handleCropClick",
@@ -527,13 +527,13 @@ function (_React$Component) {
 
         switch (fileType) {
           case 'image':
-            if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.refs.zone && this.refs.img) {
-              var zoneWidth = this.refs.zone.offsetWidth,
-                  zoneHeight = this.refs.zone.offsetHeight,
-                  displayWidth = this.refs.img.offsetWidth,
-                  displayHeight = this.refs.img.offsetHeight,
-                  realWidth = this.refs.img.naturalWidth,
-                  realHeight = this.refs.img.naturalHeight,
+            if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone && this.img) {
+              var zoneWidth = this.zone.offsetWidth,
+                  zoneHeight = this.zone.offsetHeight,
+                  displayWidth = this.img.offsetWidth,
+                  displayHeight = this.img.offsetHeight,
+                  realWidth = this.img.naturalWidth,
+                  realHeight = this.img.naturalHeight,
                   displayCropX = displayWidth * this.props.imageCrop.x / realWidth,
                   displayCropY = displayHeight * this.props.imageCrop.y / realHeight,
                   displayCropWidth = displayWidth * this.props.imageCrop.width / realWidth,
@@ -549,7 +549,9 @@ function (_React$Component) {
 
               media = React.createElement("img", {
                 alt: "",
-                ref: "img",
+                ref: function ref(obj) {
+                  return _this3.img = obj;
+                },
                 src: this.props.src,
                 onLoad: this.handleLoad,
                 style: {
@@ -575,7 +577,9 @@ function (_React$Component) {
                 }
               }, React.createElement("img", {
                 alt: "",
-                ref: "img",
+                ref: function ref(obj) {
+                  return _this3.img = obj;
+                },
                 src: this.props.src,
                 onLoad: this.handleLoad,
                 style: {
@@ -627,12 +631,16 @@ function (_React$Component) {
         className: "\n                    uploader\n                    ".concat(_$1.get(this.props.customAttributes, 'root.className', ''), "\n                    ").concat(this.props.fetching ? 'uploader/fetching' : '', "\n                    ").concat(this.props.withURLInput ? 'uploader/withUrl' : '', "\n                    ").concat(withControls ? 'uploader/withControls' : '', "\n                ")
       }), React.createElement("input", {
         "data-attr": "input",
-        ref: "input",
+        ref: function ref(obj) {
+          return _this3.input = obj;
+        },
         type: "file",
         className: "uploader-input",
         onChange: this.handleChange
       }), React.createElement("div", {
-        ref: "zone",
+        ref: function ref(obj) {
+          return _this3.zone = obj;
+        },
         className: "\n                        uploader-zone\n                        ".concat(this.props.withURLInput ? 'uploader-zone/withUrl' : '', "\n                    "),
         onDragOver: this.handleDragOver,
         onDragLeave: this.handleDragLeave,
