@@ -1,4 +1,8 @@
 import React from 'react';
+// this comment tells babel to convert jsx to calls to a function called jsx instead of React.createElement
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import styles from './assets/styles';
 import PropTypes from 'prop-types';
 import isURL from 'validator/lib/isURL';
 const validator = { isURL };
@@ -39,7 +43,7 @@ export default class Uploader extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleCropClick = this.handleCropClick.bind(this);
         this.handleDragLeave = this.handleDragLeave.bind(this);
-        this.handleDragOver = this.handleDragOver.bind(this);
+        this.handleDragEnter = this.handleDragEnter.bind(this);
         this.handleDrop = this.handleDrop.bind(this);
         this.handleInjectURLClick = this.handleInjectURLClick.bind(this);
         this.handleLoad = this.handleLoad.bind(this);
@@ -83,15 +87,19 @@ export default class Uploader extends React.Component {
     }
 
     handleDragLeave() {
-        this.setState({beingDropTarget: false});
+        if (--this.dndCounter === 0) this.setState({beingDropTarget: false});
     }
 
-    handleDragOver() {
+    handleDragEnter(ev) {
+        ev.preventDefault(); // needed for IE
+        if (this.dndCounter === undefined) this.dndCounter = 0;
+        this.dndCounter++;
         this.setState({beingDropTarget: true});
     }
 
     handleDrop(ev) {
         ev.preventDefault();
+        this.dndCounter = 0;
         this.setState({beingDropTarget: false});
         const file = _.get(ev, 'dataTransfer.files.0');
         if (file) this.change(file);
@@ -276,9 +284,12 @@ export default class Uploader extends React.Component {
                 className={`
                     uploader
                     ${_.get(this.props.customAttributes, 'root.className', '')}
-                    ${this.props.fetching ? 'uploader/fetching' : ''}
-                    ${this.props.withURLInput ? 'uploader/withUrl' : ''}
-                    ${withControls ? 'uploader/withControls' : ''}
+                `}
+                css={css`
+                    ${styles.uploader};
+                    ${this.props.fetching ? styles['uploader/fetching'] : null};
+                    ${this.props.withURLInput ? styles['uploader/withUrl'] : null};
+                    ${withControls ? styles['uploader/withControls'] : null};
                 `}
             >
                 <input data-attr="input" ref={obj => this.input = obj} type="file" className="uploader-input" onChange={this.handleChange} />
@@ -288,7 +299,7 @@ export default class Uploader extends React.Component {
                         uploader-zone
                         ${this.props.withURLInput ? 'uploader-zone/withUrl' : ''}
                     `}
-                    onDragOver={this.handleDragOver}
+                    onDragEnter={this.handleDragEnter}
                     onDragLeave={this.handleDragLeave}
                     onDrop={this.handleDrop}
                 >
