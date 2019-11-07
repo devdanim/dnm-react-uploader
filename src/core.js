@@ -15,6 +15,7 @@ import get from 'lodash-es/get';
 import last from 'lodash-es/last';
 import upperFirst from 'lodash-es/upperFirst';
 import split from 'lodash-es/split';
+import debounce from 'lodash-es/debounce';
 const _ = {
     camelCase,
     difference,
@@ -22,6 +23,7 @@ const _ = {
     last,
     upperFirst,
     split,
+    debounce
 };
 
 export default class Uploader extends React.Component {
@@ -36,6 +38,7 @@ export default class Uploader extends React.Component {
             mounted: false,
             url: '',
             width: null,
+            counter: 0
         };
 
         this.change = this.change.bind(this);
@@ -52,12 +55,24 @@ export default class Uploader extends React.Component {
         this.get = this.get.bind(this);
         this.injectURL = this.injectURL.bind(this);
         this.change = this.change.bind(this);
+        this._forceUpdate = this._forceUpdate.bind(this);
+        this.forceUpdateOnResize = _.debounce(this._forceUpdate, 500);
     }
 
     componentDidMount() {
         this.setState({mounted: true});
-
         FileManager.initializeDrag();
+        window.addEventListener("resize", this.forceUpdateOnResize);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.forceUpdateOnResize);
+    }
+    
+    // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
+    _forceUpdate() {
+        const { src } = this.state;
+        if(src) this.setState({ counter: this.state.counter++ });
     }
 
     change(file, callback = data => null) {

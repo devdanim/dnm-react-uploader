@@ -13,6 +13,7 @@ const external = {
         'prop-types', 
         'lodash-es/camelCase',
         'lodash-es/concat',
+        'lodash-es/debounce',
         'lodash-es/difference',
         'lodash-es/get',
         'lodash-es/isString',
