@@ -181,8 +181,7 @@ export default class Uploader extends React.Component {
     }
 
     render() {
-        let style = null,
-            media = null,
+        let media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable);
 
