@@ -1,18 +1,18 @@
 import React, { createContext, createElement, Fragment, forwardRef, Component } from 'react';
 import PropTypes from 'prop-types';
 import isURL from 'validator/lib/isURL';
+import camelCase from 'lodash-es/camelCase';
 import concat from 'lodash-es/concat';
+import debounce from 'lodash-es/debounce';
+import difference from 'lodash-es/difference';
+import get from 'lodash-es/get';
 import isString from 'lodash-es/isString';
 import last from 'lodash-es/last';
 import map from 'lodash-es/map';
 import round from 'lodash-es/round';
 import split from 'lodash-es/split';
-import upperCase from 'lodash-es/upperCase';
-import camelCase from 'lodash-es/camelCase';
-import difference from 'lodash-es/difference';
-import get from 'lodash-es/get';
 import upperFirst from 'lodash-es/upperFirst';
-import debounce from 'lodash-es/debounce';
+import upperCase from 'lodash-es/upperCase';
 
 function _typeof(obj) {
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -48,6 +48,21 @@ function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   if (staticProps) _defineProperties(Constructor, staticProps);
   return Constructor;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
 }
 
 function _extends() {
@@ -2129,121 +2144,6 @@ var Constants = {
   }
 };
 
-var FileManager = {};
-var _ = {
-  concat: concat,
-  isString: isString,
-  last: last,
-  map: map,
-  round: round,
-  split: split,
-  upperCase: upperCase
-};
-
-FileManager.initializeDrag = function () {
-  // avoid browser drop management
-  window.addEventListener('dragover', function (ev) {
-    ev = ev || event;
-    ev.preventDefault();
-  }, false);
-  window.addEventListener('drop', function (ev) {
-    ev = ev || event;
-    ev.preventDefault();
-  }, false);
-};
-/**
- * From Base64 dataURL to MIME Type
- * Returns null when input is invalid
- */
-
-
-FileManager.base64MimeType = function (encoded) {
-  var result = null;
-  if (typeof encoded !== 'string') return result;
-  var mime = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
-  if (mime && mime.length) result = mime[1];
-  return result;
-};
-
-FileManager.isBase64 = function (input) {
-  return FileManager.base64MimeType(input) !== null;
-};
-/**
- * From string|File to extension
- * Ex: https://upload.wikimedia.org/wikipedia/commons/d/da/Nelson_Mandela%2C_2000_%285%29_%28cropped%29.jpg => jpg
- */
-
-
-FileManager.extension = function (input) {
-  input = _.isString(input) ? input : input.name;
-  return _.last(_.split(input, '.'));
-};
-/**
- * Input may be a MIME Type or an extension
- * Ex: video/mp4 => video, or application/zip => compressedFile
- */
-
-
-FileManager.fileType = function (input) {
-  var isExtension = !input.match(/\//);
-
-  if (isExtension) {
-    var extensions = {
-      video: Constants.video.extensions,
-      image: Constants.image.extensions,
-      compressedFile: Constants.compressedFile.extensions
-    };
-
-    for (var k in extensions) {
-      var v = _.concat(extensions[k], _.map(extensions[k], function (ext) {
-        return _.upperCase(ext);
-      })); // case insensitive
-
-
-      if (v.indexOf(input) !== -1) return k;
-    }
-  } else {
-    var mimeTypes = {
-      video: Constants.video.mimeTypes,
-      image: Constants.image.mimeTypes,
-      compressedFile: Constants.compressedFile.mimeTypes
-    };
-
-    for (var _k in mimeTypes) {
-      var _v = mimeTypes[_k];
-      if (_v.indexOf(input) !== -1) return _k;
-    }
-  }
-
-  return null;
-};
-/**
- * Input may be url string, base64, File.
- */
-
-
-FileManager.guessFileType = function (input) {
-  return FileManager.fileType(FileManager.base64MimeType(input) || FileManager.extension(input));
-};
-/**
- * From '100000000' to '100 MB'
- */
-
-
-FileManager.humanSize = function (size) {
-  var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  var units = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-  for (var power = units.length - 1; power >= 0; power--) {
-    var tmpRes = size * 1.0 / Math.pow(1000, power);
-
-    if (tmpRes >= 1) {
-      if (round) tmpRes = _.round(tmpRes);
-      return "".concat(tmpRes, " ").concat(units[power]);
-    }
-  }
-};
-
 function _templateObject$1() {
   var data = _taggedTemplateLiteral(["\n                    ", ";\n                    ", ";\n                    ", ";\n                    ", ";\n                "]);
 
@@ -2256,14 +2156,19 @@ function _templateObject$1() {
 var validator = {
   isURL: isURL
 };
-var _$1 = {
+var _ = {
   camelCase: camelCase,
+  concat: concat,
+  debounce: debounce,
   difference: difference,
   get: get,
+  isString: isString,
   last: last,
-  upperFirst: upperFirst,
+  map: map,
+  round: round,
   split: split,
-  debounce: debounce
+  upperCase: upperCase,
+  upperFirst: upperFirst
 };
 
 var Uploader =
@@ -2302,7 +2207,7 @@ function (_React$Component) {
     _this.injectURL = _this.injectURL.bind(_assertThisInitialized(_this));
     _this.change = _this.change.bind(_assertThisInitialized(_this));
     _this._forceUpdate = _this._forceUpdate.bind(_assertThisInitialized(_this));
-    _this.forceUpdateOnResize = _$1.debounce(_this._forceUpdate, 500);
+    _this.forceUpdateOnResize = _.debounce(_this._forceUpdate, 500);
     return _this;
   }
 
@@ -2312,7 +2217,7 @@ function (_React$Component) {
       this.setState({
         mounted: true
       });
-      FileManager.initializeDrag();
+      this.initializeDrag();
       window.addEventListener("resize", this.forceUpdateOnResize);
     }
   }, {
@@ -2336,14 +2241,14 @@ function (_React$Component) {
         return null;
       };
       var maxSize = this.props.maxSize;
-      if (FileManager.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();else this.props.onChange(file);
+      if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();else this.props.onChange(file);
       callback(file);
       this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
     }
   }, {
     key: "handleChange",
     value: function handleChange(ev) {
-      var file = _$1.get(ev, 'target.files.0');
+      var file = _.get(ev, 'target.files.0');
 
       if (file) this.change(file);
     }
@@ -2385,7 +2290,7 @@ function (_React$Component) {
         beingDropTarget: false
       });
 
-      var file = _$1.get(ev, 'dataTransfer.files.0');
+      var file = _.get(ev, 'dataTransfer.files.0');
 
       if (file) this.change(file);
     }
@@ -2456,7 +2361,7 @@ function (_React$Component) {
       }
 
       this.get(url).then(function (response) {
-        var name = _$1.last(_$1.split(url, '/')),
+        var name = _.last(_.split(url, '/')),
             file = new File([response], name, {
           type: response.type
         });
@@ -2476,7 +2381,7 @@ function (_React$Component) {
           withControls = this.props.src && (this.props.removable || this.props.croppable);
 
       if (this.props.src) {
-        var fileType = this.props.fileType || FileManager.guessFileType(this.props.src);
+        var fileType = this.props.fileType || this.guessFileType(this.props.src);
 
         switch (fileType) {
           case 'image':
@@ -2580,8 +2485,8 @@ function (_React$Component) {
 
       return jsx("div", _extends({
         "data-attr": "root"
-      }, _$1.get(this.props.customAttributes, 'root', {}), {
-        className: "\n                    uploader\n                    ".concat(_$1.get(this.props.customAttributes, 'root.className', ''), "\n                "),
+      }, _.get(this.props.customAttributes, 'root', {}), {
+        className: "\n                    uploader\n                    ".concat(_.get(this.props.customAttributes, 'root.className', ''), "\n                "),
         css: css(_templateObject$1(), styles.uploader, this.props.fetching ? styles['uploader/fetching'] : null, this.props.withURLInput ? styles['uploader/withUrl'] : null, withControls ? styles['uploader/withControls'] : null)
       }), jsx("input", {
         "data-attr": "input",
@@ -2645,6 +2550,122 @@ function (_React$Component) {
       }, jsx(InternetGlobe, {
         className: "uploader-url-addon-icon"
       }), this.props.catalogue.urlSubmitText)));
+    } // + utils
+
+    /**
+     * Input may be url string, base64, File.
+     */
+
+  }, {
+    key: "guessFileType",
+    value: function guessFileType(input) {
+      this.fileType(this.base64MimeType(input) || this.extension(input));
+    }
+    /**
+     * From Base64 dataURL to MIME Type
+     * Returns null when input is invalid
+     */
+
+  }, {
+    key: "base64MimeType",
+    value: function base64MimeType(encoded) {
+      var result = null;
+      if (typeof encoded !== 'string') return result;
+      var mime = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+      if (mime && mime.length) result = mime[1];
+      return result;
+    }
+  }, {
+    key: "isBase64",
+    value: function isBase64(input) {
+      return this.base64MimeType(input) !== null;
+    }
+    /**
+     * From string|File to extension
+     * Ex: https://upload.wikimedia.org/wikipedia/commons/d/da/Nelson_Mandela%2C_2000_%285%29_%28cropped%29.jpg => jpg
+     */
+
+  }, {
+    key: "extension",
+    value: function extension(input) {
+      input = _.isString(input) ? input : input.name;
+      return _.last(_.split(input, '.'));
+    }
+    /**
+     * Input may be a MIME Type or an extension
+     * Ex: video/mp4 => video, or application/zip => compressedFile
+     */
+
+  }, {
+    key: "fileType",
+    value: function fileType(input) {
+      var isExtension = !input.match(/\//);
+
+      if (isExtension) {
+        var extensions = {
+          video: Constants.video.extensions,
+          image: Constants.image.extensions,
+          compressedFile: Constants.compressedFile.extensions
+        }; // unless some have explicitly been provided
+
+        if (this.props.extensions) extensions = _defineProperty({}, this.props.fileType, this.props.extensions);
+
+        for (var k in extensions) {
+          var v = _.concat(extensions[k], _.map(extensions[k], function (ext) {
+            return _.upperCase(ext);
+          })); // case insensitive
+
+
+          if (v.indexOf(input) !== -1) return k;
+        }
+      } else {
+        var mimeTypes = {
+          video: Constants.video.mimeTypes,
+          image: Constants.image.mimeTypes,
+          compressedFile: Constants.compressedFile.mimeTypes
+        }; // unless some have explicitly been provided
+
+        if (this.props.mimeTypes) mimeTypes = _defineProperty({}, this.props.fileType, this.props.mimeTypes);
+
+        for (var _k in mimeTypes) {
+          var _v = mimeTypes[_k];
+          if (_v.indexOf(input) !== -1) return _k;
+        }
+      }
+
+      return null;
+    }
+    /**
+     * From '100000000' to '100 MB'
+     */
+
+  }, {
+    key: "humanSize",
+    value: function humanSize(size) {
+      var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+      var units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+      for (var power = units.length - 1; power >= 0; power--) {
+        var tmpRes = size * 1.0 / Math.pow(1000, power);
+
+        if (tmpRes >= 1) {
+          if (round) tmpRes = _.round(tmpRes);
+          return "".concat(tmpRes, " ").concat(units[power]);
+        }
+      }
+    }
+  }, {
+    key: "initializeDrag",
+    value: function initializeDrag() {
+      // avoid browser drop management
+      window.addEventListener('dragover', function (ev) {
+        ev = ev || event;
+        ev.preventDefault();
+      }, false);
+      window.addEventListener('drop', function (ev) {
+        ev = ev || event;
+        ev.preventDefault();
+      }, false);
     }
   }]);
 
@@ -2660,18 +2681,20 @@ Uploader.propTypes = {
         expectedPropsKeys = Object.keys(Uploader.defaultProps[propName]);
     if (!givenCatalogue || _typeof(givenCatalogue) !== 'object') throw new Error('Catalogue must be an object.');
 
-    var diffKeys = _$1.difference(expectedPropsKeys, givenPropsKeys);
+    var diffKeys = _.difference(expectedPropsKeys, givenPropsKeys);
 
     if (diffKeys.length) throw new Error('Given catalogue is insufficient. Missing keys: ' + JSON.stringify(diffKeys));
   },
   compact: PropTypes.bool,
   croppable: PropTypes.bool,
   customAttributes: PropTypes.object,
+  extensions: PropTypes.array,
   fetching: PropTypes.bool,
-  fileType: PropTypes.oneOf(['image', 'video']),
+  fileType: PropTypes.oneOf(['compressedFile', 'image', 'video']),
   // expected file type
   imageCrop: PropTypes.object,
   maxSize: PropTypes.number,
+  mimeTypes: PropTypes.array,
   onChange: PropTypes.func,
   onCropClick: PropTypes.func,
   onFileTooLargeError: PropTypes.func,
@@ -2702,10 +2725,14 @@ Uploader.defaultProps = {
   cropIcon: null,
   // if let null, it will be default one
   customAttributes: {},
+  extensions: null,
+  // if not set and left as it is, we'll use default ones
   fetching: false,
   fileType: 'image',
   imageCrop: null,
   maxSize: 10 * 1000 * 1000,
+  mimeTypes: null,
+  // if not set and left as it is, we'll use default ones
   onChange: function onChange(file) {
     return null;
   },

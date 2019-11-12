@@ -7,23 +7,33 @@ import PropTypes from 'prop-types';
 import isURL from 'validator/lib/isURL';
 const validator = { isURL };
 import * as Svg from './svg/index';
-import FileManager from './file-manager';
+import Constants from './constants';
 // lodash
 import camelCase from 'lodash-es/camelCase';
+import concat from 'lodash-es/concat';
+import debounce from 'lodash-es/debounce';
 import difference from 'lodash-es/difference';
 import get from 'lodash-es/get';
+import isString from 'lodash-es/isString';
 import last from 'lodash-es/last';
-import upperFirst from 'lodash-es/upperFirst';
+import map from 'lodash-es/map';
+import round from 'lodash-es/round';
 import split from 'lodash-es/split';
-import debounce from 'lodash-es/debounce';
+import upperFirst from 'lodash-es/upperFirst';
+import upperCase from 'lodash-es/upperCase';
 const _ = {
     camelCase,
+    concat,
+    debounce,
     difference,
     get,
+    isString,
     last,
-    upperFirst,
+    map,
+    round,
     split,
-    debounce
+    upperCase,
+    upperFirst,
 };
 
 export default class Uploader extends React.Component {
@@ -61,7 +71,7 @@ export default class Uploader extends React.Component {
 
     componentDidMount() {
         this.setState({mounted: true});
-        FileManager.initializeDrag();
+        this.initializeDrag();
         window.addEventListener("resize", this.forceUpdateOnResize);
     }
 
@@ -77,7 +87,7 @@ export default class Uploader extends React.Component {
 
     change(file, callback = data => null) {
         let maxSize = this.props.maxSize;
-        if (FileManager.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();
+        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();
         else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();
         else this.props.onChange(file);
 
@@ -186,7 +196,7 @@ export default class Uploader extends React.Component {
             withControls = this.props.src && (this.props.removable || this.props.croppable);
 
         if (this.props.src) {
-            const fileType = this.props.fileType || FileManager.guessFileType(this.props.src);
+            const fileType = this.props.fileType || this.guessFileType(this.props.src);
             switch (fileType) {
                 case 'image':
                     if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone && this.img) {
@@ -383,6 +393,108 @@ export default class Uploader extends React.Component {
             </div>
         );
     }
+
+    // + utils
+
+    /**
+     * Input may be url string, base64, File.
+     */
+    guessFileType(input) {
+        this.fileType(this.base64MimeType(input) || this.extension(input))
+    }
+
+    /**
+     * From Base64 dataURL to MIME Type
+     * Returns null when input is invalid
+     */
+    base64MimeType(encoded) {
+        let result = null;
+
+        if (typeof encoded !== 'string') return result;
+
+        let mime = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+
+        if (mime && mime.length) result = mime[1];
+
+        return result;
+    }
+
+    isBase64(input) {
+        return this.base64MimeType(input) !== null;
+    }
+
+    /**
+     * From string|File to extension
+     * Ex: https://upload.wikimedia.org/wikipedia/commons/d/da/Nelson_Mandela%2C_2000_%285%29_%28cropped%29.jpg => jpg
+     */
+    extension(input) {
+        input = _.isString(input) ? input : input.name;
+        return _.last(_.split(input, '.'));
+    }
+
+    /**
+     * Input may be a MIME Type or an extension
+     * Ex: video/mp4 => video, or application/zip => compressedFile
+     */
+    fileType(input) {
+        let isExtension = ! input.match(/\//);
+
+        if (isExtension) {
+            let extensions = {
+                video: Constants.video.extensions,
+                image: Constants.image.extensions,
+                compressedFile: Constants.compressedFile.extensions,
+            };
+            // unless some have explicitly been provided
+            if (this.props.extensions) extensions = {[this.props.fileType]: this.props.extensions};
+
+            for (let k in extensions) {
+                let v = _.concat(extensions[k], _.map(extensions[k], ext => _.upperCase(ext))); // case insensitive
+                if (v.indexOf(input) !== -1) return k;
+            }
+        } else {
+            let mimeTypes = {
+                video: Constants.video.mimeTypes,
+                image: Constants.image.mimeTypes,
+                compressedFile: Constants.compressedFile.mimeTypes,
+            };
+            // unless some have explicitly been provided
+            if (this.props.mimeTypes) mimeTypes = {[this.props.fileType]: this.props.mimeTypes};
+
+            for (let k in mimeTypes) {
+                let v = mimeTypes[k];
+                if (v.indexOf(input) !== -1) return k;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * From '100000000' to '100 MB'
+     */
+    humanSize(size, round = true) {
+        let units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        for (let power = units.length - 1; power >= 0; power--) {
+            let tmpRes = size * 1.0 / Math.pow(1000, power);
+            if (tmpRes >= 1) {
+                if (round) tmpRes = _.round(tmpRes);
+                return `${tmpRes} ${units[power]}`;
+            }
+        }
+    }
+
+    initializeDrag() {
+        // avoid browser drop management
+        window.addEventListener('dragover', ev => {
+            ev = ev || event;
+            ev.preventDefault();
+        }, false);
+        window.addEventListener('drop', ev => {
+            ev = ev || event;
+            ev.preventDefault();
+        }, false);
+    }
 }
 
 Uploader.propTypes = {
@@ -403,10 +515,12 @@ Uploader.propTypes = {
     compact: PropTypes.bool,
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
+    extensions: PropTypes.array,
     fetching: PropTypes.bool,
-    fileType: PropTypes.oneOf(['image', 'video']), // expected file type
+    fileType: PropTypes.oneOf(['compressedFile', 'image', 'video']), // expected file type
     imageCrop: PropTypes.object,
     maxSize: PropTypes.number,
+    mimeTypes: PropTypes.array,
     onChange: PropTypes.func,
     onCropClick: PropTypes.func,
     onFileTooLargeError: PropTypes.func,
@@ -437,10 +551,12 @@ Uploader.defaultProps = {
     croppable: false,
     cropIcon: null, // if let null, it will be default one
     customAttributes: {},
+    extensions: null, // if not set and left as it is, we'll use default ones
     fetching: false,
     fileType: 'image',
     imageCrop: null,
     maxSize: 10 * 1000 * 1000,
+    mimeTypes: null, // if not set and left as it is, we'll use default ones
     onChange: file => null,
     onCropClick: () => null,
     onFileTooLargeError: () => null,

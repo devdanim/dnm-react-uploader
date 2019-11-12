@@ -7,7 +7,7 @@ const catalogue = {
     click: 'Custom: Click!',
     drop: null,
     typeURL: 'Type URL',
-    loading: 'Custom loading caption',
+    loading: 'Only PNG',
     or: 'Custom OR',
     urlInputPlaceholder: 'Custom URL input',
     urlSubmitText: 'Custom URL submit',
@@ -30,6 +30,8 @@ render(
             onFirstLoad={() => console.log('onFirstLoad')}
             onLoad={() => console.log('onLoad')}
             withURLInput={true}
+            extensions={['png']}
+            mimeTypes={['image/png']}
             onFileTooLargeError={() => alert('onFileTooLargeError')}
             onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
             onInvalidURLError={() => alert('onInvalidURLError')}
