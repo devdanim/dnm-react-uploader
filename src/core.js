@@ -400,7 +400,7 @@ export default class Uploader extends React.Component {
      * Input may be url string, base64, File.
      */
     guessFileType(input) {
-        this.fileType(this.base64MimeType(input) || this.extension(input))
+        return this.fileType(this.base64MimeType(input) || this.extension(input))
     }
 
     /**

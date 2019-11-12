@@ -7289,7 +7289,7 @@
     }, {
       key: "guessFileType",
       value: function guessFileType(input) {
-        this.fileType(this.base64MimeType(input) || this.extension(input));
+        return this.fileType(this.base64MimeType(input) || this.extension(input));
       }
       /**
        * From Base64 dataURL to MIME Type
