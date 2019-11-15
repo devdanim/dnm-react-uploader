@@ -2368,7 +2368,7 @@ function (_React$Component) {
 
         _this2.change(file, callback);
       })["catch"](function (error) {
-        _this2.props.onURLInjectionError();
+        _this2.props.onURLInjectionError(error);
       });
     }
   }, {

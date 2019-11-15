@@ -186,7 +186,7 @@ export default class Uploader extends React.Component {
                     file = new File([response], name, {type: response.type});
                 this.change(file, callback);
             }).catch(error => {
-                this.props.onURLInjectionError();
+                this.props.onURLInjectionError(error);
             });
     }
 
