@@ -2405,6 +2405,7 @@ function (_React$Component) {
           case 'image':
             if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
               var style = {};
+              console.log(this.cropImg);
 
               if (this.cropImg) {
                 var zoneWidth = this.zone.offsetWidth,

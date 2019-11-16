@@ -209,6 +209,7 @@ export default class Uploader extends React.Component {
                 case 'image':
                     if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
                         let style = {};
+                        console.log(this.cropImg);
                         if (this.cropImg) {
                             let zoneWidth = this.zone.offsetWidth,
                                 zoneHeight = this.zone.offsetHeight,
