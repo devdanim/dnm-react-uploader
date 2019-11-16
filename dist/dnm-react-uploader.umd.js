@@ -76,6 +76,25 @@
     return _extends.apply(this, arguments);
   }
 
+  function _objectSpread(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+      var ownKeys = Object.keys(source);
+
+      if (typeof Object.getOwnPropertySymbols === 'function') {
+        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+        }));
+      }
+
+      ownKeys.forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    }
+
+    return target;
+  }
+
   function _inherits(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function");
@@ -7032,23 +7051,15 @@
     }, {
       key: "handleLoad",
       value: function handleLoad() {
-        var _this2 = this;
+        if (typeof this.firstLoadDone === 'undefined') {
+          this.firstLoadDone = true;
+          this.props.onFirstLoad();
+          this.setState({
+            loaded: true
+          });
+        }
 
-        setTimeout(function () {
-          cl(888);
-
-          if (typeof _this2.firstLoadDone === 'undefined') {
-            _this2.firstLoadDone = true;
-
-            _this2.props.onFirstLoad();
-
-            _this2.setState({
-              loaded: true
-            }, _this2._forceUpdate);
-          }
-
-          _this2.props.onLoad();
-        }, 2000);
+        this.props.onLoad();
       }
     }, {
       key: "handleRemoveClick",
@@ -7086,7 +7097,7 @@
     }, {
       key: "injectURL",
       value: function injectURL(url) {
-        var _this3 = this;
+        var _this2 = this;
 
         var validate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
         var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (data) {
@@ -7104,29 +7115,29 @@
             type: response.type
           });
 
-          _this3.change(file, callback);
+          _this2.change(file, callback);
         })["catch"](function (error) {
-          _this3.props.onURLInjectionError(error);
+          _this2.props.onURLInjectionError(error);
         });
       }
     }, {
       key: "render",
       value: function render() {
-        var _this4 = this;
+        var _this3 = this;
 
         var media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable);
-        console.log('----');
-        console.log(this.state.loaded);
-        console.log(this.img);
 
         if (this.props.src) {
           var fileType = this.props.fileType || this.guessFileType(this.props.src);
 
           switch (fileType) {
             case 'image':
-              if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone && this.img) {
+              media = [];
+              var activeCrop = this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone && this.img;
+
+              if (activeCrop) {
                 var zoneWidth = this.zone.offsetWidth,
                     zoneHeight = this.zone.offsetHeight,
                     displayWidth = this.img.offsetWidth,
@@ -7146,11 +7157,9 @@
                   if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;else scale = zoneWidth / displayCropWidth;
                 }
 
-                media = jsx("img", {
+                media.push(jsx("img", {
+                  key: "cropVersion",
                   alt: "",
-                  ref: function ref(obj) {
-                    return _this4.img = obj;
-                  },
                   src: this.props.src // onLoad={this.handleLoad}
                   ,
                   style: {
@@ -7161,34 +7170,39 @@
                     transform: "\n                                        translateX(-".concat(displayCropX + displayCropWidth / 2, "px)\n                                        translateY(-").concat(displayCropY + displayCropHeight / 2, "px)\n                                        scale(").concat(scale, ")\n                                    "),
                     clip: "rect(\n                                        ".concat(displayCropY, "px\n                                        ").concat(displayCropX + displayCropWidth, "px\n                                        ").concat(displayCropY + displayCropHeight, "px\n                                        ").concat(displayCropX, "px)\n                                    ")
                   }
-                });
-              } else {
-                media = jsx("div", {
-                  style: {
-                    backgroundColor: this.props.backgroundColor,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center center',
-                    backgroundSize: this.props.backgroundSize,
-                    backgroundImage: "url(".concat(this.props.src, ")"),
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%'
-                  }
-                }, jsx("img", {
-                  alt: "",
-                  ref: function ref(obj) {
-                    return _this4.img = obj;
-                  },
-                  src: this.props.src,
-                  onLoad: this.handleLoad,
-                  style: {
-                    position: 'fixed',
-                    top: '-9999px',
-                    left: '-9999px'
-                  }
                 }));
               }
 
+              media.push( // still there (but hidden) when  we replace it with cropVersion, since we always need this.img
+              jsx("div", {
+                key: "baseVersion",
+                style: _objectSpread({
+                  backgroundColor: this.props.backgroundColor,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center center',
+                  backgroundSize: this.props.backgroundSize,
+                  backgroundImage: "url(".concat(this.props.src, ")"),
+                  position: 'relative',
+                  width: '100%',
+                  height: '100%'
+                }, activeCrop ? {
+                  position: 'fixed',
+                  top: '-9999px',
+                  left: '-9999px'
+                } : null)
+              }, jsx("img", {
+                alt: "",
+                ref: function ref(obj) {
+                  return _this3.img = obj;
+                },
+                src: this.props.src,
+                onLoad: this.handleLoad,
+                style: {
+                  position: 'fixed',
+                  top: '-9999px',
+                  left: '-9999px'
+                }
+              })));
               break;
 
             case 'video':
@@ -7232,14 +7246,14 @@
         }), jsx("input", {
           "data-attr": "input",
           ref: function ref(obj) {
-            return _this4.input = obj;
+            return _this3.input = obj;
           },
           type: "file",
           className: "uploader-input",
           onChange: this.handleChange
         }), jsx("div", {
           ref: function ref(obj) {
-            return _this4.zone = obj;
+            return _this3.zone = obj;
           },
           className: "\n                        uploader-zone\n                        ".concat(this.props.withURLInput ? 'uploader-zone/withUrl' : '', "\n                    "),
           onDragEnter: this.handleDragEnter,
@@ -7282,7 +7296,7 @@
               // enter would otherwise submit form
               ev.preventDefault();
 
-              _this4.handleInjectURLClick();
+              _this3.handleInjectURLClick();
             }
           }
         }), jsx("span", {

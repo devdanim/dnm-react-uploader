@@ -135,15 +135,12 @@ export default class Uploader extends React.Component {
     }
 
     handleLoad() {
-        setTimeout(() => {
-            cl(888);
-            if (typeof this.firstLoadDone === 'undefined') {
-                this.firstLoadDone = true;
-                this.props.onFirstLoad();
-                this.setState({loaded: true}, this._forceUpdate);
-            }
-            this.props.onLoad();
-        }, 2000);
+        if (typeof this.firstLoadDone === 'undefined') {
+            this.firstLoadDone = true;
+            this.props.onFirstLoad();
+            this.setState({loaded: true});
+        }
+        this.props.onLoad();
     }
 
     handleRemoveClick(ev) {
@@ -198,15 +195,13 @@ export default class Uploader extends React.Component {
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable);
 
-        console.log('----')
-        console.log(this.state.loaded);
-        console.log(this.img)
-
         if (this.props.src) {
             const fileType = this.props.fileType || this.guessFileType(this.props.src);
             switch (fileType) {
                 case 'image':
-                    if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone && this.img) {
+                    media = [];
+                    const activeCrop = this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone && this.img;
+                    if (activeCrop) {
                         let zoneWidth = this.zone.offsetWidth,
                             zoneHeight = this.zone.offsetHeight,
                             displayWidth = this.img.offsetWidth,
@@ -229,10 +224,10 @@ export default class Uploader extends React.Component {
                             else scale = zoneWidth / displayCropWidth;
                         }
 
-                        media = (
+                        media.push(
                             <img
+                                key="cropVersion"
                                 alt=''
-                                ref={obj => this.img = obj}
                                 src={this.props.src}
                                 // onLoad={this.handleLoad}
                                 style={{
@@ -254,32 +249,36 @@ export default class Uploader extends React.Component {
                                 }}
                             />
                         );
-                    } else {
-                        media = (
-                            <div style={{
-                                backgroundColor: this.props.backgroundColor,
-                                backgroundRepeat: 'no-repeat',
-                                backgroundPosition: 'center center',
-                                backgroundSize: this.props.backgroundSize,
-                                backgroundImage: `url(${this.props.src})`,
-                                position: 'relative',
-                                width: '100%',
-                                height: '100%',
-                            }}>
-                                <img
-                                    alt=''
-                                    ref={obj => this.img = obj}
-                                    src={this.props.src}
-                                    onLoad={this.handleLoad}
-                                    style={{
-                                        position: 'fixed',
-                                        top: '-9999px',
-                                        left: '-9999px',
-                                    }}
-                                />
-                            </div>
-                        );
                     }
+                    media.push( // still there (but hidden) when  we replace it with cropVersion, since we always need this.img
+                        <div key="baseVersion" style={{
+                            backgroundColor: this.props.backgroundColor,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'center center',
+                            backgroundSize: this.props.backgroundSize,
+                            backgroundImage: `url(${this.props.src})`,
+                            position: 'relative',
+                            width: '100%',
+                            height: '100%',
+                            ...activeCrop ? {
+                                position: 'fixed',
+                                top: '-9999px',
+                                left: '-9999px',
+                            } : null
+                        }}>
+                            <img
+                                alt=''
+                                ref={obj => this.img = obj}
+                                src={this.props.src}
+                                onLoad={this.handleLoad}
+                                style={{
+                                    position: 'fixed',
+                                    top: '-9999px',
+                                    left: '-9999px',
+                                }}
+                            />
+                        </div>
+                    );
                     break;
                 case 'video':
                     media = (
