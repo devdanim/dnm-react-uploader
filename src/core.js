@@ -69,14 +69,23 @@ export default class Uploader extends React.Component {
         this.forceUpdateOnResize = _.debounce(this._forceUpdate, 500);
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        return {
+            // mirroring, see https://stackoverflow.com/a/50080417/6503789
+            ...nextProps.src !== _.get(prevState, '_src') ? {_src: nextProps.src} : null,
+            // derivation
+            ...nextProps.src !== _.get(prevState, '_src') ? {loaded: false, _forceUpdateCounter: 0} : null
+        };
+    }
+
     componentDidMount() {
         this.setState({mounted: true});
         this.initializeDrag();
-        window.addEventListener("resize", this.forceUpdateOnResize);
+        window.addEventListener('resize', this.forceUpdateOnResize);
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.forceUpdateOnResize);
+        window.removeEventListener('resize', this.forceUpdateOnResize);
     }
     
     // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize

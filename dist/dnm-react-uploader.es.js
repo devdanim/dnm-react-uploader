@@ -83,6 +83,25 @@ function _extends() {
   return _extends.apply(this, arguments);
 }
 
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    var ownKeys = Object.keys(source);
+
+    if (typeof Object.getOwnPropertySymbols === 'function') {
+      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+      }));
+    }
+
+    ownKeys.forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    });
+  }
+
+  return target;
+}
+
 function _inherits(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function");
@@ -2218,12 +2237,12 @@ function (_React$Component) {
         mounted: true
       });
       this.initializeDrag();
-      window.addEventListener("resize", this.forceUpdateOnResize);
+      window.addEventListener('resize', this.forceUpdateOnResize);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      window.removeEventListener("resize", this.forceUpdateOnResize);
+      window.removeEventListener('resize', this.forceUpdateOnResize);
     } // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
 
   }, {
@@ -2671,6 +2690,16 @@ function (_React$Component) {
         ev = ev || event;
         ev.preventDefault();
       }, false);
+    }
+  }], [{
+    key: "getDerivedStateFromProps",
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      return _objectSpread({}, nextProps.src !== _.get(prevState, '_src') ? {
+        _src: nextProps.src
+      } : null, nextProps.src !== _.get(prevState, '_src') ? {
+        loaded: false,
+        _forceUpdateCounter: 0
+      } : null);
     }
   }]);
 
