@@ -83,25 +83,6 @@ function _extends() {
   return _extends.apply(this, arguments);
 }
 
-function _objectSpread(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    var ownKeys = Object.keys(source);
-
-    if (typeof Object.getOwnPropertySymbols === 'function') {
-      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-      }));
-    }
-
-    ownKeys.forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    });
-  }
-
-  return target;
-}
-
 function _inherits(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function");
@@ -2209,7 +2190,7 @@ function (_React$Component) {
       mounted: false,
       url: '',
       width: null,
-      counter: 0
+      _forceUpdateCounter: 0
     };
     _this.change = _this.change.bind(_assertThisInitialized(_this));
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
@@ -2248,9 +2229,8 @@ function (_React$Component) {
   }, {
     key: "_forceUpdate",
     value: function _forceUpdate() {
-      var src = this.state.src;
-      if (src) this.setState({
-        counter: this.state.counter++
+      this.setState({
+        _forceUpdateCounter: this.state._forceUpdateCounter++
       });
     }
   }, {
@@ -2404,75 +2384,75 @@ function (_React$Component) {
 
         switch (fileType) {
           case 'image':
-            media = [];
-            var activeCrop = this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone && this.img;
+            if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
+              var style = {};
 
-            if (activeCrop) {
-              var zoneWidth = this.zone.offsetWidth,
-                  zoneHeight = this.zone.offsetHeight,
-                  displayWidth = this.img.offsetWidth,
-                  displayHeight = this.img.offsetHeight,
-                  realWidth = this.img.naturalWidth,
-                  realHeight = this.img.naturalHeight,
-                  displayCropX = displayWidth * this.props.imageCrop.x / realWidth,
-                  displayCropY = displayHeight * this.props.imageCrop.y / realHeight,
-                  displayCropWidth = displayWidth * this.props.imageCrop.width / realWidth,
-                  displayCropHeight = displayHeight * this.props.imageCrop.height / realHeight,
-                  displayCropRatio = displayCropWidth / displayCropHeight,
-                  scale = null; // image fit to zone
+              if (this.cropImg) {
+                var zoneWidth = this.zone.offsetWidth,
+                    zoneHeight = this.zone.offsetHeight,
+                    displayWidth = this.cropImg.offsetWidth,
+                    displayHeight = this.cropImg.offsetHeight,
+                    realWidth = this.cropImg.naturalWidth,
+                    realHeight = this.cropImg.naturalHeight,
+                    displayCropX = displayWidth * this.props.imageCrop.x / realWidth,
+                    displayCropY = displayHeight * this.props.imageCrop.y / realHeight,
+                    displayCropWidth = displayWidth * this.props.imageCrop.width / realWidth,
+                    displayCropHeight = displayHeight * this.props.imageCrop.height / realHeight,
+                    displayCropRatio = displayCropWidth / displayCropHeight,
+                    scale = null; // image fit to zone
 
-              if (this.props.backgroundSize === 'contain') {
-                if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;else scale = zoneHeight / displayCropHeight;
-              } else {
-                if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;else scale = zoneWidth / displayCropWidth;
-              }
+                if (this.props.backgroundSize === 'contain') {
+                  if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;else scale = zoneHeight / displayCropHeight;
+                } else {
+                  if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;else scale = zoneWidth / displayCropWidth;
+                }
 
-              media.push(jsx("img", {
-                key: "cropVersion",
-                alt: "",
-                src: this.props.src // onLoad={this.handleLoad}
-                ,
-                style: {
+                style = {
                   position: 'absolute',
                   top: '50%',
                   left: '50%',
                   transformOrigin: "".concat(displayCropX + displayCropWidth / 2, "px ").concat(displayCropY + displayCropHeight / 2, "px"),
-                  transform: "\n                                        translateX(-".concat(displayCropX + displayCropWidth / 2, "px)\n                                        translateY(-").concat(displayCropY + displayCropHeight / 2, "px)\n                                        scale(").concat(scale, ")\n                                    "),
-                  clip: "rect(\n                                        ".concat(displayCropY, "px\n                                        ").concat(displayCropWidth, "px\n                                        ").concat(displayCropHeight, "px\n                                        ").concat(displayCropX, "px)\n                                    ")
+                  transform: "\n                                    translateX(-".concat(displayCropX + displayCropWidth / 2, "px)\n                                    translateY(-").concat(displayCropY + displayCropHeight / 2, "px)\n                                    scale(").concat(scale, ")\n                                "),
+                  clip: "rect(\n                                    ".concat(displayCropY, "px\n                                    ").concat(displayCropX + displayCropWidth, "px\n                                    ").concat(displayCropY + displayCropHeight, "px\n                                    ").concat(displayCropX, "px)\n                                ")
+                };
+              }
+
+              media = jsx("img", {
+                alt: "",
+                ref: function ref(obj) {
+                  return _this3.cropImg = obj;
+                },
+                src: this.props.src,
+                onLoad: this._forceUpdate,
+                style: style
+              });
+            } else {
+              media = jsx("div", {
+                style: {
+                  backgroundColor: this.props.backgroundColor,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center center',
+                  backgroundSize: this.props.backgroundSize,
+                  backgroundImage: "url(".concat(this.props.src, ")"),
+                  position: 'relative',
+                  width: '100%',
+                  height: '100%'
+                }
+              }, jsx("img", {
+                alt: "",
+                ref: function ref(obj) {
+                  return _this3.img = obj;
+                },
+                src: this.props.src,
+                onLoad: this.handleLoad,
+                style: {
+                  position: 'fixed',
+                  top: '-9999px',
+                  left: '-9999px'
                 }
               }));
             }
 
-            media.push( // still there (but hidden) when we replace it with cropVersion, since we always need this.img
-            jsx("div", {
-              key: "baseVersion",
-              style: _objectSpread({
-                backgroundColor: this.props.backgroundColor,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center center',
-                backgroundSize: this.props.backgroundSize,
-                backgroundImage: "url(".concat(this.props.src, ")"),
-                position: 'relative',
-                width: '100%',
-                height: '100%'
-              }, activeCrop ? {
-                position: 'fixed',
-                top: '-9999px',
-                left: '-9999px'
-              } : null)
-            }, jsx("img", {
-              alt: "",
-              ref: function ref(obj) {
-                return _this3.img = obj;
-              },
-              src: this.props.src,
-              onLoad: this.handleLoad,
-              style: {
-                position: 'fixed',
-                top: '-9999px',
-                left: '-9999px'
-              }
-            })));
             break;
 
           case 'video':

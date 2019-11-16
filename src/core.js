@@ -48,7 +48,7 @@ export default class Uploader extends React.Component {
             mounted: false,
             url: '',
             width: null,
-            counter: 0
+            _forceUpdateCounter: 0
         };
 
         this.change = this.change.bind(this);
@@ -81,8 +81,7 @@ export default class Uploader extends React.Component {
     
     // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
     _forceUpdate() {
-        const { src } = this.state;
-        if(src) this.setState({ counter: this.state.counter++ });
+        this.setState({ _forceUpdateCounter: this.state._forceUpdateCounter++ });
     }
 
     change(file, callback = data => null) {
@@ -199,86 +198,85 @@ export default class Uploader extends React.Component {
             const fileType = this.props.fileType || this.guessFileType(this.props.src);
             switch (fileType) {
                 case 'image':
-                    media = [];
-                    const activeCrop = this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone && this.img;
-                    if (activeCrop) {
-                        let zoneWidth = this.zone.offsetWidth,
-                            zoneHeight = this.zone.offsetHeight,
-                            displayWidth = this.img.offsetWidth,
-                            displayHeight = this.img.offsetHeight,
-                            realWidth = this.img.naturalWidth,
-                            realHeight = this.img.naturalHeight,
-                            displayCropX = displayWidth * this.props.imageCrop.x / realWidth,
-                            displayCropY = displayHeight * this.props.imageCrop.y / realHeight,
-                            displayCropWidth = displayWidth * this.props.imageCrop.width / realWidth,
-                            displayCropHeight = displayHeight * this.props.imageCrop.height / realHeight,
-                            displayCropRatio = displayCropWidth / displayCropHeight,
-                            scale = null;
+                    if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
+                        let style = {};
+                        if (this.cropImg) {
+                            let zoneWidth = this.zone.offsetWidth,
+                                zoneHeight = this.zone.offsetHeight,
+                                displayWidth = this.cropImg.offsetWidth,
+                                displayHeight = this.cropImg.offsetHeight,
+                                realWidth = this.cropImg.naturalWidth,
+                                realHeight = this.cropImg.naturalHeight,
+                                displayCropX = displayWidth * this.props.imageCrop.x / realWidth,
+                                displayCropY = displayHeight * this.props.imageCrop.y / realHeight,
+                                displayCropWidth = displayWidth * this.props.imageCrop.width / realWidth,
+                                displayCropHeight = displayHeight * this.props.imageCrop.height / realHeight,
+                                displayCropRatio = displayCropWidth / displayCropHeight,
+                                scale = null;
 
-                        // image fit to zone
-                        if (this.props.backgroundSize === 'contain') {
-                            if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;
-                            else scale = zoneHeight / displayCropHeight;
-                        } else {
-                            if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;
-                            else scale = zoneWidth / displayCropWidth;
+                            // image fit to zone
+                            if (this.props.backgroundSize === 'contain') {
+                                if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;
+                                else scale = zoneHeight / displayCropHeight;
+                            } else {
+                                if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;
+                                else scale = zoneWidth / displayCropWidth;
+                            }
+
+                            style = {
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transformOrigin: `${displayCropX + displayCropWidth / 2}px ${displayCropY + displayCropHeight / 2}px`,
+                                transform: `
+                                    translateX(-${displayCropX + displayCropWidth / 2}px)
+                                    translateY(-${displayCropY + displayCropHeight / 2}px)
+                                    scale(${scale})
+                                `,
+                                clip: `rect(
+                                    ${displayCropY}px
+                                    ${displayCropX + displayCropWidth}px
+                                    ${displayCropY + displayCropHeight}px
+                                    ${displayCropX}px)
+                                `
+                            };
                         }
 
-                        media.push(
+                        media = (
                             <img
-                                key="cropVersion"
                                 alt=''
+                                ref={obj => this.cropImg = obj}
                                 src={this.props.src}
-                                // onLoad={this.handleLoad}
-                                style={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transformOrigin: `${displayCropX + displayCropWidth / 2}px ${displayCropY + displayCropHeight / 2}px`,
-                                    transform: `
-                                        translateX(-${displayCropX + displayCropWidth / 2}px)
-                                        translateY(-${displayCropY + displayCropHeight / 2}px)
-                                        scale(${scale})
-                                    `,
-                                    clip: `rect(
-                                        ${displayCropY}px
-                                        ${displayCropWidth}px
-                                        ${displayCropHeight}px
-                                        ${displayCropX}px)
-                                    `
-                                }}
+                                onLoad={this._forceUpdate}
+                                style={style}
                             />
                         );
+                    } else {
+                        media = (
+                            <div style={{
+                                backgroundColor: this.props.backgroundColor,
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center center',
+                                backgroundSize: this.props.backgroundSize,
+                                backgroundImage: `url(${this.props.src})`,
+                                position: 'relative',
+                                width: '100%',
+                                height: '100%',
+                            }}>
+                                <img
+                                    alt=''
+                                    ref={obj => this.img = obj}
+                                    src={this.props.src}
+                                    onLoad={this.handleLoad}
+                                    style={{
+                                        position: 'fixed',
+                                        top: '-9999px',
+                                        left: '-9999px',
+                                    }}
+                                />
+                            </div>
+                        );
                     }
-                    media.push( // still there (but hidden) when we replace it with cropVersion, since we always need this.img
-                        <div key="baseVersion" style={{
-                            backgroundColor: this.props.backgroundColor,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundPosition: 'center center',
-                            backgroundSize: this.props.backgroundSize,
-                            backgroundImage: `url(${this.props.src})`,
-                            position: 'relative',
-                            width: '100%',
-                            height: '100%',
-                            ...activeCrop ? {
-                                position: 'fixed',
-                                top: '-9999px',
-                                left: '-9999px',
-                            } : null
-                        }}>
-                            <img
-                                alt=''
-                                ref={obj => this.img = obj}
-                                src={this.props.src}
-                                onLoad={this.handleLoad}
-                                style={{
-                                    position: 'fixed',
-                                    top: '-9999px',
-                                    left: '-9999px',
-                                }}
-                            />
-                        </div>
-                    );
                     break;
                 case 'video':
                     media = (
