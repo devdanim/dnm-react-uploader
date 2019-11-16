@@ -7053,12 +7053,11 @@
         if (typeof this.firstLoadDone === 'undefined') {
           this.firstLoadDone = true;
           this.props.onFirstLoad();
-          this.setState({
-            loaded: true
-          });
         }
 
-        this.props.onLoad();
+        this.setState({
+          loaded: true
+        }, this.props.onLoad);
       }
     }, {
       key: "handleRemoveClick",
@@ -7135,7 +7134,6 @@
             case 'image':
               if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
                 var style = {};
-                console.log(this.cropImg);
 
                 if (this.cropImg) {
                   var zoneWidth = this.zone.offsetWidth,
