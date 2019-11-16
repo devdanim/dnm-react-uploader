@@ -7168,7 +7168,7 @@
                     left: '50%',
                     transformOrigin: "".concat(displayCropX + displayCropWidth / 2, "px ").concat(displayCropY + displayCropHeight / 2, "px"),
                     transform: "\n                                        translateX(-".concat(displayCropX + displayCropWidth / 2, "px)\n                                        translateY(-").concat(displayCropY + displayCropHeight / 2, "px)\n                                        scale(").concat(scale, ")\n                                    "),
-                    clip: "rect(\n                                        ".concat(displayCropY, "px\n                                        ").concat(displayCropX + displayCropWidth, "px\n                                        ").concat(displayCropY + displayCropHeight, "px\n                                        ").concat(displayCropX, "px)\n                                    ")
+                    clipPath: "polygon(\n                                        ".concat(displayCropX, "px ").concat(displayCropY, "px,\n                                        ").concat(displayCropX + displayCropWidth, "px ").concat(displayCropY, "px,\n                                        ").concat(displayCropX + displayCropWidth, "px ").concat(displayCropY + displayCropHeight, "px,\n                                        ").concat(displayCropX, "px ").concat(displayCropY + displayCropHeight, "px\n                                    )")
                   }
                 }));
               }

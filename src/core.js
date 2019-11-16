@@ -240,12 +240,12 @@ export default class Uploader extends React.Component {
                                         translateY(-${displayCropY + displayCropHeight / 2}px)
                                         scale(${scale})
                                     `,
-                                    clip: `rect(
-                                        ${displayCropY}px
-                                        ${displayCropX + displayCropWidth}px
-                                        ${displayCropY + displayCropHeight}px
-                                        ${displayCropX}px)
-                                    `
+                                    clipPath: `polygon(
+                                        ${displayCropX}px ${displayCropY}px,
+                                        ${displayCropX + displayCropWidth}px ${displayCropY}px,
+                                        ${displayCropX + displayCropWidth}px ${displayCropY + displayCropHeight}px,
+                                        ${displayCropX}px ${displayCropY + displayCropHeight}px
+                                    )`
                                 }}
                             />
                         );
