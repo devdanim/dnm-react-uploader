@@ -220,6 +220,10 @@ export default class Uploader extends React.Component {
                                 displayCropWidth = displayWidth * this.props.imageCrop.width / realWidth,
                                 displayCropHeight = displayHeight * this.props.imageCrop.height / realHeight,
                                 displayCropRatio = displayCropWidth / displayCropHeight,
+                                displayCropTop = displayCropY,
+                                displayCropRight = Math.min(displayCropX + displayCropWidth, displayWidth), // important, because an overflow would result in an ugly crop preview
+                                displayCropBottom = Math.min(displayCropY + displayCropHeight, displayHeight), // same
+                                displayCropLeft = displayCropX,
                                 scale = null;
 
                             // image fit to zone
@@ -235,17 +239,17 @@ export default class Uploader extends React.Component {
                                 position: 'absolute',
                                 top: '50%',
                                 left: '50%',
-                                transformOrigin: `${displayCropX + displayCropWidth / 2}px ${displayCropY + displayCropHeight / 2}px`,
+                                transformOrigin: `${(displayCropLeft + displayCropRight) / 2}px ${(displayCropTop + displayCropBottom) / 2}px`,
                                 transform: `
-                                    translateX(-${displayCropX + displayCropWidth / 2}px)
-                                    translateY(-${displayCropY + displayCropHeight / 2}px)
+                                    translateX(-${(displayCropLeft + displayCropRight) / 2}px)
+                                    translateY(-${(displayCropTop + displayCropBottom) / 2}px)
                                     scale(${scale})
                                 `,
                                 clip: `rect(
-                                    ${displayCropY}px
-                                    ${displayCropX + displayCropWidth}px
-                                    ${displayCropY + displayCropHeight}px
-                                    ${displayCropX}px)
+                                    ${displayCropTop}px
+                                    ${displayCropRight}px
+                                    ${displayCropBottom}px
+                                    ${displayCropLeft}px)
                                 `
                             };
                         }

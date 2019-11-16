@@ -2417,6 +2417,12 @@ function (_React$Component) {
                     displayCropWidth = displayWidth * this.props.imageCrop.width / realWidth,
                     displayCropHeight = displayHeight * this.props.imageCrop.height / realHeight,
                     displayCropRatio = displayCropWidth / displayCropHeight,
+                    displayCropTop = displayCropY,
+                    displayCropRight = Math.min(displayCropX + displayCropWidth, displayWidth),
+                    // important, because an overflow would result in an ugly crop preview
+                displayCropBottom = Math.min(displayCropY + displayCropHeight, displayHeight),
+                    // same
+                displayCropLeft = displayCropX,
                     scale = null; // image fit to zone
 
                 if (this.props.backgroundSize === 'contain') {
@@ -2429,9 +2435,9 @@ function (_React$Component) {
                   position: 'absolute',
                   top: '50%',
                   left: '50%',
-                  transformOrigin: "".concat(displayCropX + displayCropWidth / 2, "px ").concat(displayCropY + displayCropHeight / 2, "px"),
-                  transform: "\n                                    translateX(-".concat(displayCropX + displayCropWidth / 2, "px)\n                                    translateY(-").concat(displayCropY + displayCropHeight / 2, "px)\n                                    scale(").concat(scale, ")\n                                "),
-                  clip: "rect(\n                                    ".concat(displayCropY, "px\n                                    ").concat(displayCropX + displayCropWidth, "px\n                                    ").concat(displayCropY + displayCropHeight, "px\n                                    ").concat(displayCropX, "px)\n                                ")
+                  transformOrigin: "".concat((displayCropLeft + displayCropRight) / 2, "px ").concat((displayCropTop + displayCropBottom) / 2, "px"),
+                  transform: "\n                                    translateX(-".concat((displayCropLeft + displayCropRight) / 2, "px)\n                                    translateY(-").concat((displayCropTop + displayCropBottom) / 2, "px)\n                                    scale(").concat(scale, ")\n                                "),
+                  clip: "rect(\n                                    ".concat(displayCropTop, "px\n                                    ").concat(displayCropRight, "px\n                                    ").concat(displayCropBottom, "px\n                                    ").concat(displayCropLeft, "px)\n                                ")
                 };
               }
 
