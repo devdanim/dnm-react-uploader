@@ -242,8 +242,8 @@ export default class Uploader extends React.Component {
                                     `,
                                     clip: `rect(
                                         ${displayCropY}px
-                                        ${displayCropX + displayCropWidth}px
-                                        ${displayCropY + displayCropHeight}px
+                                        ${displayCropWidth}px
+                                        ${displayCropHeight}px
                                         ${displayCropX}px)
                                     `
                                 }}
