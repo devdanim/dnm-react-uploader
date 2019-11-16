@@ -7032,15 +7032,23 @@
     }, {
       key: "handleLoad",
       value: function handleLoad() {
-        if (typeof this.firstLoadDone === 'undefined') {
-          this.firstLoadDone = true;
-          this.props.onFirstLoad();
-          this.setState({
-            loaded: true
-          });
-        }
+        var _this2 = this;
 
-        this.props.onLoad();
+        setTimeout(function () {
+          cl(888);
+
+          if (typeof _this2.firstLoadDone === 'undefined') {
+            _this2.firstLoadDone = true;
+
+            _this2.props.onFirstLoad();
+
+            _this2.setState({
+              loaded: true
+            }, _this2._forceUpdate);
+          }
+
+          _this2.props.onLoad();
+        }, 2000);
       }
     }, {
       key: "handleRemoveClick",
@@ -7078,7 +7086,7 @@
     }, {
       key: "injectURL",
       value: function injectURL(url) {
-        var _this2 = this;
+        var _this3 = this;
 
         var validate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
         var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (data) {
@@ -7096,15 +7104,15 @@
             type: response.type
           });
 
-          _this2.change(file, callback);
+          _this3.change(file, callback);
         })["catch"](function (error) {
-          _this2.props.onURLInjectionError(error);
+          _this3.props.onURLInjectionError(error);
         });
       }
     }, {
       key: "render",
       value: function render() {
-        var _this3 = this;
+        var _this4 = this;
 
         var media = null,
             icon = null,
@@ -7139,7 +7147,7 @@
                 media = jsx("img", {
                   alt: "",
                   ref: function ref(obj) {
-                    return _this3.img = obj;
+                    return _this4.img = obj;
                   },
                   src: this.props.src // onLoad={this.handleLoad}
                   ,
@@ -7167,7 +7175,7 @@
                 }, jsx("img", {
                   alt: "",
                   ref: function ref(obj) {
-                    return _this3.img = obj;
+                    return _this4.img = obj;
                   },
                   src: this.props.src,
                   onLoad: this.handleLoad,
@@ -7222,14 +7230,14 @@
         }), jsx("input", {
           "data-attr": "input",
           ref: function ref(obj) {
-            return _this3.input = obj;
+            return _this4.input = obj;
           },
           type: "file",
           className: "uploader-input",
           onChange: this.handleChange
         }), jsx("div", {
           ref: function ref(obj) {
-            return _this3.zone = obj;
+            return _this4.zone = obj;
           },
           className: "\n                        uploader-zone\n                        ".concat(this.props.withURLInput ? 'uploader-zone/withUrl' : '', "\n                    "),
           onDragEnter: this.handleDragEnter,
@@ -7272,7 +7280,7 @@
               // enter would otherwise submit form
               ev.preventDefault();
 
-              _this3.handleInjectURLClick();
+              _this4.handleInjectURLClick();
             }
           }
         }), jsx("span", {

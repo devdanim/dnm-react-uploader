@@ -135,12 +135,15 @@ export default class Uploader extends React.Component {
     }
 
     handleLoad() {
-        if (typeof this.firstLoadDone === 'undefined') {
-            this.firstLoadDone = true;
-            this.props.onFirstLoad();
-            this.setState({loaded: true});
-        }
-        this.props.onLoad();
+        setTimeout(() => {
+            cl(888);
+            if (typeof this.firstLoadDone === 'undefined') {
+                this.firstLoadDone = true;
+                this.props.onFirstLoad();
+                this.setState({loaded: true}, this._forceUpdate);
+            }
+            this.props.onLoad();
+        }, 2000);
     }
 
     handleRemoveClick(ev) {
