@@ -227,7 +227,7 @@ export default class Uploader extends React.Component {
                                 alt=''
                                 ref={obj => this.img = obj}
                                 src={this.props.src}
-                                onLoad={this.handleLoad}
+                                // onLoad={this.handleLoad}
                                 style={{
                                     position: 'absolute',
                                     top: '50%',

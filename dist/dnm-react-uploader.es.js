@@ -2410,8 +2410,8 @@ function (_React$Component) {
                 ref: function ref(obj) {
                   return _this3.img = obj;
                 },
-                src: this.props.src,
-                onLoad: this.handleLoad,
+                src: this.props.src // onLoad={this.handleLoad}
+                ,
                 style: {
                   position: 'absolute',
                   top: '50%',
