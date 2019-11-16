@@ -7146,7 +7146,9 @@
                     x: this.props.imageCrop.x,
                     y: this.props.imageCrop.y,
                     width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x),
-                    height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y)
+                    // important, because an overflow would result in an ugly crop preview
+                    height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y) // same
+
                   },
                       displayCropX = displayWidth * imageCrop.x / realWidth,
                       displayCropY = displayHeight * imageCrop.y / realHeight,
@@ -7154,11 +7156,9 @@
                       displayCropHeight = displayHeight * imageCrop.height / realHeight,
                       displayCropRatio = displayCropWidth / displayCropHeight,
                       displayCropTop = displayCropY,
-                      displayCropRight = Math.min(displayCropX + displayCropWidth, displayWidth),
-                      // important, because an overflow would result in an ugly crop preview
-                  displayCropBottom = Math.min(displayCropY + displayCropHeight, displayHeight),
-                      // same
-                  displayCropLeft = displayCropX,
+                      displayCropRight = displayCropX + displayCropWidth,
+                      displayCropBottom = displayCropY + displayCropHeight,
+                      displayCropLeft = displayCropX,
                       scale = null; // image fit to zone
 
                   if (this.props.backgroundSize === 'contain') {
