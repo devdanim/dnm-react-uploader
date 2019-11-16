@@ -39,7 +39,8 @@ render(
         />
         <div id="second-uploader-parent">
             <Uploader
-                src="https://images.unsplash.com/photo-1554676187-e9a89ddb659e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9"
+                // heavy on purpose, to check loading look
+                src="https://wallpaperplay.com/walls/full/2/5/0/200799.jpg"
                 customAttributes={{
                     root: {
                         id: 'second-uploader'

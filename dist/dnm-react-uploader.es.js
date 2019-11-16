@@ -2186,7 +2186,7 @@ function (_React$Component) {
       beingDropTarget: false,
       height: null,
       file: null,
-      loaded: true,
+      loaded: false,
       mounted: false,
       url: '',
       width: null,

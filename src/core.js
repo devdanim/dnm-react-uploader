@@ -44,7 +44,7 @@ export default class Uploader extends React.Component {
             beingDropTarget: false,
             height: null,
             file: null,
-            loaded: true,
+            loaded: false,
             mounted: false,
             url: '',
             width: null,
@@ -233,7 +233,7 @@ export default class Uploader extends React.Component {
                                     top: '50%',
                                     left: '50%',
                                     transformOrigin: `${displayCropX + displayCropWidth / 2}px ${displayCropY + displayCropHeight / 2}px`,
-                                    transform: `
+                                        transform: `
                                         translateX(-${displayCropX + displayCropWidth / 2}px)
                                         translateY(-${displayCropY + displayCropHeight / 2}px)
                                         scale(${scale})
@@ -243,7 +243,7 @@ export default class Uploader extends React.Component {
                                         ${displayCropX + displayCropWidth}px
                                         ${displayCropY + displayCropHeight}px
                                         ${displayCropX}px)
-                                    `,
+                                    `
                                 }}
                             />
                         );
