@@ -6956,7 +6956,7 @@
       _this.injectURL = _this.injectURL.bind(_assertThisInitialized(_this));
       _this.change = _this.change.bind(_assertThisInitialized(_this));
       _this._forceUpdate = _this._forceUpdate.bind(_assertThisInitialized(_this));
-      _this.forceUpdateOnResize = _.debounce(_this._forceUpdate, 500);
+      _this.forceUpdateOnResize = _.debounce(_this._forceUpdate, 250);
       return _this;
     }
 
@@ -7142,10 +7142,16 @@
                       displayHeight = this.cropImg.offsetHeight,
                       realWidth = this.cropImg.naturalWidth,
                       realHeight = this.cropImg.naturalHeight,
-                      displayCropX = displayWidth * this.props.imageCrop.x / realWidth,
-                      displayCropY = displayHeight * this.props.imageCrop.y / realHeight,
-                      displayCropWidth = displayWidth * this.props.imageCrop.width / realWidth,
-                      displayCropHeight = displayHeight * this.props.imageCrop.height / realHeight,
+                      imageCrop = {
+                    x: this.props.imageCrop.x,
+                    y: this.props.imageCrop.y,
+                    width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x),
+                    height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y)
+                  },
+                      displayCropX = displayWidth * imageCrop.x / realWidth,
+                      displayCropY = displayHeight * imageCrop.y / realHeight,
+                      displayCropWidth = displayWidth * imageCrop.width / realWidth,
+                      displayCropHeight = displayHeight * imageCrop.height / realHeight,
                       displayCropRatio = displayCropWidth / displayCropHeight,
                       displayCropTop = displayCropY,
                       displayCropRight = Math.min(displayCropX + displayCropWidth, displayWidth),
