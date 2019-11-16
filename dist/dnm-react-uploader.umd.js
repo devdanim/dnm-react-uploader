@@ -7109,6 +7109,7 @@
         var media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable);
+        console.log(this.state.loaded);
 
         if (this.props.src) {
           var fileType = this.props.fileType || this.guessFileType(this.props.src);
