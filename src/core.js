@@ -235,22 +235,22 @@ export default class Uploader extends React.Component {
                                     top: '50%',
                                     left: '50%',
                                     transformOrigin: `${displayCropX + displayCropWidth / 2}px ${displayCropY + displayCropHeight / 2}px`,
-                                        transform: `
+                                    transform: `
                                         translateX(-${displayCropX + displayCropWidth / 2}px)
                                         translateY(-${displayCropY + displayCropHeight / 2}px)
                                         scale(${scale})
                                     `,
-                                    clipPath: `polygon(
-                                        ${displayCropX}px ${displayCropY}px,
-                                        ${displayCropX + displayCropWidth}px ${displayCropY}px,
-                                        ${displayCropX + displayCropWidth}px ${displayCropY + displayCropHeight}px,
-                                        ${displayCropX}px ${displayCropY + displayCropHeight}px
-                                    )`
+                                    clip: `rect(
+                                        ${displayCropY}px
+                                        ${displayCropX + displayCropWidth}px
+                                        ${displayCropY + displayCropHeight}px
+                                        ${displayCropX}px)
+                                    `
                                 }}
                             />
                         );
                     }
-                    media.push( // still there (but hidden) when  we replace it with cropVersion, since we always need this.img
+                    media.push( // still there (but hidden) when we replace it with cropVersion, since we always need this.img
                         <div key="baseVersion" style={{
                             backgroundColor: this.props.backgroundColor,
                             backgroundRepeat: 'no-repeat',
