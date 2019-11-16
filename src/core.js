@@ -205,6 +205,7 @@ export default class Uploader extends React.Component {
         console.log('---------')
         console.log(this.state.loaded)
         console.log(this.props.imageCrop)
+        console.log(this.props.src)
         if (this.props.src) {
             const fileType = this.props.fileType || this.guessFileType(this.props.src);
             switch (fileType) {
