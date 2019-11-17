@@ -79,9 +79,7 @@ class Page extends React.Component {
                         onInvalidURLError={() => alert('onInvalidURLError')}
                         onURLInjectionError={() => alert('onURLInjectionError')}
                         removeIcon={<Svg.Erase />}
-                        imageCrop={{
-                            x: 2000, y: 2000, width: 1000, height: 1000
-                        }}
+                        imageCrop={{x: 2000, y: 2000, width: 1000, height: 1000}}
                         backgroundSize="contain"
                     />
                 </div>
