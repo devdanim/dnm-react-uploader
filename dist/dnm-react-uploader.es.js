@@ -2431,7 +2431,8 @@ function (_React$Component) {
                     displayCropLeft = displayCropX,
                     scale = null;
 
-                if (imageCrop.width > 0 && imageCrop.height > 0) {
+                if (imageCrop.width * imageCrop.height > 0) {
+                  // covered surface musn't be nil
                   // image fit to zone
                   if (this.props.backgroundSize === 'contain') {
                     if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;else scale = zoneHeight / displayCropHeight;
