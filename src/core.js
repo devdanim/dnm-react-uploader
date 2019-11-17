@@ -202,6 +202,11 @@ export default class Uploader extends React.Component {
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable);
 
+        console.log('----')
+        console.log(this.props.src)
+        console.log(this.state.loaded)
+        console.log(this.props.imageCrop)
+
         if (this.props.src) {
             const fileType = this.props.fileType || this.guessFileType(this.props.src);
             switch (fileType) {
@@ -215,11 +220,12 @@ export default class Uploader extends React.Component {
                                 displayHeight = this.cropImg.offsetHeight,
                                 realWidth = this.cropImg.naturalWidth,
                                 realHeight = this.cropImg.naturalHeight,
+                                // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
                                 imageCrop = {
-                                    x: this.props.imageCrop.x,
-                                    y: this.props.imageCrop.y,
-                                    width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x), // important, because an overflow would result in an ugly crop preview
-                                    height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y), // same
+                                    x: Math.min(this.props.imageCrop.x, realWidth),
+                                    y: Math.min(this.props.imageCrop.y, realHeight),
+                                    width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x),
+                                    height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y),
                                 },
                                 displayCropX = displayWidth * imageCrop.x / realWidth,
                                 displayCropY = displayHeight * imageCrop.y / realHeight,
@@ -232,7 +238,7 @@ export default class Uploader extends React.Component {
                                 displayCropLeft = displayCropX,
                                 scale = null;
 
-                            if (imageCrop.width * imageCrop.height > 0) { // covered surface musn't be nil
+                            if (imageCrop.width > 0 && imageCrop.height > 0) {
                                 // image fit to zone
                                 if (this.props.backgroundSize === 'contain') {
                                     if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;
@@ -244,10 +250,10 @@ export default class Uploader extends React.Component {
 
                                 style = {
                                     position: 'absolute',
-                                        top: '50%',
-                                        left: '50%',
-                                        transformOrigin: `${(displayCropLeft + displayCropRight) / 2}px ${(displayCropTop + displayCropBottom) / 2}px`,
-                                        transform: `
+                                    top: '50%',
+                                    left: '50%',
+                                    transformOrigin: `${(displayCropLeft + displayCropRight) / 2}px ${(displayCropTop + displayCropBottom) / 2}px`,
+                                    transform: `
                                         translateX(-${(displayCropLeft + displayCropRight) / 2}px)
                                         translateY(-${(displayCropTop + displayCropBottom) / 2}px)
                                         scale(${scale})

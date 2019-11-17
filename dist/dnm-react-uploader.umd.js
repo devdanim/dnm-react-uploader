@@ -7126,6 +7126,10 @@
         var media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable);
+        console.log('----');
+        console.log(this.props.src);
+        console.log(this.state.loaded);
+        console.log(this.props.imageCrop);
 
         if (this.props.src) {
           var fileType = this.props.fileType || this.guessFileType(this.props.src);
@@ -7142,13 +7146,12 @@
                       displayHeight = this.cropImg.offsetHeight,
                       realWidth = this.cropImg.naturalWidth,
                       realHeight = this.cropImg.naturalHeight,
-                      imageCrop = {
-                    x: this.props.imageCrop.x,
-                    y: this.props.imageCrop.y,
+                      // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
+                  imageCrop = {
+                    x: Math.min(this.props.imageCrop.x, realWidth),
+                    y: Math.min(this.props.imageCrop.y, realHeight),
                     width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x),
-                    // important, because an overflow would result in an ugly crop preview
-                    height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y) // same
-
+                    height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y)
                   },
                       displayCropX = displayWidth * imageCrop.x / realWidth,
                       displayCropY = displayHeight * imageCrop.y / realHeight,
@@ -7161,8 +7164,7 @@
                       displayCropLeft = displayCropX,
                       scale = null;
 
-                  if (imageCrop.width * imageCrop.height > 0) {
-                    // covered surface musn't be nil
+                  if (imageCrop.width > 0 && imageCrop.height > 0) {
                     // image fit to zone
                     if (this.props.backgroundSize === 'contain') {
                       if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;else scale = zoneHeight / displayCropHeight;
