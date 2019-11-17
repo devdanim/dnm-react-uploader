@@ -2429,22 +2429,25 @@ function (_React$Component) {
                     displayCropRight = displayCropX + displayCropWidth,
                     displayCropBottom = displayCropY + displayCropHeight,
                     displayCropLeft = displayCropX,
-                    scale = null; // image fit to zone
+                    scale = null;
 
-                if (this.props.backgroundSize === 'contain') {
-                  if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;else scale = zoneHeight / displayCropHeight;
-                } else {
-                  if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;else scale = zoneWidth / displayCropWidth;
+                if (imageCrop.width > 0 && imageCrop.height > 0) {
+                  // image fit to zone
+                  if (this.props.backgroundSize === 'contain') {
+                    if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;else scale = zoneHeight / displayCropHeight;
+                  } else {
+                    if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;else scale = zoneWidth / displayCropWidth;
+                  }
+
+                  style = {
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transformOrigin: "".concat((displayCropLeft + displayCropRight) / 2, "px ").concat((displayCropTop + displayCropBottom) / 2, "px"),
+                    transform: "\n                                    translateX(-".concat((displayCropLeft + displayCropRight) / 2, "px)\n                                    translateY(-").concat((displayCropTop + displayCropBottom) / 2, "px)\n                                    scale(").concat(scale, ")\n                                "),
+                    clip: "rect(\n                                    ".concat(displayCropTop, "px\n                                    ").concat(displayCropRight, "px\n                                    ").concat(displayCropBottom, "px\n                                    ").concat(displayCropLeft, "px)\n                                ")
+                  };
                 }
-
-                style = {
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transformOrigin: "".concat((displayCropLeft + displayCropRight) / 2, "px ").concat((displayCropTop + displayCropBottom) / 2, "px"),
-                  transform: "\n                                    translateX(-".concat((displayCropLeft + displayCropRight) / 2, "px)\n                                    translateY(-").concat((displayCropTop + displayCropBottom) / 2, "px)\n                                    scale(").concat(scale, ")\n                                "),
-                  clip: "rect(\n                                    ".concat(displayCropTop, "px\n                                    ").concat(displayCropRight, "px\n                                    ").concat(displayCropBottom, "px\n                                    ").concat(displayCropLeft, "px)\n                                ")
-                };
               }
 
               media = jsx("img", {

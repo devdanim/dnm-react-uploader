@@ -232,32 +232,34 @@ export default class Uploader extends React.Component {
                                 displayCropLeft = displayCropX,
                                 scale = null;
 
-                            // image fit to zone
-                            if (this.props.backgroundSize === 'contain') {
-                                if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;
-                                else scale = zoneHeight / displayCropHeight;
-                            } else {
-                                if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;
-                                else scale = zoneWidth / displayCropWidth;
-                            }
+                            if (imageCrop.width > 0 && imageCrop.height > 0) {
+                                // image fit to zone
+                                if (this.props.backgroundSize === 'contain') {
+                                    if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;
+                                    else scale = zoneHeight / displayCropHeight;
+                                } else {
+                                    if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;
+                                    else scale = zoneWidth / displayCropWidth;
+                                }
 
-                            style = {
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transformOrigin: `${(displayCropLeft + displayCropRight) / 2}px ${(displayCropTop + displayCropBottom) / 2}px`,
-                                transform: `
-                                    translateX(-${(displayCropLeft + displayCropRight) / 2}px)
-                                    translateY(-${(displayCropTop + displayCropBottom) / 2}px)
-                                    scale(${scale})
-                                `,
-                                clip: `rect(
-                                    ${displayCropTop}px
-                                    ${displayCropRight}px
-                                    ${displayCropBottom}px
-                                    ${displayCropLeft}px)
-                                `
-                            };
+                                style = {
+                                    position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transformOrigin: `${(displayCropLeft + displayCropRight) / 2}px ${(displayCropTop + displayCropBottom) / 2}px`,
+                                        transform: `
+                                        translateX(-${(displayCropLeft + displayCropRight) / 2}px)
+                                        translateY(-${(displayCropTop + displayCropBottom) / 2}px)
+                                        scale(${scale})
+                                    `,
+                                    clip: `rect(
+                                        ${displayCropTop}px
+                                        ${displayCropRight}px
+                                        ${displayCropBottom}px
+                                        ${displayCropLeft}px)
+                                    `
+                                };
+                            }
                         }
 
                         media = (
