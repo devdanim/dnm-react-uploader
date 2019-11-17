@@ -7174,8 +7174,8 @@
                       top: '50%',
                       left: '50%',
                       transformOrigin: "".concat((displayCropLeft + displayCropRight) / 2, "px ").concat((displayCropTop + displayCropBottom) / 2, "px"),
-                      transform: "\n                                    translateX(-".concat((displayCropLeft + displayCropRight) / 2, "px)\n                                    translateY(-").concat((displayCropTop + displayCropBottom) / 2, "px)\n                                    scale(").concat(scale, ")\n                                "),
-                      clip: "rect(\n                                    ".concat(displayCropTop, "px\n                                    ").concat(displayCropRight, "px\n                                    ").concat(displayCropBottom, "px\n                                    ").concat(displayCropLeft, "px)\n                                ")
+                      transform: "\n                                        translateX(-".concat((displayCropLeft + displayCropRight) / 2, "px)\n                                        translateY(-").concat((displayCropTop + displayCropBottom) / 2, "px)\n                                        scale(").concat(scale, ")\n                                    "),
+                      clip: "rect(\n                                        ".concat(displayCropTop, "px\n                                        ").concat(displayCropRight, "px\n                                        ").concat(displayCropBottom, "px\n                                        ").concat(displayCropLeft, "px)\n                                    ")
                     };
                   }
                 }
