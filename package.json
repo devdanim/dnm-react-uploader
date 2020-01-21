@@ -1,6 +1,6 @@
 {
   "name": "dnm-react-uploader",
-  "version": "1.5.5",
+  "version": "1.6.8",
   "description": "React file uploader",
   "main": "dist/dnm-react-uploader.umd.min.js",
   "module": "dist/dnm-react-uploader.es.min.js",
@@ -45,7 +45,7 @@
     "babel-preset-react": "^6.24.1",
     "npm-login-noninteractive": "^0.1.4",
     "onchange": "^5.2.0",
-    "parcel-bundler": "^1.12.3",
+    "parcel-bundler": "^1.12.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "rollup": "^1.0.0",
@@ -53,15 +53,11 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-postcss": "^2.0.3",
-    "rollup-plugin-terser": "^4.0.4"
+    "rollup-plugin-terser": "^5.2.0"
   },
   "dependencies": {
     "@emotion/core": "^10.0.22",
-    "assemble": "^0.3.83",
-    "assets": "^3.0.1",
-    "grunt": "^0.4.5",
     "lodash-es": "^4.17.11",
-    "styles": "^0.2.1",
     "validator": "^10.11.0"
   }
 }
