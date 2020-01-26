@@ -168,6 +168,7 @@ export default class Uploader extends React.Component {
             xhr.responseType = 'blob';
 
             xhr.open('GET', url, true);
+            xhr.withCredentials = true; // ensure browser sends "Sec-Fetch-Mode: cors" (avoid no-cors)
 
             xhr.onload = () => {
                 if (xhr.status === 200) resolve(xhr.response);

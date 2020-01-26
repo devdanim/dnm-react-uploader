@@ -7080,6 +7080,7 @@
           var xhr = new XMLHttpRequest();
           xhr.responseType = 'blob';
           xhr.open('GET', url, true);
+          xhr.withCredentials = true; // ensure browser sends "Sec-Fetch-Mode: cors" (avoid no-cors)
 
           xhr.onload = function () {
             if (xhr.status === 200) resolve(xhr.response);else reject(Error(xhr.statusText));
