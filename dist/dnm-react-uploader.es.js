@@ -2864,7 +2864,9 @@ function (_React$Component) {
   }, {
     key: "get",
     value: function get(url) {
-      return fetch(url).then(function (response) {
+      return fetch(url, {
+        mode: 'cors'
+      }).then(function (response) {
         return response.blob();
       });
     }
