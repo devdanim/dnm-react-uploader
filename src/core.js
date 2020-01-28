@@ -21,6 +21,7 @@ import round from 'lodash-es/round';
 import split from 'lodash-es/split';
 import upperFirst from 'lodash-es/upperFirst';
 import upperCase from 'lodash-es/upperCase';
+import 'whatwg-fetch'; // importing will automatically polyfill window.fetch and related APIs
 const _ = {
     camelCase,
     concat,
@@ -162,23 +163,7 @@ export default class Uploader extends React.Component {
     }
 
     get(url) {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-
-            xhr.responseType = 'blob';
-
-            xhr.open('GET', url, true);
-            xhr.withCredentials = true; // ensure browser sends "Sec-Fetch-Mode: cors" (avoid no-cors)
-
-            xhr.onload = () => {
-                if (xhr.status === 200) resolve(xhr.response);
-                else reject(Error(xhr.statusText));
-            };
-
-            xhr.onerror = () => reject(Error('Network Error'));
-
-            xhr.send();
-        });
+        return fetch(url).then(response => response.blob());
     }
 
     injectURL(url, validate = false, callback = data => null) {
