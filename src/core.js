@@ -163,7 +163,7 @@ export default class Uploader extends React.Component {
     }
 
     get(url) {
-        return fetch(url, {mode: 'cors', credentials: 'include'}).then(response => response.blob());
+        return fetch(url, {mode: 'cors'}).then(response => response.blob());
     }
 
     injectURL(url, validate = false, callback = data => null) {
