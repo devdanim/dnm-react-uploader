@@ -7595,7 +7595,8 @@
       key: "get",
       value: function get(url) {
         return fetch(url, {
-          mode: 'cors'
+          mode: 'cors',
+          credentials: 'include'
         }).then(function (response) {
           return response.blob();
         });

@@ -43,8 +43,8 @@ class Page extends React.Component {
                     onFirstLoad={() => console.log('onFirstLoad')}
                     onLoad={() => console.log('onLoad')}
                     withURLInput={true}
-                    extensions={['png']}
-                    mimeTypes={['image/png']}
+                    extensions={['png', 'jpeg', 'jpg']}
+                    mimeTypes={['image/png', 'image/jpeg']}
                     onFileTooLargeError={() => alert('onFileTooLargeError')}
                     onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
                     onInvalidURLError={() => alert('onInvalidURLError')}
