@@ -7503,11 +7503,12 @@
     }, {
       key: "change",
       value: function change(file) {
-        var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (data) {
+        var manual = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+        var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (data) {
           return null;
         };
         var maxSize = this.props.maxSize;
-        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();else this.props.onChange(file);
+        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();else this.props.onChange(file, manual);
         callback(file);
         this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
       }
@@ -7621,7 +7622,7 @@
             type: response.type
           });
 
-          _this2.change(file, callback);
+          _this2.change(file, false, callback);
         })["catch"](function (error) {
           _this2.props.onURLInjectionError(error);
         });
@@ -8018,9 +8019,10 @@
     maxSize: 10 * 1000 * 1000,
     mimeTypes: null,
     // if not set and left as it is, we'll use default ones
-    onChange: function onChange(file) {
+    onChange: function onChange(file, manual) {
       return null;
     },
+    // manual: does it follow a manual action (vs. injections, for instance)
     onCropClick: function onCropClick() {
       return null;
     },

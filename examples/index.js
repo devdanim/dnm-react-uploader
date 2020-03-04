@@ -39,7 +39,7 @@ class Page extends React.Component {
                     fileType="image"
                     catalogue={catalogue}
                     maxSize={50 * 1000 * 1000}
-                    onChange={file => console.log('onChange', file)}
+                    onChange={(file, manual) => console.log('onChange', file, manual ? 'Done manually' : 'Done programmatically')}
                     onFirstLoad={() => console.log('onFirstLoad')}
                     onLoad={() => console.log('onLoad')}
                     withURLInput={true}

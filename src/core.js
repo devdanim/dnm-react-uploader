@@ -94,11 +94,11 @@ export default class Uploader extends React.Component {
         this.setState({ _forceUpdateCounter: this.state._forceUpdateCounter++ });
     }
 
-    change(file, callback = data => null) {
+    change(file, manual = true, callback = data => null) {
         let maxSize = this.props.maxSize;
         if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();
         else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();
-        else this.props.onChange(file);
+        else this.props.onChange(file, manual);
 
         callback(file);
 
@@ -177,7 +177,7 @@ export default class Uploader extends React.Component {
             .then(response => {
                 let name = _.last(_.split(url, '/')),
                     file = new File([response], name, {type: response.type});
-                this.change(file, callback);
+                this.change(file, false, callback);
             }).catch(error => {
                 this.props.onURLInjectionError(error);
             });
@@ -568,7 +568,7 @@ Uploader.defaultProps = {
     imageCrop: null,
     maxSize: 10 * 1000 * 1000,
     mimeTypes: null, // if not set and left as it is, we'll use default ones
-    onChange: file => null,
+    onChange: (file, manual) => null, // manual: does it follow a manual action (vs. injections, for instance)
     onCropClick: () => null,
     onFileTooLargeError: () => null,
     onFirstLoad: () => null,
