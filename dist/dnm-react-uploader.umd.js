@@ -7333,7 +7333,7 @@
     DOMException.prototype.constructor = DOMException;
   }
 
-  function fetch$1(input, init) {
+  function fetch(input, init) {
     return new Promise(function(resolve, reject) {
       var request = new Request(input, init);
 
@@ -7401,10 +7401,10 @@
     })
   }
 
-  fetch$1.polyfill = true;
+  fetch.polyfill = true;
 
   if (!self.fetch) {
-    self.fetch = fetch$1;
+    self.fetch = fetch;
     self.Headers = Headers;
     self.Request = Request;
     self.Response = Response;
@@ -7511,6 +7511,11 @@
         if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();else this.props.onChange(file, manual);
         callback(file);
         this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
+        // reinit xhr
+
+        if (this.xhr) this.xhr.abort(); // important, ex: heavy file (HF) injection, and the user importing another light file manually (LF) during the HF loading. If the xhr were not aborted, the user would find the HF replacing its LF at any unexpected later moment
+
+        this.xhr = null;
       }
     }, {
       key: "handleChange",
@@ -7595,16 +7600,30 @@
     }, {
       key: "get",
       value: function get(url) {
-        return fetch(url, {
-          mode: 'cors'
-        }).then(function (response) {
-          return response.blob();
+        var _this2 = this;
+
+        // return fetch(url, {mode: 'cors'}).then(response => response.blob());
+        return new Promise(function (resolve, reject) {
+          _this2.xhr = new XMLHttpRequest();
+          _this2.xhr.responseType = 'blob';
+
+          _this2.xhr.open('GET', url, true);
+
+          _this2.xhr.onload = function () {
+            if (xhr.status === 200) resolve(_this2.xhr.response);else reject(Error(_this2.xhr.statusText));
+          };
+
+          _this2.xhr.onerror = function () {
+            return reject(Error('Network Error'));
+          };
+
+          _this2.xhr.send();
         });
       }
     }, {
       key: "injectURL",
       value: function injectURL(url) {
-        var _this2 = this;
+        var _this3 = this;
 
         var validate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
         var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (data) {
@@ -7622,15 +7641,15 @@
             type: response.type
           });
 
-          _this2.change(file, false, callback);
+          _this3.change(file, false, callback);
         })["catch"](function (error) {
-          _this2.props.onURLInjectionError(error);
+          _this3.props.onURLInjectionError(error);
         });
       }
     }, {
       key: "render",
       value: function render() {
-        var _this3 = this;
+        var _this4 = this;
 
         var media = null,
             icon = null,
@@ -7691,7 +7710,7 @@
                 media = jsx("img", {
                   alt: "",
                   ref: function ref(obj) {
-                    return _this3.cropImg = obj;
+                    return _this4.cropImg = obj;
                   },
                   src: this.props.src,
                   onLoad: this._forceUpdate,
@@ -7712,7 +7731,7 @@
                 }, jsx("img", {
                   alt: "",
                   ref: function ref(obj) {
-                    return _this3.img = obj;
+                    return _this4.img = obj;
                   },
                   src: this.props.src,
                   onLoad: this.handleLoad,
@@ -7767,14 +7786,14 @@
         }), jsx("input", {
           "data-attr": "input",
           ref: function ref(obj) {
-            return _this3.input = obj;
+            return _this4.input = obj;
           },
           type: "file",
           className: "uploader-input",
           onChange: this.handleChange
         }), jsx("div", {
           ref: function ref(obj) {
-            return _this3.zone = obj;
+            return _this4.zone = obj;
           },
           className: "\n                        uploader-zone\n                        ".concat(this.props.withURLInput ? 'uploader-zone/withUrl' : '', "\n                    "),
           onDragEnter: this.handleDragEnter,
@@ -7817,7 +7836,7 @@
               // enter would otherwise submit form
               ev.preventDefault();
 
-              _this3.handleInjectURLClick();
+              _this4.handleInjectURLClick();
             }
           }
         }), jsx("span", {

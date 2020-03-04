@@ -103,6 +103,10 @@ export default class Uploader extends React.Component {
         callback(file);
 
         this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
+
+        // reinit xhr
+        if (this.xhr) this.xhr.abort(); // important, ex: heavy file (HF) injection, and the user importing another light file manually (LF) during the HF loading. If the xhr were not aborted, the user would find the HF replacing its LF at any unexpected later moment
+        this.xhr = null;
     }
 
     handleChange(ev) {
@@ -163,7 +167,24 @@ export default class Uploader extends React.Component {
     }
 
     get(url) {
-        return fetch(url, {mode: 'cors'}).then(response => response.blob());
+        // return fetch(url, {mode: 'cors'}).then(response => response.blob());
+
+        return new Promise((resolve, reject) => {
+            this.xhr = new XMLHttpRequest();
+
+            this.xhr.responseType = 'blob';
+
+            this.xhr.open('GET', url, true);
+
+            this.xhr.onload = () => {
+                if (xhr.status === 200) resolve(this.xhr.response);
+                else reject(Error(this.xhr.statusText));
+            };
+
+            this.xhr.onerror = () => reject(Error('Network Error'));
+
+            this.xhr.send();
+        });
     }
 
     injectURL(url, validate = false, callback = data => null) {
