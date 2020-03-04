@@ -7610,7 +7610,7 @@
           _this2.xhr.open('GET', url, true);
 
           _this2.xhr.onload = function () {
-            if (xhr.status === 200) resolve(_this2.xhr.response);else reject(Error(_this2.xhr.statusText));
+            if (_this2.xhr.status === 200) resolve(_this2.xhr.response);else reject(Error(_this2.xhr.statusText));
           };
 
           _this2.xhr.onerror = function () {

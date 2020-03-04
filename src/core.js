@@ -177,7 +177,7 @@ export default class Uploader extends React.Component {
             this.xhr.open('GET', url, true);
 
             this.xhr.onload = () => {
-                if (xhr.status === 200) resolve(this.xhr.response);
+                if (this.xhr.status === 200) resolve(this.xhr.response);
                 else reject(Error(this.xhr.statusText));
             };
 
