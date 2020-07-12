@@ -200,7 +200,7 @@ export default class Uploader extends React.Component {
                     file = new File([response], name, {type: response.type});
                 this.change(file, false, callback);
             }).catch(error => {
-                this.props.onURLInjectionError(error);
+                this.props.onURLInjectionError(error, url);
             });
     }
 
@@ -603,13 +603,13 @@ Uploader.defaultProps = {
     mimeTypes: null, // if not set and left as it is, we'll use default ones
     onChange: (file, manual) => null, // manual: does it follow a manual action (vs. injections, for instance)
     onCropClick: () => null,
-    onFileTooLargeError: maxSize => null,
+    onFileTooLargeError: (size, maxSize) => null,
     onFirstLoad: () => null,
-    onInvalidFileExtensionError: () => null,
-    onInvalidURLError: () => null,
+    onInvalidFileExtensionError: (extension, expectedExtensions) => null,
+    onInvalidURLError: url => null,
     onLoad: () => null,
     onRemoveClick: () => null,
-    onURLInjectionError: () => null,
+    onURLInjectionError: (error, url) => null,
     removable: false,
     removeIcon: null, // if let null, it will be default one
     src: null,

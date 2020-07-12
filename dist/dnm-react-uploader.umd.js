@@ -7643,7 +7643,7 @@
 
           _this3.change(file, false, callback);
         })["catch"](function (error) {
-          _this3.props.onURLInjectionError(error);
+          _this3.props.onURLInjectionError(error, url);
         });
       }
     }, {
@@ -8058,16 +8058,16 @@
     onCropClick: function onCropClick() {
       return null;
     },
-    onFileTooLargeError: function onFileTooLargeError(maxSize) {
+    onFileTooLargeError: function onFileTooLargeError(size, maxSize) {
       return null;
     },
     onFirstLoad: function onFirstLoad() {
       return null;
     },
-    onInvalidFileExtensionError: function onInvalidFileExtensionError() {
+    onInvalidFileExtensionError: function onInvalidFileExtensionError(extension, expectedExtensions) {
       return null;
     },
-    onInvalidURLError: function onInvalidURLError() {
+    onInvalidURLError: function onInvalidURLError(url) {
       return null;
     },
     onLoad: function onLoad() {
@@ -8076,7 +8076,7 @@
     onRemoveClick: function onRemoveClick() {
       return null;
     },
-    onURLInjectionError: function onURLInjectionError() {
+    onURLInjectionError: function onURLInjectionError(error, url) {
       return null;
     },
     removable: false,
