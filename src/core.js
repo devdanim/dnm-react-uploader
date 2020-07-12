@@ -96,7 +96,7 @@ export default class Uploader extends React.Component {
 
     change(file, manual = true, callback = data => null) {
         let maxSize = this.props.maxSize;
-        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError(this.extension(file), this.extensions());
+        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError(this.extension(file), this.extensions()[this.props.fileType]);
         else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);
         else this.props.onChange(file, manual);
 

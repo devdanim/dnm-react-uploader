@@ -7508,7 +7508,7 @@
           return null;
         };
         var maxSize = this.props.maxSize;
-        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError(this.extension(file), this.extensions());else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual);
+        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError(this.extension(file), this.extensions()[this.props.fileType]);else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual);
         callback(file);
         this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
         // reinit xhr
