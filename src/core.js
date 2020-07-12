@@ -96,8 +96,8 @@ export default class Uploader extends React.Component {
 
     change(file, manual = true, callback = data => null) {
         let maxSize = this.props.maxSize;
-        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();
-        else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();
+        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError(this.extension(file), this.extensions());
+        else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);
         else this.props.onChange(file, manual);
 
         callback(file);
@@ -189,7 +189,7 @@ export default class Uploader extends React.Component {
 
     injectURL(url, validate = false, callback = data => null) {
         if (validate && ! validator.isURL(url)) {
-            this.props.onInvalidURLError();
+            this.props.onInvalidURLError(url);
 
             return;
         }
@@ -464,34 +464,46 @@ export default class Uploader extends React.Component {
         return _.last(_.split(input, '.'));
     }
 
+    extensions() {
+        let extensions = {
+            video: Constants.video.extensions,
+            image: Constants.image.extensions,
+            compressedFile: Constants.compressedFile.extensions,
+        };
+        // unless some have explicitly been provided
+        if (this.props.extensions) extensions = {[this.props.fileType]: this.props.extensions};
+
+        return extensions;
+    }
+
+    mimeTypes() {
+        let mimeTypes = {
+            video: Constants.video.mimeTypes,
+            image: Constants.image.mimeTypes,
+            compressedFile: Constants.compressedFile.mimeTypes,
+        };
+        // unless some have explicitly been provided
+        if (this.props.mimeTypes) mimeTypes = {[this.props.fileType]: this.props.mimeTypes};
+
+        return mimeTypes;
+    }
+
     /**
      * Input may be a MIME Type or an extension
      * Ex: video/mp4 => video, or application/zip => compressedFile
      */
     fileType(input) {
-        let isExtension = ! input.match(/\//);
+        let isExtension = !input.match(/\//);
 
         if (isExtension) {
-            let extensions = {
-                video: Constants.video.extensions,
-                image: Constants.image.extensions,
-                compressedFile: Constants.compressedFile.extensions,
-            };
-            // unless some have explicitly been provided
-            if (this.props.extensions) extensions = {[this.props.fileType]: this.props.extensions};
+            let extensions = this.extensions();
 
             for (let k in extensions) {
                 let v = _.concat(extensions[k], _.map(extensions[k], ext => _.upperCase(ext))); // case insensitive
                 if (v.indexOf(input) !== -1) return k;
             }
         } else {
-            let mimeTypes = {
-                video: Constants.video.mimeTypes,
-                image: Constants.image.mimeTypes,
-                compressedFile: Constants.compressedFile.mimeTypes,
-            };
-            // unless some have explicitly been provided
-            if (this.props.mimeTypes) mimeTypes = {[this.props.fileType]: this.props.mimeTypes};
+            let mimeTypes = this.mimeTypes();
 
             for (let k in mimeTypes) {
                 let v = mimeTypes[k];
@@ -585,13 +597,13 @@ Uploader.defaultProps = {
     customAttributes: {},
     extensions: null, // if not set and left as it is, we'll use default ones
     fetching: false,
-    fileType: 'image',
+    fileType: 'image', // may be one of: image, video
     imageCrop: null,
     maxSize: 10 * 1000 * 1000,
     mimeTypes: null, // if not set and left as it is, we'll use default ones
     onChange: (file, manual) => null, // manual: does it follow a manual action (vs. injections, for instance)
     onCropClick: () => null,
-    onFileTooLargeError: () => null,
+    onFileTooLargeError: maxSize => null,
     onFirstLoad: () => null,
     onInvalidFileExtensionError: () => null,
     onInvalidURLError: () => null,

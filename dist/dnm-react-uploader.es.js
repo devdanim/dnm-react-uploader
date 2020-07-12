@@ -2778,7 +2778,7 @@ function (_React$Component) {
         return null;
       };
       var maxSize = this.props.maxSize;
-      if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError();else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError();else this.props.onChange(file, manual);
+      if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError(this.extension(file), this.extensions());else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual);
       callback(file);
       this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
       // reinit xhr
@@ -2901,7 +2901,7 @@ function (_React$Component) {
       };
 
       if (validate && !validator.isURL(url)) {
-        this.props.onInvalidURLError();
+        this.props.onInvalidURLError(url);
         return;
       }
 
@@ -3156,6 +3156,30 @@ function (_React$Component) {
       input = _.isString(input) ? input : input.name;
       return _.last(_.split(input, '.'));
     }
+  }, {
+    key: "extensions",
+    value: function extensions() {
+      var extensions = {
+        video: Constants.video.extensions,
+        image: Constants.image.extensions,
+        compressedFile: Constants.compressedFile.extensions
+      }; // unless some have explicitly been provided
+
+      if (this.props.extensions) extensions = _defineProperty({}, this.props.fileType, this.props.extensions);
+      return extensions;
+    }
+  }, {
+    key: "mimeTypes",
+    value: function mimeTypes() {
+      var mimeTypes = {
+        video: Constants.video.mimeTypes,
+        image: Constants.image.mimeTypes,
+        compressedFile: Constants.compressedFile.mimeTypes
+      }; // unless some have explicitly been provided
+
+      if (this.props.mimeTypes) mimeTypes = _defineProperty({}, this.props.fileType, this.props.mimeTypes);
+      return mimeTypes;
+    }
     /**
      * Input may be a MIME Type or an extension
      * Ex: video/mp4 => video, or application/zip => compressedFile
@@ -3167,13 +3191,7 @@ function (_React$Component) {
       var isExtension = !input.match(/\//);
 
       if (isExtension) {
-        var extensions = {
-          video: Constants.video.extensions,
-          image: Constants.image.extensions,
-          compressedFile: Constants.compressedFile.extensions
-        }; // unless some have explicitly been provided
-
-        if (this.props.extensions) extensions = _defineProperty({}, this.props.fileType, this.props.extensions);
+        var extensions = this.extensions();
 
         for (var k in extensions) {
           var v = _.concat(extensions[k], _.map(extensions[k], function (ext) {
@@ -3184,13 +3202,7 @@ function (_React$Component) {
           if (v.indexOf(input) !== -1) return k;
         }
       } else {
-        var mimeTypes = {
-          video: Constants.video.mimeTypes,
-          image: Constants.image.mimeTypes,
-          compressedFile: Constants.compressedFile.mimeTypes
-        }; // unless some have explicitly been provided
-
-        if (this.props.mimeTypes) mimeTypes = _defineProperty({}, this.props.fileType, this.props.mimeTypes);
+        var mimeTypes = this.mimeTypes();
 
         for (var _k in mimeTypes) {
           var _v = mimeTypes[_k];
@@ -3304,6 +3316,7 @@ Uploader.defaultProps = {
   // if not set and left as it is, we'll use default ones
   fetching: false,
   fileType: 'image',
+  // may be one of: image, video
   imageCrop: null,
   maxSize: 10 * 1000 * 1000,
   mimeTypes: null,
@@ -3315,7 +3328,7 @@ Uploader.defaultProps = {
   onCropClick: function onCropClick() {
     return null;
   },
-  onFileTooLargeError: function onFileTooLargeError() {
+  onFileTooLargeError: function onFileTooLargeError(maxSize) {
     return null;
   },
   onFirstLoad: function onFirstLoad() {
