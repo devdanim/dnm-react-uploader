@@ -3213,14 +3213,14 @@ function (_React$Component) {
       return null;
     }
     /**
-     * From ~ 100 000 000 => 100 Mo
+     * From ~ 100 000 000 => 100 MB
      */
 
   }, {
     key: "humanSize",
     value: function humanSize(size) {
       var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-      var units = ['o', 'Ko', 'Mo', 'Go', 'To'];
+      var units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
       for (var power = units.length - 1; power >= 0; power--) {
         var tmpRes = size * 1.0 / Math.pow(1024, power);
