@@ -515,12 +515,12 @@ export default class Uploader extends React.Component {
     }
 
     /**
-     * From '100000000' to '100 MB'
+     * From ~ 100 000 000 => 100 Mo
      */
     humanSize(size, round = true) {
-        let units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        let units = ['o', 'Ko', 'Mo', 'Go', 'To'];
         for (let power = units.length - 1; power >= 0; power--) {
-            let tmpRes = size * 1.0 / Math.pow(1000, power);
+            let tmpRes = size * 1.0 / Math.pow(1024, power);
             if (tmpRes >= 1) {
                 if (round) tmpRes = _.round(tmpRes);
                 return `${tmpRes} ${units[power]}`;

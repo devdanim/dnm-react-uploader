@@ -7943,17 +7943,17 @@
         return null;
       }
       /**
-       * From '100000000' to '100 MB'
+       * From ~ 100 000 000 => 100 Mo
        */
 
     }, {
       key: "humanSize",
       value: function humanSize(size) {
         var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-        var units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        var units = ['o', 'Ko', 'Mo', 'Go', 'To'];
 
         for (var power = units.length - 1; power >= 0; power--) {
-          var tmpRes = size * 1.0 / Math.pow(1000, power);
+          var tmpRes = size * 1.0 / Math.pow(1024, power);
 
           if (tmpRes >= 1) {
             if (round) tmpRes = _.round(tmpRes);
