@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.22",
+    "deasync": "^0.1.20",
     "lodash-es": "^4.17.11",
     "validator": "^10.11.0",
     "whatwg-fetch": "^3.0.0"
