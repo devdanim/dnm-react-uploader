@@ -47,6 +47,7 @@ export default class Uploader extends React.Component {
             file: null,
             loaded: false,
             mounted: false,
+            fetching: !!props.src,
             url: '',
             width: null,
             _forceUpdateCounter: 0
@@ -75,7 +76,7 @@ export default class Uploader extends React.Component {
             // mirroring, see https://stackoverflow.com/a/50080417/6503789
             ...nextProps.src !== _.get(prevState, '_src') ? {_src: nextProps.src} : null,
             // derivation
-            ...nextProps.src !== _.get(prevState, '_src') ? {loaded: false, _forceUpdateCounter: 0} : null
+            ...nextProps.src !== _.get(prevState, '_src') ? {loaded: false, fetching: !!nextProps.src, _forceUpdateCounter: 0} : null
         };
     }
 
@@ -152,7 +153,7 @@ export default class Uploader extends React.Component {
             this.firstLoadDone = true;
             this.props.onFirstLoad();
         }
-        this.setState({loaded: true}, this.props.onLoad);
+        this.setState({loaded: true, fetching: false}, this.props.onLoad);
     }
 
     handleRemoveClick(ev) {
@@ -343,7 +344,7 @@ export default class Uploader extends React.Component {
                 `}
                 css={css`
                     ${styles.uploader};
-                    ${this.props.fetching ? styles['uploader/fetching'] : null};
+                    ${this.state.fetching ? styles['uploader/fetching'] : null};
                     ${this.props.withURLInput ? styles['uploader/withUrl'] : null};
                     ${withControls ? styles['uploader/withControls'] : null};
                 `}
@@ -361,43 +362,47 @@ export default class Uploader extends React.Component {
                 >
                     { media }
                     <div className="uploader-zone-fog" onClick={this.handleClick}>
-                        { !this.props.compact || (!this.props.removable && !this.props.croppable) || !this.props.src ? (       
+                        { this.state.fetching === true &&
+                        <div className="uploader-zone-fog-loader">
+                            {this.props.catalogue.loading}
+                        </div>
+                        }
+                        <div className="uploader-zone-fog-core">
+                            { !this.props.compact || (!this.props.removable && !this.props.croppable) || !this.props.src ? (
+                                <React.Fragment>
+                                    { this.state.beingDropTarget
+                                        ? <Svg.CloudComputing className="uploader-zone-fog-img" />
+                                        : icon
+                                    }
+                                    <div className="uploader-zone-fog-caption">
+                                        { `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withURLInput ? `/${this.props.catalogue.typeURL}` : ''}` }
+                                    </div>
+                                </React.Fragment>
+                            ) : null }
+                            { withControls === true &&
                             <React.Fragment>
-                                { this.state.beingDropTarget
-                                    ? <Svg.CloudComputing className="uploader-zone-fog-img" />
-                                    : icon
-                                }
-                                <div className="uploader-zone-fog-caption">
-                                    { this.props.fetching
-                                        ? this.props.catalogue.loading
-                                        : `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withURLInput ? `/${this.props.catalogue.typeURL}` : ''}`
+                                { !this.props.compact ? (
+                                    <div className="uploader-zone-fog-or">
+                                        <div className="uploader-zone-fog-or-wing" />
+                                        <div className="uploader-zone-fog-or-body">{ this.props.catalogue.or }</div>
+                                        <div className="uploader-zone-fog-or-wing" />
+                                    </div>
+                                ) : null }
+                                <div className="uploader-zone-fog-controls">
+                                    {this.props.croppable === true &&
+                                    <span className="uploader-zone-fog-controls-control" onClick={this.handleCropClick}>
+                                        {this.props.cropIcon || <Svg.Crop />}
+                                    </span>
+                                    }
+                                    {this.props.removable === true &&
+                                    <span className="uploader-zone-fog-controls-control" onClick={this.handleRemoveClick}>
+                                        {this.props.removeIcon || <Svg.Garbage />}
+                                    </span>
                                     }
                                 </div>
                             </React.Fragment>
-                        ) : null }
-                        { withControls === true &&
-                        <React.Fragment>
-                            { !this.props.compact ? (
-                                <div className="uploader-zone-fog-or">
-                                    <div className="uploader-zone-fog-or-wing" />
-                                    <div className="uploader-zone-fog-or-body">{ this.props.catalogue.or }</div>
-                                    <div className="uploader-zone-fog-or-wing" />
-                                </div>
-                            ) : null }
-                            <div className="uploader-zone-fog-controls">
-                                {this.props.croppable === true &&
-                                <span className="uploader-zone-fog-controls-control" onClick={this.handleCropClick}>
-                                    {this.props.cropIcon || <Svg.Crop />}
-                                </span>
-                                }
-                                {this.props.removable === true &&
-                                <span className="uploader-zone-fog-controls-control" onClick={this.handleRemoveClick}>
-                                    {this.props.removeIcon || <Svg.Garbage />}
-                                </span>
-                                }
-                            </div>
-                        </React.Fragment>
-                        }
+                            }
+                        </div>
                     </div>
                 </div>
                 { this.props.withURLInput === true &&
@@ -560,7 +565,6 @@ Uploader.propTypes = {
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     extensions: PropTypes.array,
-    fetching: PropTypes.bool,
     fileType: PropTypes.oneOf(['compressedFile', 'image', 'video']), // expected file type
     imageCrop: PropTypes.object,
     maxSize: PropTypes.number,
@@ -596,7 +600,6 @@ Uploader.defaultProps = {
     cropIcon: null, // if let null, it will be default one
     customAttributes: {},
     extensions: null, // if not set and left as it is, we'll use default ones
-    fetching: false,
     fileType: 'image', // may be one of: image, video
     imageCrop: null,
     maxSize: 10 * 1000 * 1000,

@@ -7,7 +7,7 @@ const catalogue = {
     click: 'Custom: Click!',
     drop: null,
     typeURL: 'Type URL',
-    loading: 'Only PNG',
+    loading: 'Loading...',
     or: 'Custom OR',
     urlInputPlaceholder: 'Custom URL input',
     urlSubmitText: 'Custom URL submit',
@@ -35,7 +35,6 @@ class Page extends React.Component {
                         }
                     }}
                     compact={true}
-                    fetching={true}
                     fileType="image"
                     catalogue={catalogue}
                     maxSize={50 * 1000 * 1000}
@@ -50,13 +49,34 @@ class Page extends React.Component {
                     onInvalidURLError={() => alert('onInvalidURLError')}
                     onURLInjectionError={() => alert('onURLInjectionError')}
                 />
+                <Uploader
+                    customAttributes={{
+                        root: {
+                            id: 'second-uploader'
+                        }
+                    }}
+                    compact={true}
+                    fileType="image"
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Osmium_crystals.jpg/2880px-Osmium_crystals.jpg"
+                    catalogue={catalogue}
+                    maxSize={50 * 1000 * 1000}
+                    onChange={(file, manual) => console.log('onChange', file, manual ? 'Done manually' : 'Done programmatically')}
+                    onFirstLoad={() => console.log('onFirstLoad')}
+                    onLoad={() => console.log('onLoad')}
+                    extensions={['png', 'jpeg', 'jpg']}
+                    mimeTypes={['image/png', 'image/jpeg']}
+                    onFileTooLargeError={() => alert('onFileTooLargeError')}
+                    onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
+                    onInvalidURLError={() => alert('onInvalidURLError')}
+                    onURLInjectionError={() => alert('onURLInjectionError')}
+                />
                 <div id="second-uploader-parent">
                     <Uploader
                         // heavy on purpose, to check loading look
                         src={this.state.second.src}
                         customAttributes={{
                             root: {
-                                id: 'second-uploader'
+                                id: 'third-uploader'
                             }
                         }}
                         catalogue={catalogue}

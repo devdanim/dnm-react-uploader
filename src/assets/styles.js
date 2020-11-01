@@ -111,6 +111,15 @@ export default {
             }
         }
         
+        .uploader-zone-fog-core {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-flow: column;
+            width: 100%;
+            height: 100%;
+        }
+        
         .uploader-zone-fog-caption {
             width: 80%;
             text-align: center;
@@ -134,8 +143,10 @@ export default {
         }
     `,
     'uploader/fetching': css`
-        .uploader-zone-fog-img {
-            animation: ${pulse} 2s linear infinite;
+        .uploader-zone-fog-core {
+            position: fixed;
+            top: -9999px;
+            left: -9999px;
         }
     `,
     'uploader/withUrl': css`
