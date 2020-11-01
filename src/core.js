@@ -47,7 +47,6 @@ export default class Uploader extends React.Component {
             file: null,
             loaded: false,
             mounted: false,
-            fetching: !!props.src,
             url: '',
             width: null,
             _forceUpdateCounter: 0
@@ -76,7 +75,7 @@ export default class Uploader extends React.Component {
             // mirroring, see https://stackoverflow.com/a/50080417/6503789
             ...nextProps.src !== _.get(prevState, '_src') ? {_src: nextProps.src} : null,
             // derivation
-            ...nextProps.src !== _.get(prevState, '_src') ? {loaded: false, fetching: !!nextProps.src, _forceUpdateCounter: 0} : null
+            ...nextProps.src !== _.get(prevState, '_src') ? {loaded: false, _forceUpdateCounter: 0} : null
         };
     }
 
@@ -153,7 +152,7 @@ export default class Uploader extends React.Component {
             this.firstLoadDone = true;
             this.props.onFirstLoad();
         }
-        this.setState({loaded: true, fetching: false}, this.props.onLoad);
+        this.setState({loaded: true}, this.props.onLoad);
     }
 
     handleRemoveClick(ev) {
@@ -344,7 +343,7 @@ export default class Uploader extends React.Component {
                 `}
                 css={css`
                     ${styles.uploader};
-                    ${this.state.fetching ? styles['uploader/fetching'] : null};
+                    ${this.props.fetching ? styles['uploader/fetching'] : null};
                     ${this.props.withURLInput ? styles['uploader/withUrl'] : null};
                     ${withControls ? styles['uploader/withControls'] : null};
                 `}
@@ -362,7 +361,7 @@ export default class Uploader extends React.Component {
                 >
                     { media }
                     <div className="uploader-zone-fog" onClick={this.handleClick}>
-                        { this.state.fetching === true &&
+                        { this.props.fetching === true &&
                         <div className="uploader-zone-fog-loader">
                             {this.props.catalogue.loading}
                         </div>

@@ -56,19 +56,20 @@ class Page extends React.Component {
                         }
                     }}
                     compact={true}
+                    fetching={true}
                     fileType="image"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Osmium_crystals.jpg/2880px-Osmium_crystals.jpg"
                     catalogue={catalogue}
                     maxSize={50 * 1000 * 1000}
-                    onChange={(file, manual) => console.log('onChange', file, manual ? 'Done manually' : 'Done programmatically')}
-                    onFirstLoad={() => console.log('onFirstLoad')}
-                    onLoad={() => console.log('onLoad')}
+                    onChange={(file, manual) => console.log('onChange 2', file, manual ? 'Done manually' : 'Done programmatically')}
+                    onFirstLoad={() => console.log('onFirstLoad 2 (but still showing loader since this a controlled prop)')}
+                    onLoad={() => console.log('onLoad 2 (but still showing loader since this a controlled prop)')}
                     extensions={['png', 'jpeg', 'jpg']}
                     mimeTypes={['image/png', 'image/jpeg']}
-                    onFileTooLargeError={() => alert('onFileTooLargeError')}
-                    onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
-                    onInvalidURLError={() => alert('onInvalidURLError')}
-                    onURLInjectionError={() => alert('onURLInjectionError')}
+                    onFileTooLargeError={() => alert('onFileTooLargeError 2')}
+                    onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError 2')}
+                    onInvalidURLError={() => alert('onInvalidURLError 2')}
+                    onURLInjectionError={() => alert('onURLInjectionError 2')}
                 />
                 <div id="second-uploader-parent">
                     <Uploader
@@ -82,9 +83,9 @@ class Page extends React.Component {
                         catalogue={catalogue}
                         compact={true}
                         removable={true}
-                        onRemoveClick={() => alert('onRemoveClick')}
+                        onRemoveClick={() => alert('onRemoveClick 3')}
                         croppable={true}
-                        onCropClick={() => alert('onCropClick')}
+                        onCropClick={() => alert('onCropClick 3')}
                         maxSize={500 * 1000 * 1000}
                         onChange={file => this.setState(prevState => ({
                             second: {
@@ -92,12 +93,12 @@ class Page extends React.Component {
                                 src: URL.createObjectURL(file)
                             }
                         }))}
-                        onFirstLoad={() => console.log('onFirstLoad')}
-                        onLoad={() => console.log('onLoad')}
-                        onFileTooLargeError={() => alert('onFileTooLargeError')}
-                        onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
-                        onInvalidURLError={() => alert('onInvalidURLError')}
-                        onURLInjectionError={() => alert('onURLInjectionError')}
+                        onFirstLoad={() => console.log('onFirstLoad 3')}
+                        onLoad={() => console.log('onLoad 3')}
+                        onFileTooLargeError={() => alert('onFileTooLargeError 3')}
+                        onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError 3')}
+                        onInvalidURLError={() => alert('onInvalidURLError 3')}
+                        onURLInjectionError={() => alert('onURLInjectionError 3')}
                         removeIcon={<Svg.Erase />}
                         imageCrop={{x: 2000, y: 2000, width: 1000, height: 1000}}
                         backgroundSize="contain"

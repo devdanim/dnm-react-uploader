@@ -7605,7 +7605,6 @@
         file: null,
         loaded: false,
         mounted: false,
-        fetching: !!props.src,
         url: '',
         width: null,
         _forceUpdateCounter: 0
@@ -7731,8 +7730,7 @@
         }
 
         this.setState({
-          loaded: true,
-          fetching: false
+          loaded: true
         }, this.props.onLoad);
       }
     }, {
@@ -7934,7 +7932,7 @@
           "data-attr": "root"
         }, _.get(this.props.customAttributes, 'root', {}), {
           className: "\n                    uploader\n                    ".concat(_.get(this.props.customAttributes, 'root.className', ''), "\n                "),
-          css: css(_templateObject$1(), styles.uploader, this.state.fetching ? styles['uploader/fetching'] : null, this.props.withURLInput ? styles['uploader/withUrl'] : null, withControls ? styles['uploader/withControls'] : null)
+          css: css(_templateObject$1(), styles.uploader, this.props.fetching ? styles['uploader/fetching'] : null, this.props.withURLInput ? styles['uploader/withUrl'] : null, withControls ? styles['uploader/withControls'] : null)
         }), jsx("input", {
           "data-attr": "input",
           ref: function ref(obj) {
@@ -7954,7 +7952,7 @@
         }, media, jsx("div", {
           className: "uploader-zone-fog",
           onClick: this.handleClick
-        }, this.state.fetching === true && jsx("div", {
+        }, this.props.fetching === true && jsx("div", {
           className: "uploader-zone-fog-loader"
         }, this.props.catalogue.loading), jsx("div", {
           className: "uploader-zone-fog-core"
@@ -8137,7 +8135,6 @@
           _src: nextProps.src
         } : null), nextProps.src !== _.get(prevState, '_src') ? {
           loaded: false,
-          fetching: !!nextProps.src,
           _forceUpdateCounter: 0
         } : null);
       }
