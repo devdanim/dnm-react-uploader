@@ -35,7 +35,7 @@ class Page extends React.Component {
                         }
                     }}
                     compact={true}
-                    fileType="image"
+                    fileType={"image"}
                     catalogue={catalogue}
                     maxSize={50 * 1000 * 1000}
                     onChange={(file, manual) => console.log('onChange', file, manual ? 'Done manually' : 'Done programmatically')}

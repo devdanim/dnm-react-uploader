@@ -53,6 +53,8 @@ export default class Uploader extends React.Component {
         };
 
         this.change = this.change.bind(this);
+        this.getFileTypes = this.getFileTypes.bind(this);
+        this.getAcceptedExtensions = this.getAcceptedExtensions.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleCropClick = this.handleCropClick.bind(this);
@@ -94,9 +96,24 @@ export default class Uploader extends React.Component {
         this.setState({ _forceUpdateCounter: this.state._forceUpdateCounter++ });
     }
 
+    getFileTypes() {
+        const { fileType } = this.props;
+        return typeof fileType === "string" ? [fileType] : fileType;
+    }
+
+    getAcceptedExtensions() {
+        const fileTypes = this.getFileTypes();
+        const extensions = [];
+        fileTypes.forEach(fileType => {
+            this.extensions()[fileType].forEach(extension => extensions.push(extension));
+        });
+        return extensions;
+    }
+
     change(file, manual = true, callback = data => null) {
         let maxSize = this.props.maxSize;
-        if (this.guessFileType(file) !== this.props.fileType) this.props.onInvalidFileExtensionError(this.extension(file), this.extensions()[this.props.fileType]);
+        const fileTypes = this.getFileTypes();
+        if (fileTypes.indexOf(this.guessFileType(file)) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
         else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);
         else this.props.onChange(file, manual);
 
@@ -205,13 +222,14 @@ export default class Uploader extends React.Component {
     }
 
     render() {
+        const fileTypes = this.getFileTypes();
+        const guessFileType = this.props.src ? this.guessFileType(this.props.src) : fileTypes[0];
         let media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable);
 
         if (this.props.src) {
-            const fileType = this.props.fileType || this.guessFileType(this.props.src);
-            switch (fileType) {
+            switch (guessFileType) {
                 case 'image':
                     if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
                         let style = {};
@@ -324,7 +342,7 @@ export default class Uploader extends React.Component {
             }
         }
 
-        switch (this.props.fileType) {
+        switch (guessFileType) {
             case 'image':
                 icon = <Svg.Image className="uploader-zone-fog-img" /> ;
                 break;
@@ -475,7 +493,9 @@ export default class Uploader extends React.Component {
             compressedFile: Constants.compressedFile.extensions,
         };
         // unless some have explicitly been provided
-        if (this.props.extensions) extensions = {[this.props.fileType]: this.props.extensions};
+        if (this.props.extensions) {
+            extensions = {[this.getFileTypes()[0]]: this.props.extensions};
+        }
 
         return extensions;
     }
@@ -564,7 +584,7 @@ Uploader.propTypes = {
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     extensions: PropTypes.array,
-    fileType: PropTypes.oneOf(['compressedFile', 'image', 'video']), // expected file type
+    fileType: PropTypes.oneOf(PropTypes.array, PropTypes.string), // expected file type
     imageCrop: PropTypes.object,
     maxSize: PropTypes.number,
     mimeTypes: PropTypes.array,
