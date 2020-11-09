@@ -230,7 +230,7 @@ export default class Uploader extends React.Component {
 
         if (this.props.src) {
             let cropStyle = null;
-            if(this.cropImg && ((srcType === "image" && this.cropImg.nodeName === "IMG") || (srcType === "video" && this.cropImg.nodeName === "VIDEO"))) {
+            if(this.props.imageCrop && this.cropImg && ((srcType === "image" && this.cropImg.nodeName === "IMG") || (srcType === "video" && this.cropImg.nodeName === "VIDEO"))) {
                 let zoneWidth = this.zone.offsetWidth,
                     zoneHeight = this.zone.offsetHeight,
                     realWidth = srcType === "video" ? this.cropImg.videoWidth : this.cropImg.naturalWidth,

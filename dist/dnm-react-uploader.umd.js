@@ -7683,7 +7683,7 @@
         if (this.props.src) {
           var cropStyle = null;
 
-          if (this.cropImg && (srcType === "image" && this.cropImg.nodeName === "IMG" || srcType === "video" && this.cropImg.nodeName === "VIDEO")) {
+          if (this.props.imageCrop && this.cropImg && (srcType === "image" && this.cropImg.nodeName === "IMG" || srcType === "video" && this.cropImg.nodeName === "VIDEO")) {
             var zoneWidth = this.zone.offsetWidth,
                 zoneHeight = this.zone.offsetHeight,
                 realWidth = srcType === "video" ? this.cropImg.videoWidth : this.cropImg.naturalWidth,
