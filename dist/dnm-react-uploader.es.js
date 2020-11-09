@@ -2945,61 +2945,61 @@ function (_React$Component) {
       var _this5 = this;
 
       var fileTypes = this.getFileTypes();
-      var guessFileType = this.props.src ? this.guessFileType(this.props.src) : fileTypes[0];
+      var srcType = this.props.srcType ? this.fileType(this.props.srcType) : fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null);
       var media = null,
           icon = null,
           withControls = this.props.src && (this.props.removable || this.props.croppable);
 
       if (this.props.src) {
-        switch (guessFileType) {
+        var cropStyle = null;
+
+        if (this.cropImg && (srcType === "image" && this.cropImg.nodeName === "IMG" || srcType === "video" && this.cropImg.nodeName === "VIDEO")) {
+          var zoneWidth = this.zone.offsetWidth,
+              zoneHeight = this.zone.offsetHeight,
+              realWidth = srcType === "video" ? this.cropImg.videoWidth : this.cropImg.naturalWidth,
+              realHeight = srcType === "video" ? this.cropImg.videoHeight : this.cropImg.naturalHeight,
+              displayWidth = srcType === "video" ? realWidth : this.cropImg.offsetWidth,
+              displayHeight = srcType === "video" ? realHeight : this.cropImg.offsetHeight,
+              // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
+          imageCrop = {
+            x: Math.min(this.props.imageCrop.x, realWidth),
+            y: Math.min(this.props.imageCrop.y, realHeight),
+            width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x),
+            height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y)
+          },
+              displayCropX = displayWidth * imageCrop.x / realWidth,
+              displayCropY = displayHeight * imageCrop.y / realHeight,
+              displayCropWidth = displayWidth * imageCrop.width / realWidth,
+              displayCropHeight = displayHeight * imageCrop.height / realHeight,
+              displayCropRatio = displayCropWidth / displayCropHeight,
+              displayCropTop = displayCropY,
+              displayCropRight = displayCropX + displayCropWidth,
+              displayCropBottom = displayCropY + displayCropHeight,
+              displayCropLeft = displayCropX,
+              scale = null;
+
+          if (imageCrop.width > 0 && imageCrop.height > 0) {
+            // image fit to zone
+            if (this.props.backgroundSize === 'contain') {
+              if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;else scale = zoneHeight / displayCropHeight;
+            } else {
+              if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;else scale = zoneWidth / displayCropWidth;
+            }
+
+            cropStyle = {
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transformOrigin: "".concat((displayCropLeft + displayCropRight) / 2, "px ").concat((displayCropTop + displayCropBottom) / 2, "px"),
+              transform: "\n                            translateX(-".concat((displayCropLeft + displayCropRight) / 2, "px)\n                            translateY(-").concat((displayCropTop + displayCropBottom) / 2, "px)\n                            scale(").concat(scale, ")\n                        "),
+              clip: "rect(\n                            ".concat(displayCropTop, "px\n                            ").concat(displayCropRight, "px\n                            ").concat(displayCropBottom, "px\n                            ").concat(displayCropLeft, "px)\n                        ")
+            };
+          }
+        }
+
+        switch (srcType) {
           case 'image':
             if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
-              var style = {};
-
-              if (this.cropImg) {
-                var zoneWidth = this.zone.offsetWidth,
-                    zoneHeight = this.zone.offsetHeight,
-                    displayWidth = this.cropImg.offsetWidth,
-                    displayHeight = this.cropImg.offsetHeight,
-                    realWidth = this.cropImg.naturalWidth,
-                    realHeight = this.cropImg.naturalHeight,
-                    // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
-                imageCrop = {
-                  x: Math.min(this.props.imageCrop.x, realWidth),
-                  y: Math.min(this.props.imageCrop.y, realHeight),
-                  width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x),
-                  height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y)
-                },
-                    displayCropX = displayWidth * imageCrop.x / realWidth,
-                    displayCropY = displayHeight * imageCrop.y / realHeight,
-                    displayCropWidth = displayWidth * imageCrop.width / realWidth,
-                    displayCropHeight = displayHeight * imageCrop.height / realHeight,
-                    displayCropRatio = displayCropWidth / displayCropHeight,
-                    displayCropTop = displayCropY,
-                    displayCropRight = displayCropX + displayCropWidth,
-                    displayCropBottom = displayCropY + displayCropHeight,
-                    displayCropLeft = displayCropX,
-                    scale = null;
-
-                if (imageCrop.width > 0 && imageCrop.height > 0) {
-                  // image fit to zone
-                  if (this.props.backgroundSize === 'contain') {
-                    if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;else scale = zoneHeight / displayCropHeight;
-                  } else {
-                    if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;else scale = zoneWidth / displayCropWidth;
-                  }
-
-                  style = {
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transformOrigin: "".concat((displayCropLeft + displayCropRight) / 2, "px ").concat((displayCropTop + displayCropBottom) / 2, "px"),
-                    transform: "\n                                        translateX(-".concat((displayCropLeft + displayCropRight) / 2, "px)\n                                        translateY(-").concat((displayCropTop + displayCropBottom) / 2, "px)\n                                        scale(").concat(scale, ")\n                                    "),
-                    clip: "rect(\n                                        ".concat(displayCropTop, "px\n                                        ").concat(displayCropRight, "px\n                                        ").concat(displayCropBottom, "px\n                                        ").concat(displayCropLeft, "px)\n                                    ")
-                  };
-                }
-              }
-
               media = jsx("img", {
                 alt: "",
                 ref: function ref(obj) {
@@ -3007,7 +3007,7 @@ function (_React$Component) {
                 },
                 src: this.props.src,
                 onLoad: this._forceUpdate,
-                style: style
+                style: cropStyle
               });
             } else {
               media = jsx("div", {
@@ -3045,7 +3045,10 @@ function (_React$Component) {
               muted: true,
               src: this.props.src,
               onLoadedData: this.handleLoad,
-              style: this.props.backgroundSize === 'cover' ? {
+              ref: function ref(obj) {
+                return _this5.cropImg = obj;
+              },
+              style: cropStyle ? cropStyle : this.props.backgroundSize === 'cover' ? {
                 height: '100%' // considering the majority of videos at landscape format
 
               } : {
@@ -3057,7 +3060,7 @@ function (_React$Component) {
         }
       }
 
-      switch (guessFileType) {
+      switch (srcType) {
         case 'image':
           icon = jsx(Image, {
             className: "uploader-zone-fog-img"
@@ -3113,7 +3116,7 @@ function (_React$Component) {
         className: "uploader-zone-fog-or-wing"
       })) : null, jsx("div", {
         className: "uploader-zone-fog-controls"
-      }, this.props.croppable === true && jsx("span", {
+      }, srcType === "image" && this.props.croppable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleCropClick
       }, this.props.cropIcon || jsx(Crop, null)), this.props.removable === true && jsx("span", {
@@ -3306,7 +3309,7 @@ Uploader.propTypes = {
   croppable: PropTypes.bool,
   customAttributes: PropTypes.object,
   extensions: PropTypes.array,
-  fileType: PropTypes.oneOf(PropTypes.array, PropTypes.string),
+  fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   // expected file type
   imageCrop: PropTypes.object,
   maxSize: PropTypes.number,

@@ -21,11 +21,14 @@ class Page extends React.Component {
             first: {},
             second: {
                 src: 'https://wallpaperplay.com/walls/full/2/5/0/200799.jpg',
+                srcType: 'image/jpeg'
             },
         };
     }
 
+    
     render() {
+        console.log("SRC", this.state.second);
         return (
             <React.Fragment>
                 <Uploader
@@ -75,6 +78,7 @@ class Page extends React.Component {
                     <Uploader
                         // heavy on purpose, to check loading look
                         src={this.state.second.src}
+                        srcType={this.state.second.srcType}
                         customAttributes={{
                             root: {
                                 id: 'third-uploader'
@@ -90,9 +94,11 @@ class Page extends React.Component {
                         onChange={file => this.setState(prevState => ({
                             second: {
                                 ...prevState.second,
-                                src: URL.createObjectURL(file)
+                                src: URL.createObjectURL(file),
+                                srcType: file.type,
                             }
                         }))}
+                        fileType={["image", "video"]}
                         onFirstLoad={() => console.log('onFirstLoad 3')}
                         onLoad={() => console.log('onLoad 3')}
                         onFileTooLargeError={() => alert('onFileTooLargeError 3')}
@@ -100,7 +106,7 @@ class Page extends React.Component {
                         onInvalidURLError={() => alert('onInvalidURLError 3')}
                         onURLInjectionError={() => alert('onURLInjectionError 3')}
                         removeIcon={<Svg.Erase />}
-                        imageCrop={{x: 2000, y: 2000, width: 1000, height: 1000}}
+                        imageCrop={{x: 50, y: 50, width: 1000, height: 500}}
                         backgroundSize="contain"
                     />
                 </div>

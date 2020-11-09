@@ -223,78 +223,77 @@ export default class Uploader extends React.Component {
 
     render() {
         const fileTypes = this.getFileTypes();
-        const guessFileType = this.props.src ? this.guessFileType(this.props.src) : fileTypes[0];
+        const srcType = this.props.srcType ? this.fileType(this.props.srcType) : (fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null));
         let media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable);
 
         if (this.props.src) {
-            switch (guessFileType) {
+            let cropStyle = null;
+            if(this.cropImg && ((srcType === "image" && this.cropImg.nodeName === "IMG") || (srcType === "video" && this.cropImg.nodeName === "VIDEO"))) {
+                let zoneWidth = this.zone.offsetWidth,
+                    zoneHeight = this.zone.offsetHeight,
+                    realWidth = srcType === "video" ? this.cropImg.videoWidth : this.cropImg.naturalWidth,
+                    realHeight = srcType === "video" ? this.cropImg.videoHeight : this.cropImg.naturalHeight,
+                    displayWidth = srcType === "video" ? realWidth : this.cropImg.offsetWidth,
+                    displayHeight = srcType === "video" ? realHeight : this.cropImg.offsetHeight,
+                    // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
+                    imageCrop = {
+                        x: Math.min(this.props.imageCrop.x, realWidth),
+                        y: Math.min(this.props.imageCrop.y, realHeight),
+                        width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x),
+                        height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y),
+                    },
+                    displayCropX = displayWidth * imageCrop.x / realWidth,
+                    displayCropY = displayHeight * imageCrop.y / realHeight,
+                    displayCropWidth = displayWidth * imageCrop.width / realWidth,
+                    displayCropHeight = displayHeight * imageCrop.height / realHeight,
+                    displayCropRatio = displayCropWidth / displayCropHeight,
+                    displayCropTop = displayCropY,
+                    displayCropRight = displayCropX + displayCropWidth,
+                    displayCropBottom = displayCropY + displayCropHeight,
+                    displayCropLeft = displayCropX,
+                    scale = null;
+                    
+                if (imageCrop.width > 0 && imageCrop.height > 0) {
+                    // image fit to zone
+                    if (this.props.backgroundSize === 'contain') {
+                        if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;
+                        else scale = zoneHeight / displayCropHeight;
+                    } else {
+                        if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;
+                        else scale = zoneWidth / displayCropWidth;
+                    }
+
+                    cropStyle = {
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transformOrigin: `${(displayCropLeft + displayCropRight) / 2}px ${(displayCropTop + displayCropBottom) / 2}px`,
+                        transform: `
+                            translateX(-${(displayCropLeft + displayCropRight) / 2}px)
+                            translateY(-${(displayCropTop + displayCropBottom) / 2}px)
+                            scale(${scale})
+                        `,
+                        clip: `rect(
+                            ${displayCropTop}px
+                            ${displayCropRight}px
+                            ${displayCropBottom}px
+                            ${displayCropLeft}px)
+                        `
+                    };
+                }
+            }
+            switch (srcType) {
                 case 'image':
                     if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
-                        let style = {};
-                        if (this.cropImg) {
-                            let zoneWidth = this.zone.offsetWidth,
-                                zoneHeight = this.zone.offsetHeight,
-                                displayWidth = this.cropImg.offsetWidth,
-                                displayHeight = this.cropImg.offsetHeight,
-                                realWidth = this.cropImg.naturalWidth,
-                                realHeight = this.cropImg.naturalHeight,
-                                // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
-                                imageCrop = {
-                                    x: Math.min(this.props.imageCrop.x, realWidth),
-                                    y: Math.min(this.props.imageCrop.y, realHeight),
-                                    width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x),
-                                    height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y),
-                                },
-                                displayCropX = displayWidth * imageCrop.x / realWidth,
-                                displayCropY = displayHeight * imageCrop.y / realHeight,
-                                displayCropWidth = displayWidth * imageCrop.width / realWidth,
-                                displayCropHeight = displayHeight * imageCrop.height / realHeight,
-                                displayCropRatio = displayCropWidth / displayCropHeight,
-                                displayCropTop = displayCropY,
-                                displayCropRight = displayCropX + displayCropWidth,
-                                displayCropBottom = displayCropY + displayCropHeight,
-                                displayCropLeft = displayCropX,
-                                scale = null;
-
-                            if (imageCrop.width > 0 && imageCrop.height > 0) {
-                                // image fit to zone
-                                if (this.props.backgroundSize === 'contain') {
-                                    if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;
-                                    else scale = zoneHeight / displayCropHeight;
-                                } else {
-                                    if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneHeight / displayCropHeight;
-                                    else scale = zoneWidth / displayCropWidth;
-                                }
-
-                                style = {
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transformOrigin: `${(displayCropLeft + displayCropRight) / 2}px ${(displayCropTop + displayCropBottom) / 2}px`,
-                                    transform: `
-                                        translateX(-${(displayCropLeft + displayCropRight) / 2}px)
-                                        translateY(-${(displayCropTop + displayCropBottom) / 2}px)
-                                        scale(${scale})
-                                    `,
-                                    clip: `rect(
-                                        ${displayCropTop}px
-                                        ${displayCropRight}px
-                                        ${displayCropBottom}px
-                                        ${displayCropLeft}px)
-                                    `
-                                };
-                            }
-                        }
-
                         media = (
                             <img
                                 alt=''
                                 ref={obj => this.cropImg = obj}
                                 src={this.props.src}
                                 onLoad={this._forceUpdate}
-                                style={style}
+                                style={cropStyle}
                             />
                         );
                     } else {
@@ -332,7 +331,8 @@ export default class Uploader extends React.Component {
                             muted
                             src={this.props.src}
                             onLoadedData={this.handleLoad}
-                            style={this.props.backgroundSize === 'cover'
+                            ref={obj => this.cropImg = obj}
+                            style={cropStyle ? cropStyle : this.props.backgroundSize === 'cover'
                                 ? {height: '100%'} // considering the majority of videos at landscape format
                                 : {maxHeight: '100%', maxWidth: '100%'}
                             }
@@ -342,7 +342,7 @@ export default class Uploader extends React.Component {
             }
         }
 
-        switch (guessFileType) {
+        switch (srcType) {
             case 'image':
                 icon = <Svg.Image className="uploader-zone-fog-img" /> ;
                 break;
@@ -397,27 +397,27 @@ export default class Uploader extends React.Component {
                                 </React.Fragment>
                             ) : null }
                             { withControls === true &&
-                            <React.Fragment>
-                                { !this.props.compact ? (
-                                    <div className="uploader-zone-fog-or">
-                                        <div className="uploader-zone-fog-or-wing" />
-                                        <div className="uploader-zone-fog-or-body">{ this.props.catalogue.or }</div>
-                                        <div className="uploader-zone-fog-or-wing" />
+                                <React.Fragment>
+                                    { !this.props.compact ? (
+                                        <div className="uploader-zone-fog-or">
+                                            <div className="uploader-zone-fog-or-wing" />
+                                            <div className="uploader-zone-fog-or-body">{ this.props.catalogue.or }</div>
+                                            <div className="uploader-zone-fog-or-wing" />
+                                        </div>
+                                    ) : null }
+                                    <div className="uploader-zone-fog-controls">
+                                        {srcType === "image" && this.props.croppable === true &&
+                                            <span className="uploader-zone-fog-controls-control" onClick={this.handleCropClick}>
+                                                {this.props.cropIcon || <Svg.Crop />}
+                                            </span>
+                                        }
+                                        {this.props.removable === true &&
+                                        <span className="uploader-zone-fog-controls-control" onClick={this.handleRemoveClick}>
+                                            {this.props.removeIcon || <Svg.Garbage />}
+                                        </span>
+                                        }
                                     </div>
-                                ) : null }
-                                <div className="uploader-zone-fog-controls">
-                                    {this.props.croppable === true &&
-                                    <span className="uploader-zone-fog-controls-control" onClick={this.handleCropClick}>
-                                        {this.props.cropIcon || <Svg.Crop />}
-                                    </span>
-                                    }
-                                    {this.props.removable === true &&
-                                    <span className="uploader-zone-fog-controls-control" onClick={this.handleRemoveClick}>
-                                        {this.props.removeIcon || <Svg.Garbage />}
-                                    </span>
-                                    }
-                                </div>
-                            </React.Fragment>
+                                </React.Fragment>
                             }
                         </div>
                     </div>
@@ -584,7 +584,7 @@ Uploader.propTypes = {
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     extensions: PropTypes.array,
-    fileType: PropTypes.oneOf(PropTypes.array, PropTypes.string), // expected file type
+    fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]), // expected file type
     imageCrop: PropTypes.object,
     maxSize: PropTypes.number,
     mimeTypes: PropTypes.array,
