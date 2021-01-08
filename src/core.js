@@ -58,6 +58,7 @@ export default class Uploader extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleCropClick = this.handleCropClick.bind(this);
+        this.handleVideoCutClick = this.handleVideoCutClick.bind(this);
         this.handleDragLeave = this.handleDragLeave.bind(this);
         this.handleDragEnter = this.handleDragEnter.bind(this);
         this.handleDrop = this.handleDrop.bind(this);
@@ -139,6 +140,12 @@ export default class Uploader extends React.Component {
         ev.stopPropagation();
 
         this.props.onCropClick();
+    }
+
+    handleVideoCutClick(ev) {
+        ev.stopPropagation();
+
+        this.props.onVideoCutClick();
     }
 
     handleDragLeave() {
@@ -226,7 +233,7 @@ export default class Uploader extends React.Component {
         const srcType = this.props.srcType ? this.fileType(this.props.srcType) : (fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null));
         let media = null,
             icon = null,
-            withControls = this.props.src && (this.props.removable || this.props.croppable);
+            withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable);
 
         if (this.props.src) {
             let cropStyle = null;
@@ -385,7 +392,7 @@ export default class Uploader extends React.Component {
                         </div>
                         }
                         <div className="uploader-zone-fog-core">
-                            { !this.props.compact || (!this.props.removable && !this.props.croppable) || !this.props.src ? (
+                            { !this.props.compact || (!this.props.removable && !this.props.croppable && !this.props.cuttable) || !this.props.src ? (
                                 <React.Fragment>
                                     { this.state.beingDropTarget
                                         ? <Svg.CloudComputing className="uploader-zone-fog-img" />
@@ -409,6 +416,11 @@ export default class Uploader extends React.Component {
                                         {srcType === "image" && this.props.croppable === true &&
                                             <span className="uploader-zone-fog-controls-control" onClick={this.handleCropClick}>
                                                 {this.props.cropIcon || <Svg.Crop />}
+                                            </span>
+                                        }
+                                        {srcType === "video" && this.props.cuttable === true &&
+                                            <span className="uploader-zone-fog-controls-control" onClick={this.handleVideoCutClick}>
+                                                {this.props.cutIcon || <Svg.Cut />}
                                             </span>
                                         }
                                         {this.props.removable === true &&
@@ -583,6 +595,7 @@ Uploader.propTypes = {
     compact: PropTypes.bool,
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
+    cuttable: PropTypes.bool,
     extensions: PropTypes.array,
     fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]), // expected file type
     imageCrop: PropTypes.object,
@@ -590,6 +603,7 @@ Uploader.propTypes = {
     mimeTypes: PropTypes.array,
     onChange: PropTypes.func,
     onCropClick: PropTypes.func,
+    onCutClick: PropTypes.func,
     onFileTooLargeError: PropTypes.func,
     onFirstLoad: PropTypes.func,
     onInvalidFileExtensionError: PropTypes.func,
@@ -618,6 +632,8 @@ Uploader.defaultProps = {
     croppable: false,
     cropIcon: null, // if let null, it will be default one
     customAttributes: {},
+    cuttable: false,
+    cutIcon: null, // if let null, it will be default one
     extensions: null, // if not set and left as it is, we'll use default ones
     fileType: 'image', // may be one of: image, video
     imageCrop: null,
@@ -632,6 +648,7 @@ Uploader.defaultProps = {
     onLoad: () => null,
     onRemoveClick: () => null,
     onURLInjectionError: (error, url) => null,
+    onVideoCutClick: () => null,
     removable: false,
     removeIcon: null, // if let null, it will be default one
     src: null,
