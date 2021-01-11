@@ -74,7 +74,10 @@ export default class Uploader extends React.Component {
         this.injectURL = this.injectURL.bind(this);
         this.change = this.change.bind(this);
         this._forceUpdate = this._forceUpdate.bind(this);
+        this._handleWindowScroll = this._handleWindowScroll.bind(this);
+
         this.forceUpdateOnResize = _.debounce(this._forceUpdate, 250);
+        this.handleWindowScroll = _.debounce(this._handleWindowScroll, 250);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -90,15 +93,18 @@ export default class Uploader extends React.Component {
         this.setState({mounted: true});
         this.initializeDrag();
         window.addEventListener('resize', this.forceUpdateOnResize);
+        window.addEventListener('scroll', this.handleWindowScroll);
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.forceUpdateOnResize);
+        window.removeEventListener('scroll', this.handleWindowScroll);
     }
     
     // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
     _forceUpdate() {
-        this.setState({ _forceUpdateCounter: this.state._forceUpdateCounter++ });
+        const { srcType } = this.props;
+        if (srcType !== "video") this.setState({ _forceUpdateCounter: this.state._forceUpdateCounter++ });
     }
 
     getFileTypes() {
@@ -173,6 +179,21 @@ export default class Uploader extends React.Component {
 
     handleInjectURLClick() {
         this.injectURL(this.state.url, true);
+    }
+
+    _handleWindowScroll() {
+        const video = _.get(this.video, 'current');
+        if (video) {
+            const rect = video.getBoundingClientRect();
+            // https://stackoverflow.com/a/60018490
+            if ((rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth))) {
+                console.log("Play video");
+                video.play();
+            } else {
+                console.log("Pause video");
+                video.pause();
+            }
+        }
     }
 
     handleLoad() {

@@ -7638,7 +7638,9 @@
       _this.injectURL = _this.injectURL.bind(_assertThisInitialized(_this));
       _this.change = _this.change.bind(_assertThisInitialized(_this));
       _this._forceUpdate = _this._forceUpdate.bind(_assertThisInitialized(_this));
+      _this._handleWindowScroll = _this._handleWindowScroll.bind(_assertThisInitialized(_this));
       _this.forceUpdateOnResize = _.debounce(_this._forceUpdate, 250);
+      _this.handleWindowScroll = _.debounce(_this._handleWindowScroll, 250);
       return _this;
     }
 
@@ -7650,17 +7652,20 @@
         });
         this.initializeDrag();
         window.addEventListener('resize', this.forceUpdateOnResize);
+        window.addEventListener('scroll', this.handleWindowScroll);
       }
     }, {
       key: "componentWillUnmount",
       value: function componentWillUnmount() {
         window.removeEventListener('resize', this.forceUpdateOnResize);
+        window.removeEventListener('scroll', this.handleWindowScroll);
       } // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
 
     }, {
       key: "_forceUpdate",
       value: function _forceUpdate() {
-        this.setState({
+        var srcType = this.props.srcType;
+        if (srcType !== "video") this.setState({
           _forceUpdateCounter: this.state._forceUpdateCounter++
         });
       }
@@ -7761,6 +7766,23 @@
       key: "handleInjectURLClick",
       value: function handleInjectURLClick() {
         this.injectURL(this.state.url, true);
+      }
+    }, {
+      key: "_handleWindowScroll",
+      value: function _handleWindowScroll() {
+        var video = _.get(this.video, 'current');
+
+        if (video) {
+          var rect = video.getBoundingClientRect(); // https://stackoverflow.com/a/60018490
+
+          if (rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth)) {
+            console.log("Play video");
+            video.play();
+          } else {
+            console.log("Pause video");
+            video.pause();
+          }
+        }
       }
     }, {
       key: "handleLoad",
