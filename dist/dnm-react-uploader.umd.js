@@ -7630,6 +7630,7 @@
       _this.handleDrop = _this.handleDrop.bind(_assertThisInitialized(_this));
       _this.handleInjectURLClick = _this.handleInjectURLClick.bind(_assertThisInitialized(_this));
       _this.handleLoad = _this.handleLoad.bind(_assertThisInitialized(_this));
+      _this.handleVideoLoad = _this.handleVideoLoad.bind(_assertThisInitialized(_this));
       _this.handleRemoveClick = _this.handleRemoveClick.bind(_assertThisInitialized(_this));
       _this.handleURLChange = _this.handleURLChange.bind(_assertThisInitialized(_this));
       _this.get = _this.get.bind(_assertThisInitialized(_this));
@@ -7786,15 +7787,23 @@
       key: "handleLoad",
       value: function handleLoad() {
         var _this$props = this.props,
-            srcType = _this$props.srcType,
             onFirstLoad = _this$props.onFirstLoad,
-            onLoad = _this$props.onLoad,
-            onVideoLoad = _this$props.onVideoLoad;
+            onLoad = _this$props.onLoad;
 
         if (typeof this.firstLoadDone === 'undefined') {
           this.firstLoadDone = true;
           onFirstLoad();
         }
+
+        this.setState({
+          loaded: true
+        }, onLoad);
+      }
+    }, {
+      key: "handleVideoLoad",
+      value: function handleVideoLoad(ref) {
+        console.log("VIDEO REF", ref);
+        this.video = ref;
 
         var videoEl = _.get(this.video, 'current');
 
@@ -7802,10 +7811,6 @@
           videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
           onVideoLoad(videoEl);
         }
-
-        this.setState({
-          loaded: true
-        }, onLoad);
       }
     }, {
       key: "handleRemoveClick",
@@ -7984,9 +7989,7 @@
                 muted: true,
                 src: this.props.src,
                 onLoadedData: this.handleLoad,
-                ref: function ref(obj) {
-                  return _this5.video = obj;
-                },
+                ref: this.handleVideoLoad,
                 style: cropStyle ? cropStyle : this.props.backgroundSize === 'cover' ? {
                   height: '100%'
                 } // considering the majority of videos at landscape format

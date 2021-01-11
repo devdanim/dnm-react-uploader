@@ -65,6 +65,7 @@ export default class Uploader extends React.Component {
         this.handleDrop = this.handleDrop.bind(this);
         this.handleInjectURLClick = this.handleInjectURLClick.bind(this);
         this.handleLoad = this.handleLoad.bind(this);
+        this.handleVideoLoad = this.handleVideoLoad.bind(this);
         this.handleRemoveClick = this.handleRemoveClick.bind(this);
         this.handleURLChange = this.handleURLChange.bind(this);
         this.get = this.get.bind(this);
@@ -193,17 +194,22 @@ export default class Uploader extends React.Component {
     }
 
     handleLoad() {
-        const { srcType, onFirstLoad, onLoad, onVideoLoad } = this.props;
+        const { onFirstLoad, onLoad } = this.props;
         if (typeof this.firstLoadDone === 'undefined') {
             this.firstLoadDone = true;
             onFirstLoad();
         }
+        this.setState({ loaded: true }, onLoad);
+    }
+
+    handleVideoLoad(ref) {
+        console.log("VIDEO REF", ref);
+        this.video = ref;
         const videoEl = _.get(this.video, 'current');
         if (videoEl) {
             videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
             onVideoLoad(videoEl);
         }
-        this.setState({ loaded: true }, onLoad);
     }
 
     handleRemoveClick(ev) {
@@ -372,7 +378,7 @@ export default class Uploader extends React.Component {
                             muted
                             src={this.props.src}
                             onLoadedData={this.handleLoad}
-                            ref={obj => this.video = obj}
+                            ref={this.handleVideoLoad}
                             style={cropStyle ? cropStyle : this.props.backgroundSize === 'cover'
                                 ? {height: '100%'} // considering the majority of videos at landscape format
                                 : {maxHeight: '100%', maxWidth: '100%'}
