@@ -2885,9 +2885,12 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       width: null,
       _forceUpdateCounter: 0
     };
+    _this.video = /*#__PURE__*/React.createRef();
+    _this.img = /*#__PURE__*/React.createRef();
     _this.change = _this.change.bind(_assertThisInitialized(_this));
     _this.getFileTypes = _this.getFileTypes.bind(_assertThisInitialized(_this));
     _this.getAcceptedExtensions = _this.getAcceptedExtensions.bind(_assertThisInitialized(_this));
+    _this.updateVideoLoop = _this.updateVideoLoop.bind(_assertThisInitialized(_this));
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
     _this.handleCropClick = _this.handleCropClick.bind(_assertThisInitialized(_this));
@@ -3035,6 +3038,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
         this.props.onFirstLoad();
       }
 
+      var videoEl = _.get(this.video, 'current');
+
+      if (videoEl) videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
       this.setState({
         loaded: true
       }, this.props.onLoad);
@@ -3052,6 +3058,17 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       this.setState({
         url: value
       });
+    }
+  }, {
+    key: "updateVideoLoop",
+    value: function updateVideoLoop() {
+      var videoEl = _.get(this.video, 'current');
+
+      var videoRange = this.props.videoRange;
+
+      if (videoEl && videoRange) {
+        if (videoEl.currentTime < videoRange[0] || videoEl.currentTime > videoRange[1]) videoEl.currentTime = videoRange[0];
+      }
     }
   }, {
     key: "get",
@@ -3186,9 +3203,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
                 }
               }, jsx("img", {
                 alt: "",
-                ref: function ref(obj) {
-                  return _this5.img = obj;
-                },
+                ref: this.img,
                 src: this.props.src,
                 onLoad: this.handleLoad,
                 style: {
@@ -3208,9 +3223,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               muted: true,
               src: this.props.src,
               onLoadedData: this.handleLoad,
-              ref: function ref(obj) {
-                return _this5.cropImg = obj;
-              },
+              ref: this.video,
               style: cropStyle ? cropStyle : this.props.backgroundSize === 'cover' ? {
                 height: '100%'
               } // considering the majority of videos at landscape format
@@ -3493,6 +3506,7 @@ Uploader.propTypes = {
   onURLInjectionError: PropTypes.func,
   removable: PropTypes.bool,
   src: PropTypes.string,
+  videoRange: PropTypes.array,
   withURLInput: PropTypes.bool
 };
 Uploader.defaultProps = {
@@ -3558,6 +3572,7 @@ Uploader.defaultProps = {
   removeIcon: null,
   // if let null, it will be default one
   src: null,
+  videoRange: null,
   withURLInput: false
 };
 
