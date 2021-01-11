@@ -205,7 +205,8 @@ export default class Uploader extends React.Component {
             const videoEl = _.get(this.video, 'current');
             if (videoEl) videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
         }
-        this.setState({ loaded: true }, () => onLoad(ev.current.target));
+        console.log("REF", _.get(srcType === 'video' ? this.video : this.img, 'current'));
+        this.setState({ loaded: true }, () => onLoad(_.get(srcType === 'video' ? this.video : this.img, 'current')));
     }
 
     handleRemoveClick(ev) {
