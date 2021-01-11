@@ -54,6 +54,7 @@ export default class Uploader extends React.Component {
 
         this.change = this.change.bind(this);
         this.getFileTypes = this.getFileTypes.bind(this);
+        this.getSrcType = this.getSrcType.bind(this);
         this.getAcceptedExtensions = this.getAcceptedExtensions.bind(this);
         this.updateVideoLoop = this.updateVideoLoop.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -101,13 +102,18 @@ export default class Uploader extends React.Component {
     
     // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
     _forceUpdate() {
-        const { srcType } = this.props;
+        const srcType = this.getSrcType();
         if (srcType !== "video") this.setState({ _forceUpdateCounter: this.state._forceUpdateCounter++ });
     }
 
     getFileTypes() {
         const { fileType } = this.props;
         return typeof fileType === "string" ? [fileType] : fileType;
+    }
+
+    getSrcType() {
+        const fileTypes = this.getFileTypes();
+        return this.props.srcType ? this.fileType(this.props.srcType) : (fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null));
     }
 
     getAcceptedExtensions() {
@@ -180,7 +186,7 @@ export default class Uploader extends React.Component {
     }
 
     _handleWindowScroll() {
-        const { srcType } = this.props;
+        const srcType = this.getSrcType();
         if (this.video && srcType === "video") {
             const rect = this.video.getBoundingClientRect();
             // https://stackoverflow.com/a/60018490
@@ -267,8 +273,7 @@ export default class Uploader extends React.Component {
     }
 
     render() {
-        const fileTypes = this.getFileTypes();
-        const srcType = this.props.srcType ? this.fileType(this.props.srcType) : (fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null));
+        const srcType = this.getSrcType();
         let media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable);

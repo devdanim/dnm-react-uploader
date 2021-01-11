@@ -2887,6 +2887,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     };
     _this.change = _this.change.bind(_assertThisInitialized(_this));
     _this.getFileTypes = _this.getFileTypes.bind(_assertThisInitialized(_this));
+    _this.getSrcType = _this.getSrcType.bind(_assertThisInitialized(_this));
     _this.getAcceptedExtensions = _this.getAcceptedExtensions.bind(_assertThisInitialized(_this));
     _this.updateVideoLoop = _this.updateVideoLoop.bind(_assertThisInitialized(_this));
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
@@ -2931,7 +2932,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "_forceUpdate",
     value: function _forceUpdate() {
-      var srcType = this.props.srcType;
+      var srcType = this.getSrcType();
       if (srcType !== "video") this.setState({
         _forceUpdateCounter: this.state._forceUpdateCounter++
       });
@@ -2941,6 +2942,12 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function getFileTypes() {
       var fileType = this.props.fileType;
       return typeof fileType === "string" ? [fileType] : fileType;
+    }
+  }, {
+    key: "getSrcType",
+    value: function getSrcType() {
+      var fileTypes = this.getFileTypes();
+      return this.props.srcType ? this.fileType(this.props.srcType) : fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null);
     }
   }, {
     key: "getAcceptedExtensions",
@@ -3037,7 +3044,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "_handleWindowScroll",
     value: function _handleWindowScroll() {
-      var srcType = this.props.srcType;
+      var srcType = this.getSrcType();
 
       if (this.video && srcType === "video") {
         var rect = this.video.getBoundingClientRect(); // https://stackoverflow.com/a/60018490
@@ -3153,8 +3160,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function render() {
       var _this5 = this;
 
-      var fileTypes = this.getFileTypes();
-      var srcType = this.props.srcType ? this.fileType(this.props.srcType) : fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null);
+      var srcType = this.getSrcType();
       var media = null,
           icon = null,
           withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable);
