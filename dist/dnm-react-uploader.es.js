@@ -3042,25 +3042,19 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
 
       var video = _.get(this.video, 'current');
 
-      console.log("Scroll", video);
-
       if (video && srcType === "video") {
         var rect = video.getBoundingClientRect(); // https://stackoverflow.com/a/60018490
 
         if (rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth)) {
-          console.log("Play video");
           video.play();
         } else {
-          console.log("Pause video");
           video.pause();
         }
       }
     }
   }, {
     key: "handleLoad",
-    value: function handleLoad() {
-      var _this3 = this;
-
+    value: function handleLoad(ev) {
       var _this$props = this.props,
           srcType = _this$props.srcType,
           onFirstLoad = _this$props.onFirstLoad,
@@ -3080,7 +3074,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       this.setState({
         loaded: true
       }, function () {
-        return onLoad(srcType === 'video' ? _this3.video : _this3.img);
+        return onLoad(ev.current.target);
       });
     }
   }, {
@@ -3111,30 +3105,30 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "get",
     value: function get(url) {
-      var _this4 = this;
+      var _this3 = this;
 
       // return fetch(url, {mode: 'cors'}).then(response => response.blob());
       return new Promise(function (resolve, reject) {
-        _this4.xhr = new XMLHttpRequest();
-        _this4.xhr.responseType = 'blob';
+        _this3.xhr = new XMLHttpRequest();
+        _this3.xhr.responseType = 'blob';
 
-        _this4.xhr.open('GET', url, true);
+        _this3.xhr.open('GET', url, true);
 
-        _this4.xhr.onload = function () {
-          if (_this4.xhr.status === 200) resolve(_this4.xhr.response);else reject(Error(_this4.xhr.statusText));
+        _this3.xhr.onload = function () {
+          if (_this3.xhr.status === 200) resolve(_this3.xhr.response);else reject(Error(_this3.xhr.statusText));
         };
 
-        _this4.xhr.onerror = function () {
+        _this3.xhr.onerror = function () {
           return reject(Error('Network Error'));
         };
 
-        _this4.xhr.send();
+        _this3.xhr.send();
       });
     }
   }, {
     key: "injectURL",
     value: function injectURL(url) {
-      var _this5 = this;
+      var _this4 = this;
 
       var validate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (data) {
@@ -3152,15 +3146,15 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
           type: response.type
         });
 
-        _this5.change(file, false, callback);
+        _this4.change(file, false, callback);
       })["catch"](function (error) {
-        _this5.props.onURLInjectionError(error, url);
+        _this4.props.onURLInjectionError(error, url);
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this6 = this;
+      var _this5 = this;
 
       var fileTypes = this.getFileTypes();
       var srcType = this.props.srcType ? this.fileType(this.props.srcType) : fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null);
@@ -3221,7 +3215,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               media = jsx("img", {
                 alt: "",
                 ref: function ref(obj) {
-                  return _this6.cropImg = obj;
+                  return _this5.cropImg = obj;
                 },
                 src: this.props.src,
                 onLoad: this._forceUpdate,
@@ -3296,14 +3290,14 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       }), jsx("input", {
         "data-attr": "input",
         ref: function ref(obj) {
-          return _this6.input = obj;
+          return _this5.input = obj;
         },
         type: "file",
         className: "uploader-input",
         onChange: this.handleChange
       }), jsx("div", {
         ref: function ref(obj) {
-          return _this6.zone = obj;
+          return _this5.zone = obj;
         },
         className: "\n                        uploader-zone\n                        ".concat(this.props.withURLInput ? 'uploader-zone/withUrl' : '', "\n                    "),
         onDragEnter: this.handleDragEnter,
@@ -3353,7 +3347,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
             // enter would otherwise submit form
             ev.preventDefault();
 
-            _this6.handleInjectURLClick();
+            _this5.handleInjectURLClick();
           }
         }
       }), jsx("span", {

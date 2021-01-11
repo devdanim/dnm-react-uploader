@@ -184,21 +184,18 @@ export default class Uploader extends React.Component {
     _handleWindowScroll() {
         const { srcType } = this.props;
         const video = _.get(this.video, 'current');
-        console.log("Scroll", video);
         if (video && srcType === "video") {
             const rect = video.getBoundingClientRect();
             // https://stackoverflow.com/a/60018490
             if ((rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth))) {
-                console.log("Play video");
                 video.play();
             } else {
-                console.log("Pause video");
                 video.pause();
             }
         }
     }
 
-    handleLoad() {
+    handleLoad(ev) {
         const { srcType, onFirstLoad, onLoad } = this.props;
         if (typeof this.firstLoadDone === 'undefined') {
             this.firstLoadDone = true;
@@ -208,7 +205,7 @@ export default class Uploader extends React.Component {
             const videoEl = _.get(this.video, 'current');
             if (videoEl) videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
         }
-        this.setState({ loaded: true }, () => onLoad(srcType === 'video' ? this.video : this.img));
+        this.setState({ loaded: true }, () => onLoad(ev.current.target));
     }
 
     handleRemoveClick(ev) {
