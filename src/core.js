@@ -181,14 +181,13 @@ export default class Uploader extends React.Component {
 
     _handleWindowScroll() {
         const { srcType } = this.props;
-        const video = _.get(this.video, 'current');
-        if (video && srcType === "video") {
-            const rect = video.getBoundingClientRect();
+        if (this.video && srcType === "video") {
+            const rect = this.video.getBoundingClientRect();
             // https://stackoverflow.com/a/60018490
             if ((rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth))) {
-                video.play();
+                this.video.play();
             } else {
-                video.pause();
+                this.video.pause();
             }
         }
     }
@@ -202,14 +201,12 @@ export default class Uploader extends React.Component {
         this.setState({ loaded: true }, onLoad);
     }
 
-    handleVideoLoad(ref) {
-        console.log("VIDEO REF", ref);
-        this.video = ref;
-        const videoEl = _.get(this.video, 'current');
-        if (videoEl) {
-            videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
-            onVideoLoad(videoEl);
+    handleVideoLoad() {
+        if (this.video) {
+            this.video.addEventListener('timeupdate', this.updateVideoLoop, false);
+            onVideoLoad(this.video);
         }
+        this.handleLoad();
     }
 
     handleRemoveClick(ev) {
@@ -224,10 +221,9 @@ export default class Uploader extends React.Component {
     }
 
     updateVideoLoop() {
-        const videoEl = _.get(this.video, 'current');
         const { videoRange } = this.props;
-        if (videoEl && videoRange) {
-            if (videoEl.currentTime < videoRange[0] || videoEl.currentTime > videoRange[1]) videoEl.currentTime = videoRange[0];
+        if (this.video && videoRange) {
+            if (this.video.currentTime < videoRange[0] || this.video.currentTime > videoRange[1]) this.video.currentTime = videoRange[0];
         }
     }
 
@@ -377,8 +373,8 @@ export default class Uploader extends React.Component {
                             loop
                             muted
                             src={this.props.src}
-                            onLoadedData={this.handleLoad}
-                            ref={this.handleVideoLoad}
+                            onLoadedData={this.handleVideoLoad}
+                            ref={obj => this.video = obj}
                             style={cropStyle ? cropStyle : this.props.backgroundSize === 'cover'
                                 ? {height: '100%'} // considering the majority of videos at landscape format
                                 : {maxHeight: '100%', maxWidth: '100%'}

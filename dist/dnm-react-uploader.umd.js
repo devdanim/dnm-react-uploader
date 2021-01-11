@@ -7771,15 +7771,13 @@
       value: function _handleWindowScroll() {
         var srcType = this.props.srcType;
 
-        var video = _.get(this.video, 'current');
-
-        if (video && srcType === "video") {
-          var rect = video.getBoundingClientRect(); // https://stackoverflow.com/a/60018490
+        if (this.video && srcType === "video") {
+          var rect = this.video.getBoundingClientRect(); // https://stackoverflow.com/a/60018490
 
           if (rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth)) {
-            video.play();
+            this.video.play();
           } else {
-            video.pause();
+            this.video.pause();
           }
         }
       }
@@ -7801,16 +7799,13 @@
       }
     }, {
       key: "handleVideoLoad",
-      value: function handleVideoLoad(ref) {
-        console.log("VIDEO REF", ref);
-        this.video = ref;
-
-        var videoEl = _.get(this.video, 'current');
-
-        if (videoEl) {
-          videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
-          onVideoLoad(videoEl);
+      value: function handleVideoLoad() {
+        if (this.video) {
+          this.video.addEventListener('timeupdate', this.updateVideoLoop, false);
+          onVideoLoad(this.video);
         }
+
+        this.handleLoad();
       }
     }, {
       key: "handleRemoveClick",
@@ -7829,12 +7824,10 @@
     }, {
       key: "updateVideoLoop",
       value: function updateVideoLoop() {
-        var videoEl = _.get(this.video, 'current');
-
         var videoRange = this.props.videoRange;
 
-        if (videoEl && videoRange) {
-          if (videoEl.currentTime < videoRange[0] || videoEl.currentTime > videoRange[1]) videoEl.currentTime = videoRange[0];
+        if (this.video && videoRange) {
+          if (this.video.currentTime < videoRange[0] || this.video.currentTime > videoRange[1]) this.video.currentTime = videoRange[0];
         }
       }
     }, {
@@ -7988,8 +7981,10 @@
                 loop: true,
                 muted: true,
                 src: this.props.src,
-                onLoadedData: this.handleLoad,
-                ref: this.handleVideoLoad,
+                onLoadedData: this.handleVideoLoad,
+                ref: function ref(obj) {
+                  return _this5.video = obj;
+                },
                 style: cropStyle ? cropStyle : this.props.backgroundSize === 'cover' ? {
                   height: '100%'
                 } // considering the majority of videos at landscape format
