@@ -52,9 +52,6 @@ export default class Uploader extends React.Component {
             _forceUpdateCounter: 0
         };
 
-        this.video = React.createRef();
-        this.img = React.createRef();
-
         this.change = this.change.bind(this);
         this.getFileTypes = this.getFileTypes.bind(this);
         this.getAcceptedExtensions = this.getAcceptedExtensions.bind(this);
@@ -195,18 +192,18 @@ export default class Uploader extends React.Component {
         }
     }
 
-    handleLoad(ev) {
-        const { srcType, onFirstLoad, onLoad } = this.props;
+    handleLoad() {
+        const { srcType, onFirstLoad, onLoad, onVideoLoad } = this.props;
         if (typeof this.firstLoadDone === 'undefined') {
             this.firstLoadDone = true;
             onFirstLoad();
         }
-        if (srcType === 'video') {
-            const videoEl = _.get(this.video, 'current');
-            if (videoEl) videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
+        const videoEl = _.get(this.video, 'current');
+        if (videoEl) {
+            videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
+            onVideoLoad(videoEl);
         }
-        console.log("REF", _.get(srcType === 'video' ? this.video : this.img, 'current'));
-        this.setState({ loaded: true }, () => onLoad(_.get(srcType === 'video' ? this.video : this.img, 'current')));
+        this.setState({ loaded: true }, onLoad);
     }
 
     handleRemoveClick(ev) {
@@ -355,7 +352,6 @@ export default class Uploader extends React.Component {
                             }}>
                                 <img
                                     alt=''
-                                    ref={this.img}
                                     src={this.props.src}
                                     onLoad={this.handleLoad}
                                     style={{
@@ -376,7 +372,7 @@ export default class Uploader extends React.Component {
                             muted
                             src={this.props.src}
                             onLoadedData={this.handleLoad}
-                            ref={this.video}
+                            ref={obj => this.video = obj}
                             style={cropStyle ? cropStyle : this.props.backgroundSize === 'cover'
                                 ? {height: '100%'} // considering the majority of videos at landscape format
                                 : {maxHeight: '100%', maxWidth: '100%'}
@@ -649,6 +645,8 @@ Uploader.propTypes = {
     onLoad: PropTypes.func,
     onRemoveClick: PropTypes.func,
     onURLInjectionError: PropTypes.func,
+    onVideoCutClick: PropTypes.func,
+    onVideoLoad: PropTypes.func,
     removable: PropTypes.bool,
     src: PropTypes.string,
     videoRange: PropTypes.array,
@@ -688,6 +686,7 @@ Uploader.defaultProps = {
     onRemoveClick: () => null,
     onURLInjectionError: (error, url) => null,
     onVideoCutClick: () => null,
+    onVideoLoad: () => null,
     removable: false,
     removeIcon: null, // if let null, it will be default one
     src: null,

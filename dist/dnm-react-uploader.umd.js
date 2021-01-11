@@ -7617,8 +7617,6 @@
         width: null,
         _forceUpdateCounter: 0
       };
-      _this.video = /*#__PURE__*/React__default.createRef();
-      _this.img = /*#__PURE__*/React__default.createRef();
       _this.change = _this.change.bind(_assertThisInitialized(_this));
       _this.getFileTypes = _this.getFileTypes.bind(_assertThisInitialized(_this));
       _this.getAcceptedExtensions = _this.getAcceptedExtensions.bind(_assertThisInitialized(_this));
@@ -7786,31 +7784,28 @@
       }
     }, {
       key: "handleLoad",
-      value: function handleLoad(ev) {
-        var _this3 = this;
-
+      value: function handleLoad() {
         var _this$props = this.props,
             srcType = _this$props.srcType,
             onFirstLoad = _this$props.onFirstLoad,
-            onLoad = _this$props.onLoad;
+            onLoad = _this$props.onLoad,
+            onVideoLoad = _this$props.onVideoLoad;
 
         if (typeof this.firstLoadDone === 'undefined') {
           this.firstLoadDone = true;
           onFirstLoad();
         }
 
-        if (srcType === 'video') {
-          var videoEl = _.get(this.video, 'current');
+        var videoEl = _.get(this.video, 'current');
 
-          if (videoEl) videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
+        if (videoEl) {
+          videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
+          onVideoLoad(videoEl);
         }
 
-        console.log("REF", _.get(srcType === 'video' ? this.video : this.img, 'current'));
         this.setState({
           loaded: true
-        }, function () {
-          return onLoad(_.get(srcType === 'video' ? _this3.video : _this3.img, 'current'));
-        });
+        }, onLoad);
       }
     }, {
       key: "handleRemoveClick",
@@ -7840,30 +7835,30 @@
     }, {
       key: "get",
       value: function get(url) {
-        var _this4 = this;
+        var _this3 = this;
 
         // return fetch(url, {mode: 'cors'}).then(response => response.blob());
         return new Promise(function (resolve, reject) {
-          _this4.xhr = new XMLHttpRequest();
-          _this4.xhr.responseType = 'blob';
+          _this3.xhr = new XMLHttpRequest();
+          _this3.xhr.responseType = 'blob';
 
-          _this4.xhr.open('GET', url, true);
+          _this3.xhr.open('GET', url, true);
 
-          _this4.xhr.onload = function () {
-            if (_this4.xhr.status === 200) resolve(_this4.xhr.response);else reject(Error(_this4.xhr.statusText));
+          _this3.xhr.onload = function () {
+            if (_this3.xhr.status === 200) resolve(_this3.xhr.response);else reject(Error(_this3.xhr.statusText));
           };
 
-          _this4.xhr.onerror = function () {
+          _this3.xhr.onerror = function () {
             return reject(Error('Network Error'));
           };
 
-          _this4.xhr.send();
+          _this3.xhr.send();
         });
       }
     }, {
       key: "injectURL",
       value: function injectURL(url) {
-        var _this5 = this;
+        var _this4 = this;
 
         var validate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
         var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (data) {
@@ -7881,15 +7876,15 @@
             type: response.type
           });
 
-          _this5.change(file, false, callback);
+          _this4.change(file, false, callback);
         })["catch"](function (error) {
-          _this5.props.onURLInjectionError(error, url);
+          _this4.props.onURLInjectionError(error, url);
         });
       }
     }, {
       key: "render",
       value: function render() {
-        var _this6 = this;
+        var _this5 = this;
 
         var fileTypes = this.getFileTypes();
         var srcType = this.props.srcType ? this.fileType(this.props.srcType) : fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null);
@@ -7950,7 +7945,7 @@
                 media = jsx("img", {
                   alt: "",
                   ref: function ref(obj) {
-                    return _this6.cropImg = obj;
+                    return _this5.cropImg = obj;
                   },
                   src: this.props.src,
                   onLoad: this._forceUpdate,
@@ -7970,7 +7965,6 @@
                   }
                 }, jsx("img", {
                   alt: "",
-                  ref: this.img,
                   src: this.props.src,
                   onLoad: this.handleLoad,
                   style: {
@@ -7990,7 +7984,9 @@
                 muted: true,
                 src: this.props.src,
                 onLoadedData: this.handleLoad,
-                ref: this.video,
+                ref: function ref(obj) {
+                  return _this5.video = obj;
+                },
                 style: cropStyle ? cropStyle : this.props.backgroundSize === 'cover' ? {
                   height: '100%'
                 } // considering the majority of videos at landscape format
@@ -8025,14 +8021,14 @@
         }), jsx("input", {
           "data-attr": "input",
           ref: function ref(obj) {
-            return _this6.input = obj;
+            return _this5.input = obj;
           },
           type: "file",
           className: "uploader-input",
           onChange: this.handleChange
         }), jsx("div", {
           ref: function ref(obj) {
-            return _this6.zone = obj;
+            return _this5.zone = obj;
           },
           className: "\n                        uploader-zone\n                        ".concat(this.props.withURLInput ? 'uploader-zone/withUrl' : '', "\n                    "),
           onDragEnter: this.handleDragEnter,
@@ -8082,7 +8078,7 @@
               // enter would otherwise submit form
               ev.preventDefault();
 
-              _this6.handleInjectURLClick();
+              _this5.handleInjectURLClick();
             }
           }
         }), jsx("span", {
@@ -8271,6 +8267,8 @@
     onLoad: PropTypes.func,
     onRemoveClick: PropTypes.func,
     onURLInjectionError: PropTypes.func,
+    onVideoCutClick: PropTypes.func,
+    onVideoLoad: PropTypes.func,
     removable: PropTypes.bool,
     src: PropTypes.string,
     videoRange: PropTypes.array,
@@ -8333,6 +8331,9 @@
       return null;
     },
     onVideoCutClick: function onVideoCutClick() {
+      return null;
+    },
+    onVideoLoad: function onVideoLoad() {
       return null;
     },
     removable: false,
