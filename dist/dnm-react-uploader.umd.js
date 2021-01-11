@@ -7801,6 +7801,7 @@
       key: "handleVideoLoad",
       value: function handleVideoLoad() {
         if (this.video) {
+          var onVideoLoad = this.props.onVideoLoad;
           this.video.addEventListener('timeupdate', this.updateVideoLoop, false);
           onVideoLoad(this.video);
         }

@@ -203,6 +203,7 @@ export default class Uploader extends React.Component {
 
     handleVideoLoad() {
         if (this.video) {
+            const { onVideoLoad } = this.props;
             this.video.addEventListener('timeupdate', this.updateVideoLoop, false);
             onVideoLoad(this.video);
         }
