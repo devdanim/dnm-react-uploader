@@ -3038,9 +3038,13 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "_handleWindowScroll",
     value: function _handleWindowScroll() {
+      var srcType = this.props.srcType;
+
       var video = _.get(this.video, 'current');
 
-      if (video) {
+      console.log("Scroll", video);
+
+      if (video && srcType === "video") {
         var rect = video.getBoundingClientRect(); // https://stackoverflow.com/a/60018490
 
         if (rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth)) {
