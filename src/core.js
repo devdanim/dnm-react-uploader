@@ -176,13 +176,16 @@ export default class Uploader extends React.Component {
     }
 
     handleLoad() {
+        const { srcType, onFirstLoad, onLoad } = this.props;
         if (typeof this.firstLoadDone === 'undefined') {
             this.firstLoadDone = true;
-            this.props.onFirstLoad();
+            onFirstLoad();
         }
-        const videoEl = _.get(this.video, 'current');
-        if (videoEl) videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
-        this.setState({loaded: true}, this.props.onLoad);
+        if (srcType === 'video') {
+            const videoEl = _.get(this.video, 'current');
+            if (videoEl) videoEl.addEventListener('timeupdate', this.updateVideoLoop, false);
+        }
+        this.setState({ loaded: true }, () => onLoad(srcType === 'video' ? this.video : this.img));
     }
 
     handleRemoveClick(ev) {
