@@ -2900,6 +2900,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     _this.handleInjectURLClick = _this.handleInjectURLClick.bind(_assertThisInitialized(_this));
     _this.handleLoad = _this.handleLoad.bind(_assertThisInitialized(_this));
     _this.handleVideoLoad = _this.handleVideoLoad.bind(_assertThisInitialized(_this));
+    _this.handleVideoPlayerError = _this.handleVideoPlayerError.bind(_assertThisInitialized(_this));
     _this.handleRemoveClick = _this.handleRemoveClick.bind(_assertThisInitialized(_this));
     _this.handleURLChange = _this.handleURLChange.bind(_assertThisInitialized(_this));
     _this.get = _this.get.bind(_assertThisInitialized(_this));
@@ -3084,6 +3085,16 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       this.handleLoad();
     }
   }, {
+    key: "handleVideoPlayerError",
+    value: function handleVideoPlayerError(event) {
+      var error = event.target.error;
+
+      if (error && error.code === 4) {
+        var onNotSupportedVideoLoad = this.props.onNotSupportedVideoLoad;
+        onNotSupportedVideoLoad(error.message);
+      }
+    }
+  }, {
     key: "handleRemoveClick",
     value: function handleRemoveClick(ev) {
       ev.stopPropagation();
@@ -3257,6 +3268,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               muted: true,
               src: this.props.src,
               onLoadedData: this.handleVideoLoad,
+              onError: this.handleVideoPlayerError,
               ref: function ref(obj) {
                 return _this5.video = obj;
               },
@@ -3595,6 +3607,9 @@ Uploader.defaultProps = {
     return null;
   },
   onLoad: function onLoad() {
+    return null;
+  },
+  onNotSupportedVideoLoad: function onNotSupportedVideoLoad() {
     return null;
   },
   onRemoveClick: function onRemoveClick() {

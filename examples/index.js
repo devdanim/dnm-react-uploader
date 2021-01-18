@@ -105,6 +105,7 @@ class Page extends React.Component {
                         onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError 3')}
                         onInvalidURLError={() => alert('onInvalidURLError 3')}
                         onURLInjectionError={() => alert('onURLInjectionError 3')}
+                        onNotSupportedVideoLoad={(err) => console.error("Video source not supported", err)}
                         removeIcon={<Svg.Erase />}
                         imageCrop={{x: 50, y: 50, width: 1000, height: 500}}
                         backgroundSize="contain"

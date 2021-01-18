@@ -67,6 +67,7 @@ export default class Uploader extends React.Component {
         this.handleInjectURLClick = this.handleInjectURLClick.bind(this);
         this.handleLoad = this.handleLoad.bind(this);
         this.handleVideoLoad = this.handleVideoLoad.bind(this);
+        this.handleVideoPlayerError = this.handleVideoPlayerError.bind(this);
         this.handleRemoveClick = this.handleRemoveClick.bind(this);
         this.handleURLChange = this.handleURLChange.bind(this);
         this.get = this.get.bind(this);
@@ -214,6 +215,14 @@ export default class Uploader extends React.Component {
             onVideoLoad(this.video);
         }
         this.handleLoad();
+    }
+
+    handleVideoPlayerError(event) {
+        const { error } = event.target;
+        if (error && error.code === 4) {
+            const { onNotSupportedVideoLoad } = this.props;
+            onNotSupportedVideoLoad(error.message);
+        }
     }
 
     handleRemoveClick(ev) {
@@ -380,6 +389,7 @@ export default class Uploader extends React.Component {
                             muted
                             src={this.props.src}
                             onLoadedData={this.handleVideoLoad}
+                            onError={this.handleVideoPlayerError}
                             ref={obj => this.video = obj}
                             style={cropStyle ? cropStyle : this.props.backgroundSize === 'cover'
                                 ? {height: '100%'} // considering the majority of videos at landscape format
@@ -691,6 +701,7 @@ Uploader.defaultProps = {
     onInvalidFileExtensionError: (extension, expectedExtensions) => null,
     onInvalidURLError: url => null,
     onLoad: () => null,
+    onNotSupportedVideoLoad: () => null,
     onRemoveClick: () => null,
     onURLInjectionError: (error, url) => null,
     onVideoCutClick: () => null,
