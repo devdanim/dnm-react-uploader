@@ -2219,8 +2219,8 @@ var Video = function Video(props) {
 var Constants = {
   video: {
     // see https://en.wikipedia.org/wiki/Video_file_format
-    mimeTypes: ['video/mp4'],
-    extensions: ['mp4']
+    mimeTypes: ['video/mp4', 'video/quicktime'],
+    extensions: ['mp4', 'mov']
   },
   image: {
     // see https://github.com/arthurvr/image-extensions/blob/master/image-extensions.json

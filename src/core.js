@@ -527,7 +527,6 @@ export default class Uploader extends React.Component {
      */
     base64MimeType(encoded) {
         let result = null;
-
         if (typeof encoded !== 'string') return result;
 
         let mime = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
