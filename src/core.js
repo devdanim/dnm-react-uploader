@@ -114,7 +114,7 @@ export default class Uploader extends React.Component {
 
     getSrcType() {
         const fileTypes = this.getFileTypes();
-        return this.props.srcType ? this.guessType(this.props.srcType) : (fileTypes[0] || (this.props.src ? this.guessType(this.props.src) : null));
+        return this.guessType(this.props.srcType || this.props.src) || fileTypes[0];
     }
 
     getAcceptedExtensions() {
@@ -561,12 +561,17 @@ export default class Uploader extends React.Component {
     /**
      * Input may be a MIME Type, an extension, url string, base64, or even a type
      * Ex:
+     *      - null => null
+     *      - undefined => null
      *      - https://cloud.path/to/file.mp4 => video
      *      - data:image/jpeg;base64...(folded)... => image
      *      - video/mp4 => video
      *      - .jpeg => image
+     *      - .mock => null
      */
     guessType(input) {
+        if (!input) return null;
+
         input = this.base64MimeType(input) || this.extension(input);
 
         let isExtension = !input.match(/\//);

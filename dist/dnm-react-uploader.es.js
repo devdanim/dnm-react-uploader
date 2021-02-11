@@ -2948,7 +2948,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     key: "getSrcType",
     value: function getSrcType() {
       var fileTypes = this.getFileTypes();
-      return this.props.srcType ? this.guessType(this.props.srcType) : fileTypes[0] || (this.props.src ? this.guessType(this.props.src) : null);
+      return this.guessType(this.props.srcType || this.props.src) || fileTypes[0];
     }
   }, {
     key: "getAcceptedExtensions",
@@ -3425,15 +3425,19 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     /**
      * Input may be a MIME Type, an extension, url string, base64, or even a type
      * Ex:
+     *      - null => null
+     *      - undefined => null
      *      - https://cloud.path/to/file.mp4 => video
      *      - data:image/jpeg;base64...(folded)... => image
      *      - video/mp4 => video
      *      - .jpeg => image
+     *      - .mock => null
      */
 
   }, {
     key: "guessType",
     value: function guessType(input) {
+      if (!input) return null;
       input = this.base64MimeType(input) || this.extension(input);
       var isExtension = !input.match(/\//);
 
