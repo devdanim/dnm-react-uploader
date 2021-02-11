@@ -114,7 +114,7 @@ export default class Uploader extends React.Component {
 
     getSrcType() {
         const fileTypes = this.getFileTypes();
-        return this.props.srcType ? this.fileType(this.props.srcType) : (fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null));
+        return this.props.srcType ? this.guessType(this.props.srcType) : (fileTypes[0] || (this.props.src ? this.guessType(this.props.src) : null));
     }
 
     getAcceptedExtensions() {
@@ -129,7 +129,7 @@ export default class Uploader extends React.Component {
     change(file, manual = true, callback = data => null) {
         let maxSize = this.props.maxSize;
         const fileTypes = this.getFileTypes();
-        if (fileTypes.indexOf(this.guessFileType(file)) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
+        if (fileTypes.indexOf(this.guessType(file)) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
         else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);
         else this.props.onChange(file, manual);
 
@@ -515,13 +515,6 @@ export default class Uploader extends React.Component {
     // + utils
 
     /**
-     * Input may be url string, base64, File.
-     */
-    guessFileType(input) {
-        return this.fileType(this.base64MimeType(input) || this.extension(input))
-    }
-
-    /**
      * From Base64 dataURL to MIME Type
      * Returns null when input is invalid
      */
@@ -550,36 +543,32 @@ export default class Uploader extends React.Component {
     }
 
     extensions() {
-        let extensions = {
+        return {
             video: Constants.video.extensions,
             image: Constants.image.extensions,
             compressedFile: Constants.compressedFile.extensions,
         };
-        // unless some have explicitly been provided
-        if (this.props.extensions) {
-            extensions = {[this.getFileTypes()[0]]: this.props.extensions};
-        }
-
-        return extensions;
     }
 
     mimeTypes() {
-        let mimeTypes = {
+        return {
             video: Constants.video.mimeTypes,
             image: Constants.image.mimeTypes,
             compressedFile: Constants.compressedFile.mimeTypes,
         };
-        // unless some have explicitly been provided
-        if (this.props.mimeTypes) mimeTypes = {[this.props.fileType]: this.props.mimeTypes};
-
-        return mimeTypes;
     }
 
     /**
-     * Input may be a MIME Type or an extension
-     * Ex: video/mp4 => video, or application/zip => compressedFile
+     * Input may be a MIME Type, an extension, url string, base64, or even a type
+     * Ex:
+     *      - https://cloud.path/to/file.mp4 => video
+     *      - data:image/jpeg;base64...(folded)... => image
+     *      - video/mp4 => video
+     *      - .jpeg => image
      */
-    fileType(input) {
+    guessType(input) {
+        input = this.base64MimeType(input) || this.extension(input);
+
         let isExtension = !input.match(/\//);
 
         if (isExtension) {
@@ -647,11 +636,9 @@ Uploader.propTypes = {
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
-    extensions: PropTypes.array,
     fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]), // expected file type
     imageCrop: PropTypes.object,
     maxSize: PropTypes.number,
-    mimeTypes: PropTypes.array,
     onChange: PropTypes.func,
     onCropClick: PropTypes.func,
     onCutClick: PropTypes.func,
@@ -666,6 +653,7 @@ Uploader.propTypes = {
     onVideoLoad: PropTypes.func,
     removable: PropTypes.bool,
     src: PropTypes.string,
+    srcType: PropTypes.string, // mime
     videoRange: PropTypes.array,
     withURLInput: PropTypes.bool,
 };
@@ -688,11 +676,9 @@ Uploader.defaultProps = {
     customAttributes: {},
     cuttable: false,
     cutIcon: null, // if let null, it will be default one
-    extensions: null, // if not set and left as it is, we'll use default ones
-    fileType: 'image', // may be one of: image, video
+    fileType: 'image', // may be one (or several) of: image, video, compressedFile
     imageCrop: null,
     maxSize: 10 * 1000 * 1000,
-    mimeTypes: null, // if not set and left as it is, we'll use default ones
     onChange: (file, manual) => null, // manual: does it follow a manual action (vs. injections, for instance)
     onCropClick: () => null,
     onFileTooLargeError: (size, maxSize) => null,
@@ -708,6 +694,7 @@ Uploader.defaultProps = {
     removable: false,
     removeIcon: null, // if let null, it will be default one
     src: null,
+    srcType: null, // mime
     videoRange: null,
     withURLInput: false,
 };

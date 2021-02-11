@@ -2557,7 +2557,7 @@
       viewBox: "0 0 448 512"
     }, props), /*#__PURE__*/React__default.createElement("path", {
       d: "M278.06 256L444.48 89.57c4.69-4.69 4.69-12.29 0-16.97-32.8-32.8-85.99-32.8-118.79 0L210.18 188.12l-24.86-24.86c4.31-10.92 6.68-22.81 6.68-35.26 0-53.02-42.98-96-96-96S0 74.98 0 128s42.98 96 96 96c4.54 0 8.99-.32 13.36-.93L142.29 256l-32.93 32.93c-4.37-.61-8.83-.93-13.36-.93-53.02 0-96 42.98-96 96s42.98 96 96 96 96-42.98 96-96c0-12.45-2.37-24.34-6.68-35.26l24.86-24.86L325.69 439.4c32.8 32.8 85.99 32.8 118.79 0 4.69-4.68 4.69-12.28 0-16.97L278.06 256zM96 160c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32zm0 256c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32z",
-      "class": ""
+      className: ""
     }));
   };
 
@@ -7680,7 +7680,7 @@
       key: "getSrcType",
       value: function getSrcType() {
         var fileTypes = this.getFileTypes();
-        return this.props.srcType ? this.fileType(this.props.srcType) : fileTypes[0] || (this.props.src ? this.guessFileType(this.props.src) : null);
+        return this.props.srcType ? this.guessType(this.props.srcType) : fileTypes[0] || (this.props.src ? this.guessType(this.props.src) : null);
       }
     }, {
       key: "getAcceptedExtensions",
@@ -7705,7 +7705,7 @@
         };
         var maxSize = this.props.maxSize;
         var fileTypes = this.getFileTypes();
-        if (fileTypes.indexOf(this.guessFileType(file)) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual);
+        if (fileTypes.indexOf(this.guessType(file)) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual);
         callback(file);
         this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
         // reinit xhr
@@ -8107,15 +8107,6 @@
       } // + utils
 
       /**
-       * Input may be url string, base64, File.
-       */
-
-    }, {
-      key: "guessFileType",
-      value: function guessFileType(input) {
-        return this.fileType(this.base64MimeType(input) || this.extension(input));
-      }
-      /**
        * From Base64 dataURL to MIME Type
        * Returns null when input is invalid
        */
@@ -8148,38 +8139,34 @@
     }, {
       key: "extensions",
       value: function extensions() {
-        var extensions = {
+        return {
           video: Constants.video.extensions,
           image: Constants.image.extensions,
           compressedFile: Constants.compressedFile.extensions
-        }; // unless some have explicitly been provided
-
-        if (this.props.extensions) {
-          extensions = _defineProperty({}, this.getFileTypes()[0], this.props.extensions);
-        }
-
-        return extensions;
+        };
       }
     }, {
       key: "mimeTypes",
       value: function mimeTypes() {
-        var mimeTypes = {
+        return {
           video: Constants.video.mimeTypes,
           image: Constants.image.mimeTypes,
           compressedFile: Constants.compressedFile.mimeTypes
-        }; // unless some have explicitly been provided
-
-        if (this.props.mimeTypes) mimeTypes = _defineProperty({}, this.props.fileType, this.props.mimeTypes);
-        return mimeTypes;
+        };
       }
       /**
-       * Input may be a MIME Type or an extension
-       * Ex: video/mp4 => video, or application/zip => compressedFile
+       * Input may be a MIME Type, an extension, url string, base64, or even a type
+       * Ex:
+       *      - https://cloud.path/to/file.mp4 => video
+       *      - data:image/jpeg;base64...(folded)... => image
+       *      - video/mp4 => video
+       *      - .jpeg => image
        */
 
     }, {
-      key: "fileType",
-      value: function fileType(input) {
+      key: "guessType",
+      value: function guessType(input) {
+        input = this.base64MimeType(input) || this.extension(input);
         var isExtension = !input.match(/\//);
 
         if (isExtension) {
@@ -8268,12 +8255,10 @@
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
-    extensions: PropTypes.array,
     fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
     // expected file type
     imageCrop: PropTypes.object,
     maxSize: PropTypes.number,
-    mimeTypes: PropTypes.array,
     onChange: PropTypes.func,
     onCropClick: PropTypes.func,
     onCutClick: PropTypes.func,
@@ -8288,6 +8273,8 @@
     onVideoLoad: PropTypes.func,
     removable: PropTypes.bool,
     src: PropTypes.string,
+    srcType: PropTypes.string,
+    // mime
     videoRange: PropTypes.array,
     withURLInput: PropTypes.bool
   };
@@ -8311,14 +8298,10 @@
     cuttable: false,
     cutIcon: null,
     // if let null, it will be default one
-    extensions: null,
-    // if not set and left as it is, we'll use default ones
     fileType: 'image',
-    // may be one of: image, video
+    // may be one (or several) of: image, video, compressedFile
     imageCrop: null,
     maxSize: 10 * 1000 * 1000,
-    mimeTypes: null,
-    // if not set and left as it is, we'll use default ones
     onChange: function onChange(file, manual) {
       return null;
     },
@@ -8360,6 +8343,8 @@
     removeIcon: null,
     // if let null, it will be default one
     src: null,
+    srcType: null,
+    // mime
     videoRange: null,
     withURLInput: false
   };

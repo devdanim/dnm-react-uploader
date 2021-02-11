@@ -26,9 +26,7 @@ class Page extends React.Component {
         };
     }
 
-    
     render() {
-        console.log("SRC", this.state.second);
         return (
             <React.Fragment>
                 <Uploader
@@ -45,8 +43,6 @@ class Page extends React.Component {
                     onFirstLoad={() => console.log('onFirstLoad')}
                     onLoad={() => console.log('onLoad')}
                     withURLInput={true}
-                    extensions={['png', 'jpeg', 'jpg']}
-                    mimeTypes={['image/png', 'image/jpeg']}
                     onFileTooLargeError={() => alert('onFileTooLargeError')}
                     onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
                     onInvalidURLError={() => alert('onInvalidURLError')}
@@ -67,8 +63,6 @@ class Page extends React.Component {
                     onChange={(file, manual) => console.log('onChange 2', file, manual ? 'Done manually' : 'Done programmatically')}
                     onFirstLoad={() => console.log('onFirstLoad 2 (but still showing loader since this a controlled prop)')}
                     onLoad={() => console.log('onLoad 2 (but still showing loader since this a controlled prop)')}
-                    extensions={['png', 'jpeg', 'jpg']}
-                    mimeTypes={['image/png', 'image/jpeg']}
                     onFileTooLargeError={() => alert('onFileTooLargeError 2')}
                     onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError 2')}
                     onInvalidURLError={() => alert('onInvalidURLError 2')}
@@ -85,11 +79,13 @@ class Page extends React.Component {
                             }
                         }}
                         catalogue={catalogue}
-                        compact={true}
-                        removable={true}
+                        compact
+                        removable
                         onRemoveClick={() => alert('onRemoveClick 3')}
-                        croppable={true}
+                        croppable
                         onCropClick={() => alert('onCropClick 3')}
+                        cuttable
+                        onVideoCutClick={() => alert('onCutClick 3')}
                         maxSize={500 * 1000 * 1000}
                         onChange={file => this.setState(prevState => ({
                             second: {
