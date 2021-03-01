@@ -2972,8 +2972,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
         return null;
       };
       var maxSize = this.props.maxSize;
-      var fileTypes = this.getFileTypes();
-      if (fileTypes.indexOf(this.guessType(file)) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual);
+      var fileTypes = this.getFileTypes(),
+          type = this.guessType(file);
+      if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual, type);
       callback(file);
       this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
       // reinit xhr
@@ -3574,10 +3575,10 @@ Uploader.defaultProps = {
   // may be one (or several) of: image, video, compressedFile
   imageCrop: null,
   maxSize: 10 * 1000 * 1000,
-  onChange: function onChange(file, manual) {
+  onChange: function onChange(file, manual, type) {
     return null;
   },
-  // manual: does it follow a manual action (vs. injections, for instance)
+  // manual: does it follow a manual action (vs. injections, for instance) ; type: image|video|...|null
   onCropClick: function onCropClick() {
     return null;
   },
