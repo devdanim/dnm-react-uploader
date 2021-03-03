@@ -121,7 +121,7 @@ export default class Uploader extends React.Component {
         const fileTypes = this.getFileTypes();
         const extensions = [];
         fileTypes.forEach(fileType => {
-            this.extensions()[fileType].forEach(extension => extensions.push(extension));
+            this.extensions()[fileType].forEach(extension => extensions.push(extension) & extensions.push(extension.toUpperCase()));
         });
         return extensions;
     }

@@ -2959,7 +2959,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       var extensions = [];
       fileTypes.forEach(function (fileType) {
         _this2.extensions()[fileType].forEach(function (extension) {
-          return extensions.push(extension);
+          return extensions.push(extension) & extensions.push(extension.toUpperCase());
         });
       });
       return extensions;
