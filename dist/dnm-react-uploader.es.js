@@ -12,7 +12,6 @@ import map from 'lodash-es/map';
 import round from 'lodash-es/round';
 import split from 'lodash-es/split';
 import upperFirst from 'lodash-es/upperFirst';
-import upperCase from 'lodash-es/upperCase';
 
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -2860,7 +2859,6 @@ var _ = {
   map: map,
   round: round,
   split: split,
-  upperCase: upperCase,
   upperFirst: upperFirst
 };
 
@@ -2959,7 +2957,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       var extensions = [];
       fileTypes.forEach(function (fileType) {
         _this2.extensions()[fileType].forEach(function (extension) {
-          return extensions.push(extension) & extensions.push(extension.toUpperCase());
+          return extensions.push(extension);
         });
       });
       return extensions;
@@ -3447,7 +3445,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
 
         for (var k in extensions) {
           var v = _.concat(extensions[k], _.map(extensions[k], function (ext) {
-            return _.upperCase(ext);
+            return ext.toUpperCase();
           })); // case insensitive
 
 

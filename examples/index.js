@@ -94,7 +94,7 @@ class Page extends React.Component {
                                 srcType: file.type,
                             }
                         }))}
-                        fileType={["image", "video"]}
+                        fileType={['image', 'video']}
                         onFirstLoad={() => console.log('onFirstLoad 3')}
                         onLoad={() => console.log('onLoad 3')}
                         onFileTooLargeError={() => alert('onFileTooLargeError 3')}

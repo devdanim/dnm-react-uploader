@@ -6946,30 +6946,6 @@
     return string.split(separator, limit);
   }
 
-  /**
-   * Converts `string`, as space separated words, to upper case.
-   *
-   * @static
-   * @memberOf _
-   * @since 4.0.0
-   * @category String
-   * @param {string} [string=''] The string to convert.
-   * @returns {string} Returns the upper cased string.
-   * @example
-   *
-   * _.upperCase('--foo-bar');
-   * // => 'FOO BAR'
-   *
-   * _.upperCase('fooBar');
-   * // => 'FOO BAR'
-   *
-   * _.upperCase('__foo_bar__');
-   * // => 'FOO BAR'
-   */
-  var upperCase = createCompounder(function(result, word, index) {
-    return result + (index ? ' ' : '') + word.toUpperCase();
-  });
-
   var global$1 =
     (typeof globalThis !== 'undefined' && globalThis) ||
     (typeof self !== 'undefined' && self) ||
@@ -7592,7 +7568,6 @@
     map: map,
     round: round,
     split: split,
-    upperCase: upperCase,
     upperFirst: upperFirst
   };
 
@@ -7691,7 +7666,7 @@
         var extensions = [];
         fileTypes.forEach(function (fileType) {
           _this2.extensions()[fileType].forEach(function (extension) {
-            return extensions.push(extension) & extensions.push(extension.toUpperCase());
+            return extensions.push(extension);
           });
         });
         return extensions;
@@ -8179,7 +8154,7 @@
 
           for (var k in extensions) {
             var v = _.concat(extensions[k], _.map(extensions[k], function (ext) {
-              return _.upperCase(ext);
+              return ext.toUpperCase();
             })); // case insensitive
 
 

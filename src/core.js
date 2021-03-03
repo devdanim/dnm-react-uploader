@@ -20,7 +20,6 @@ import map from 'lodash-es/map';
 import round from 'lodash-es/round';
 import split from 'lodash-es/split';
 import upperFirst from 'lodash-es/upperFirst';
-import upperCase from 'lodash-es/upperCase';
 import 'whatwg-fetch'; // importing will automatically polyfill window.fetch and related APIs
 const _ = {
     camelCase,
@@ -33,7 +32,6 @@ const _ = {
     map,
     round,
     split,
-    upperCase,
     upperFirst,
 };
 
@@ -121,7 +119,7 @@ export default class Uploader extends React.Component {
         const fileTypes = this.getFileTypes();
         const extensions = [];
         fileTypes.forEach(fileType => {
-            this.extensions()[fileType].forEach(extension => extensions.push(extension) & extensions.push(extension.toUpperCase()));
+            this.extensions()[fileType].forEach(extension => extensions.push(extension));
         });
         return extensions;
     }
@@ -580,7 +578,7 @@ export default class Uploader extends React.Component {
             let extensions = this.extensions();
 
             for (let k in extensions) {
-                let v = _.concat(extensions[k], _.map(extensions[k], ext => _.upperCase(ext))); // case insensitive
+                let v = _.concat(extensions[k], _.map(extensions[k], ext => ext.toUpperCase())); // case insensitive
                 if (v.indexOf(input) !== -1) return k;
             }
         } else {
