@@ -35,6 +35,9 @@ const _ = {
     upperFirst,
 };
 
+export const base64MimeType = Uploader.base64MimeType;
+export const guessType = Uploader.guessType;
+
 export default class Uploader extends React.Component {
     constructor(props) {
         super(props);
