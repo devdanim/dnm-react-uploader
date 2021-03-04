@@ -2218,7 +2218,8 @@ var Video = function Video(props) {
 var Constants = {
   video: {
     // see https://en.wikipedia.org/wiki/Video_file_format
-    mimeTypes: ['video/mp4', 'video/quicktime'],
+    mimeTypes: ['video/mp4', 'video/quicktime', 'application/octet-stream' // important for JS blobs
+    ],
     extensions: ['mp4', 'mov']
   },
   image: {
@@ -2946,9 +2947,6 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     key: "getSrcType",
     value: function getSrcType() {
       var fileTypes = this.getFileTypes();
-      console.log(1, this.guessType(this.props.srcType));
-      console.log(2, this.guessType(this.props.src));
-      console.log(3, fileTypes[0]);
       return this.guessType(this.props.srcType) || this.guessType(this.props.src) || fileTypes[0];
     }
   }, {
