@@ -35,9 +35,6 @@ const _ = {
     upperFirst,
 };
 
-export const base64MimeType = Uploader.base64MimeType;
-export const guessType = Uploader.guessType;
-
 export default class Uploader extends React.Component {
     constructor(props) {
         super(props);
@@ -115,8 +112,8 @@ export default class Uploader extends React.Component {
 
     getSrcType() {
         const fileTypes = this.getFileTypes();
-        return Uploader.guessType(this.props.srcType)
-            || Uploader.guessType(this.props.src)
+        return this.guessType(this.props.srcType)
+            || this.guessType(this.props.src)
             || fileTypes[0];
     }
 
@@ -124,15 +121,15 @@ export default class Uploader extends React.Component {
         const fileTypes = this.getFileTypes();
         const extensions = [];
         fileTypes.forEach(fileType => {
-            Uploader.extensions()[fileType].forEach(extension => extensions.push(extension));
+            this.extensions()[fileType].forEach(extension => extensions.push(extension));
         });
         return extensions;
     }
 
     change(file, manual = true, callback = data => null) {
         let maxSize = this.props.maxSize;
-        const fileTypes = this.getFileTypes(), type = Uploader.guessType(file);
-        if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(Uploader.extension(file), this.getAcceptedExtensions());
+        const fileTypes = this.getFileTypes(), type = this.guessType(file);
+        if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
         else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);
         else this.props.onChange(file, manual, type);
 
@@ -521,7 +518,7 @@ export default class Uploader extends React.Component {
      * From Base64 dataURL to MIME Type
      * Returns null when input is invalid
      */
-    static base64MimeType(encoded) {
+    base64MimeType(encoded) {
         let result = null;
         if (typeof encoded !== 'string') return result;
 
@@ -533,26 +530,26 @@ export default class Uploader extends React.Component {
     }
 
     isBase64(input) {
-        return Uploader.base64MimeType(input) !== null;
+        return this.base64MimeType(input) !== null;
     }
 
     /**
      * From string|File to extension
      * Ex: https://upload.wikimedia.org/wikipedia/commons/d/da/Nelson_Mandela%2C_2000_%285%29_%28cropped%29.jpg => jpg
      */
-    static extension(input) {
+    extension(input) {
         input = _.isString(input) ? input : input.name;
         return _.last(_.split(input, '.'));
     }
 
-    static extensions() {
+    extensions() {
         return {
             video: Constants.video.extensions,
             image: Constants.image.extensions,
         };
     }
 
-    static mimeTypes() {
+    mimeTypes() {
         return {
             video: Constants.video.mimeTypes,
             image: Constants.image.mimeTypes,
@@ -571,22 +568,22 @@ export default class Uploader extends React.Component {
      *      - .mock => null
      *      - application/octet-stream => null
      */
-    static guessType(input) {
+    guessType(input) {
         if (!input) return null;
 
-        input = Uploader.base64MimeType(input) || Uploader.extension(input);
+        input = this.base64MimeType(input) || this.extension(input);
 
         let isExtension = !input.match(/\//);
 
         if (isExtension) {
-            let extensions = Uploader.extensions();
+            let extensions = this.extensions();
 
             for (let k in extensions) {
                 let v = _.concat(extensions[k], _.map(extensions[k], ext => ext.toUpperCase())); // case insensitive
                 if (v.indexOf(input) !== -1) return k;
             }
         } else {
-            let mimeTypes = Uploader.mimeTypes();
+            let mimeTypes = this.mimeTypes();
 
             for (let k in mimeTypes) {
                 let v = mimeTypes[k];
