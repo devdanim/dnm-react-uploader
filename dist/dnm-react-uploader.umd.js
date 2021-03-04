@@ -7655,6 +7655,9 @@
       key: "getSrcType",
       value: function getSrcType() {
         var fileTypes = this.getFileTypes();
+        console.log(1, this.guessType(this.props.srcType));
+        console.log(2, this.guessType(this.props.src));
+        console.log(3, fileTypes[0]);
         return this.guessType(this.props.srcType) || this.guessType(this.props.src) || fileTypes[0];
       }
     }, {
@@ -8140,6 +8143,7 @@
        *      - video/mp4 => video
        *      - .jpeg => image
        *      - .mock => null
+       *      - application/octet-stream => null
        */
 
     }, {
