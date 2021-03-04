@@ -2218,8 +2218,7 @@ var Video = function Video(props) {
 var Constants = {
   video: {
     // see https://en.wikipedia.org/wiki/Video_file_format
-    mimeTypes: ['video/mp4', 'video/quicktime', 'application/octet-stream' // /!\ Important for JS blobs. This is valid as long as the only used types are image/video.
-    ],
+    mimeTypes: ['video/mp4', 'video/quicktime'],
     extensions: ['mp4', 'mov']
   },
   image: {

@@ -3,7 +3,6 @@ const Constants = {
         mimeTypes: [
             'video/mp4',
             'video/quicktime',
-            'application/octet-stream', // /!\ Important for JS blobs. This is valid as long as the only used types are image/video.
         ],
         extensions: [
             'mp4',
