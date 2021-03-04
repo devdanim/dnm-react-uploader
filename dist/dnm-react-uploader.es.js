@@ -2218,7 +2218,7 @@ var Video = function Video(props) {
 var Constants = {
   video: {
     // see https://en.wikipedia.org/wiki/Video_file_format
-    mimeTypes: ['video/mp4', 'video/quicktime', 'application/octet-stream' // important for JS blobs
+    mimeTypes: ['video/mp4', 'video/quicktime', 'application/octet-stream' // /!\ Important for JS blobs. This is valid as long as the only used types are image/video.
     ],
     extensions: ['mp4', 'mov']
   },
@@ -2226,15 +2226,6 @@ var Constants = {
     // see https://github.com/arthurvr/image-extensions/blob/master/image-extensions.json
     mimeTypes: ['image/jpeg', 'image/png'],
     extensions: ['jpeg', 'jpg', 'png']
-  },
-  compressedFile: {
-    // see https://en.wikipedia.org/wiki/List_of_archive_formats
-    mimeTypes: [// compression only
-    'application/x-bzip2', 'application/gzip', 'application/x-lzip', 'application/x-lzma', 'application/x-lzop', 'application/x-snappy-framed', 'application/x-xz', 'application/x-compress', // archiving and compression
-    'application/x-7z-compressed', 'application/x-ace-compressed', 'application/x-astrotite-afa', 'application/x-alz-compressed', 'application/vnd.android.package-archive', 'application/x-arj', 'application/x-b1', 'application/vnd.ms-cab-compressed', 'application/x-cfs-compressed', 'application/x-dar', 'application/x-dgc-compressed', 'application/x-apple-diskimage', 'application/x-gca-compressed', 'application/x-lzh', 'application/x-lzx', 'application/x-rar-compressed', 'application/x-stuffit', 'application/x-stuffitx', 'application/x-gtar', 'application/zip', 'application/x-zoo'],
-    extensions: [// compression only
-    'bz2', 'gz', 'F', 'lz', 'lzma', 'lzo', 'rz', 'sfark', 'sz', 'xz', 'z', 'Z', '?Q?', '?XF', '?Z?', '??_', // archiving and compression
-    '7z', 'ace', 'afa', 'alz', 'apk', 'arc', 'arj', 'b1', 'b6z', 'ba', 'bh', 'cab', 'car', 'cfs', 'cpt', 'dar', 'dd', 'dgc', 'dmg', 'ear', 'gca', 'ha', 'hki', 'ice', 'jar', 'kgb', 'lha', 'lzh', 'lzx', 'pak', 'paq6', 'paq7', 'paq8', 'partimg', 'pea', 'pim', 'pit', 'qda', 'rar', 'rk', 's7z', 'sda', 'sea', 'sen', 'sfx', 'shk', 'sit', 'sitx', 'sqx', 'tar.bz2', 'tar.gz', 'tar.lzma', 'tar.xz', 'tar.Z', 'tbz2', 'tgz', 'tlz', 'txz', 'ue2', 'uc', 'uc0', 'uc2', 'uca', 'ucn', 'uha', 'ur2', 'war', 'wim', 'xar', 'xp3', 'yz1', 'zip', 'zipx', 'zoo', 'zpaq', 'zz']
   }
 };
 
@@ -3409,8 +3400,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function extensions() {
       return {
         video: Constants.video.extensions,
-        image: Constants.image.extensions,
-        compressedFile: Constants.compressedFile.extensions
+        image: Constants.image.extensions
       };
     }
   }, {
@@ -3418,8 +3408,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function mimeTypes() {
       return {
         video: Constants.video.mimeTypes,
-        image: Constants.image.mimeTypes,
-        compressedFile: Constants.compressedFile.mimeTypes
+        image: Constants.image.mimeTypes
       };
     }
     /**
@@ -3572,7 +3561,7 @@ Uploader.defaultProps = {
   cutIcon: null,
   // if let null, it will be default one
   fileType: 'image',
-  // may be one (or several) of: image, video, compressedFile
+  // may be one (or several) of: image, video
   imageCrop: null,
   maxSize: 10 * 1000 * 1000,
   onChange: function onChange(file, manual, type) {

@@ -546,7 +546,6 @@ export default class Uploader extends React.Component {
         return {
             video: Constants.video.extensions,
             image: Constants.image.extensions,
-            compressedFile: Constants.compressedFile.extensions,
         };
     }
 
@@ -554,7 +553,6 @@ export default class Uploader extends React.Component {
         return {
             video: Constants.video.mimeTypes,
             image: Constants.image.mimeTypes,
-            compressedFile: Constants.compressedFile.mimeTypes,
         };
     }
 
@@ -682,7 +680,7 @@ Uploader.defaultProps = {
     customAttributes: {},
     cuttable: false,
     cutIcon: null, // if let null, it will be default one
-    fileType: 'image', // may be one (or several) of: image, video, compressedFile
+    fileType: 'image', // may be one (or several) of: image, video
     imageCrop: null,
     maxSize: 10 * 1000 * 1000,
     onChange: (file, manual, type) => null, // manual: does it follow a manual action (vs. injections, for instance) ; type: image|video|...|null
