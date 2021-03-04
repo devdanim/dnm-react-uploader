@@ -568,6 +568,7 @@ export default class Uploader extends React.Component {
      *      - video/mp4 => video
      *      - .jpeg => image
      *      - .mock => null
+     *      - application/octet-stream => null
      */
     guessType(input) {
         if (!input) return null;
