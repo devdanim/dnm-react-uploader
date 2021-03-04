@@ -698,7 +698,7 @@ Uploader.defaultProps = {
     removable: false,
     removeIcon: null, // if let null, it will be default one
     src: null,
-    srcType: null, // mime
+    srcType: null, // e.g. video, video/mp4 (which is a more detailed MIME), etc.
     videoRange: null,
     withURLInput: false,
 };
