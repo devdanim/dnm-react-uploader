@@ -7646,17 +7646,15 @@
       key: "getSrcType",
       value: function getSrcType() {
         var fileTypes = this.getFileTypes();
-        return this.guessType(this.props.srcType) || this.guessType(this.props.src) || fileTypes[0];
+        return Uploader.guessType(this.props.srcType) || Uploader.guessType(this.props.src) || fileTypes[0];
       }
     }, {
       key: "getAcceptedExtensions",
       value: function getAcceptedExtensions() {
-        var _this2 = this;
-
         var fileTypes = this.getFileTypes();
         var extensions = [];
         fileTypes.forEach(function (fileType) {
-          _this2.extensions()[fileType].forEach(function (extension) {
+          Uploader.extensions()[fileType].forEach(function (extension) {
             return extensions.push(extension);
           });
         });
@@ -7671,8 +7669,8 @@
         };
         var maxSize = this.props.maxSize;
         var fileTypes = this.getFileTypes(),
-            type = this.guessType(file);
-        if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual, type);
+            type = Uploader.guessType(file);
+        if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(Uploader.extension(file), this.getAcceptedExtensions());else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual, type);
         callback(file);
         this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
         // reinit xhr
@@ -7819,30 +7817,30 @@
     }, {
       key: "get",
       value: function get(url) {
-        var _this3 = this;
+        var _this2 = this;
 
         // return fetch(url, {mode: 'cors'}).then(response => response.blob());
         return new Promise(function (resolve, reject) {
-          _this3.xhr = new XMLHttpRequest();
-          _this3.xhr.responseType = 'blob';
+          _this2.xhr = new XMLHttpRequest();
+          _this2.xhr.responseType = 'blob';
 
-          _this3.xhr.open('GET', url, true);
+          _this2.xhr.open('GET', url, true);
 
-          _this3.xhr.onload = function () {
-            if (_this3.xhr.status === 200) resolve(_this3.xhr.response);else reject(Error(_this3.xhr.statusText));
+          _this2.xhr.onload = function () {
+            if (_this2.xhr.status === 200) resolve(_this2.xhr.response);else reject(Error(_this2.xhr.statusText));
           };
 
-          _this3.xhr.onerror = function () {
+          _this2.xhr.onerror = function () {
             return reject(Error('Network Error'));
           };
 
-          _this3.xhr.send();
+          _this2.xhr.send();
         });
       }
     }, {
       key: "injectURL",
       value: function injectURL(url) {
-        var _this4 = this;
+        var _this3 = this;
 
         var validate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
         var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (data) {
@@ -7860,15 +7858,15 @@
             type: response.type
           });
 
-          _this4.change(file, false, callback);
+          _this3.change(file, false, callback);
         })["catch"](function (error) {
-          _this4.props.onURLInjectionError(error, url);
+          _this3.props.onURLInjectionError(error, url);
         });
       }
     }, {
       key: "render",
       value: function render() {
-        var _this5 = this;
+        var _this4 = this;
 
         var srcType = this.getSrcType();
         var media = null,
@@ -7928,7 +7926,7 @@
                 media = jsx("img", {
                   alt: "",
                   ref: function ref(obj) {
-                    return _this5.cropImg = obj;
+                    return _this4.cropImg = obj;
                   },
                   src: this.props.src,
                   onLoad: this._forceUpdate,
@@ -7969,7 +7967,7 @@
                 onLoadedData: this.handleVideoLoad,
                 onError: this.handleVideoPlayerError,
                 ref: function ref(obj) {
-                  return _this5.video = obj;
+                  return _this4.video = obj;
                 },
                 style: cropStyle ? cropStyle : this.props.backgroundSize === 'cover' ? {
                   height: '100%'
@@ -8005,14 +8003,14 @@
         }), jsx("input", {
           "data-attr": "input",
           ref: function ref(obj) {
-            return _this5.input = obj;
+            return _this4.input = obj;
           },
           type: "file",
           className: "uploader-input",
           onChange: this.handleChange
         }), jsx("div", {
           ref: function ref(obj) {
-            return _this5.zone = obj;
+            return _this4.zone = obj;
           },
           className: "\n                        uploader-zone\n                        ".concat(this.props.withURLInput ? 'uploader-zone/withUrl' : '', "\n                    "),
           onDragEnter: this.handleDragEnter,
@@ -8062,7 +8060,7 @@
               // enter would otherwise submit form
               ev.preventDefault();
 
-              _this5.handleInjectURLClick();
+              _this4.handleInjectURLClick();
             }
           }
         }), jsx("span", {
@@ -8079,6 +8077,58 @@
        */
 
     }, {
+      key: "isBase64",
+      value: function isBase64(input) {
+        return Uploader.base64MimeType(input) !== null;
+      }
+      /**
+       * From string|File to extension
+       * Ex: https://upload.wikimedia.org/wikipedia/commons/d/da/Nelson_Mandela%2C_2000_%285%29_%28cropped%29.jpg => jpg
+       */
+
+    }, {
+      key: "humanSize",
+
+      /**
+       * From ~ 100 000 000 => 100 MB
+       */
+      value: function humanSize(size) {
+        var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+        var units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+        for (var power = units.length - 1; power >= 0; power--) {
+          var tmpRes = size * 1.0 / Math.pow(1024, power);
+
+          if (tmpRes >= 1) {
+            if (round) tmpRes = _.round(tmpRes);
+            return "".concat(tmpRes, " ").concat(units[power]);
+          }
+        }
+      }
+    }, {
+      key: "initializeDrag",
+      value: function initializeDrag() {
+        // avoid browser drop management
+        window.addEventListener('dragover', function (ev) {
+          ev = ev || event;
+          ev.preventDefault();
+        }, false);
+        window.addEventListener('drop', function (ev) {
+          ev = ev || event;
+          ev.preventDefault();
+        }, false);
+      }
+    }], [{
+      key: "getDerivedStateFromProps",
+      value: function getDerivedStateFromProps(nextProps, prevState) {
+        return _objectSpread2(_objectSpread2({}, nextProps.src !== _.get(prevState, '_src') ? {
+          _src: nextProps.src
+        } : null), nextProps.src !== _.get(prevState, '_src') ? {
+          loaded: false,
+          _forceUpdateCounter: 0
+        } : null);
+      }
+    }, {
       key: "base64MimeType",
       value: function base64MimeType(encoded) {
         var result = null;
@@ -8087,16 +8137,6 @@
         if (mime && mime.length) result = mime[1];
         return result;
       }
-    }, {
-      key: "isBase64",
-      value: function isBase64(input) {
-        return this.base64MimeType(input) !== null;
-      }
-      /**
-       * From string|File to extension
-       * Ex: https://upload.wikimedia.org/wikipedia/commons/d/da/Nelson_Mandela%2C_2000_%285%29_%28cropped%29.jpg => jpg
-       */
-
     }, {
       key: "extension",
       value: function extension(input) {
@@ -8136,11 +8176,11 @@
       key: "guessType",
       value: function guessType(input) {
         if (!input) return null;
-        input = this.base64MimeType(input) || this.extension(input);
+        input = Uploader.base64MimeType(input) || Uploader.extension(input);
         var isExtension = !input.match(/\//);
 
         if (isExtension) {
-          var extensions = this.extensions();
+          var extensions = Uploader.extensions();
 
           for (var k in extensions) {
             var v = _.concat(extensions[k], _.map(extensions[k], function (ext) {
@@ -8151,7 +8191,7 @@
             if (v.indexOf(input) !== -1) return k;
           }
         } else {
-          var mimeTypes = this.mimeTypes();
+          var mimeTypes = Uploader.mimeTypes();
 
           for (var _k in mimeTypes) {
             var _v = mimeTypes[_k];
@@ -8160,48 +8200,6 @@
         }
 
         return null;
-      }
-      /**
-       * From ~ 100 000 000 => 100 MB
-       */
-
-    }, {
-      key: "humanSize",
-      value: function humanSize(size) {
-        var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-        var units = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-        for (var power = units.length - 1; power >= 0; power--) {
-          var tmpRes = size * 1.0 / Math.pow(1024, power);
-
-          if (tmpRes >= 1) {
-            if (round) tmpRes = _.round(tmpRes);
-            return "".concat(tmpRes, " ").concat(units[power]);
-          }
-        }
-      }
-    }, {
-      key: "initializeDrag",
-      value: function initializeDrag() {
-        // avoid browser drop management
-        window.addEventListener('dragover', function (ev) {
-          ev = ev || event;
-          ev.preventDefault();
-        }, false);
-        window.addEventListener('drop', function (ev) {
-          ev = ev || event;
-          ev.preventDefault();
-        }, false);
-      }
-    }], [{
-      key: "getDerivedStateFromProps",
-      value: function getDerivedStateFromProps(nextProps, prevState) {
-        return _objectSpread2(_objectSpread2({}, nextProps.src !== _.get(prevState, '_src') ? {
-          _src: nextProps.src
-        } : null), nextProps.src !== _.get(prevState, '_src') ? {
-          loaded: false,
-          _forceUpdateCounter: 0
-        } : null);
       }
     }]);
 
