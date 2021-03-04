@@ -2946,7 +2946,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     key: "getSrcType",
     value: function getSrcType() {
       var fileTypes = this.getFileTypes();
-      return this.guessType(this.props.srcType || this.props.src) || fileTypes[0];
+      return this.guessType(this.props.srcType) || this.guessType(this.props.src) || fileTypes[0];
     }
   }, {
     key: "getAcceptedExtensions",
@@ -3046,7 +3046,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function _handleWindowScroll() {
       var srcType = this.getSrcType();
 
-      if (this.video && srcType === "video") {
+      if (this.video && srcType === 'video') {
         var rect = this.video.getBoundingClientRect(); // https://stackoverflow.com/a/60018490
 
         if (rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth)) {
