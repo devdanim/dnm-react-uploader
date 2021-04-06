@@ -716,7 +716,7 @@ Uploader.defaultProps = {
     onLoad: () => null,
     onNotSupportedVideoLoad: () => null,
     onRemoveClick: () => null,
-    onUploaderClick: () => null, // Useful with electron to use a custom file dialog
+    onUploaderClick: null, // Useful with electron to use a custom file dialog
     onURLInjectionError: (error, url) => null,
     onVideoCutClick: () => null,
     onVideoLoad: () => null,

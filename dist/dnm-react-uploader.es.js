@@ -4209,9 +4209,7 @@ Uploader.defaultProps = {
   onRemoveClick: function onRemoveClick() {
     return null;
   },
-  onUploaderClick: function onUploaderClick() {
-    return null;
-  },
+  onUploaderClick: null,
   // Useful with electron to use a custom file dialog
   onURLInjectionError: function onURLInjectionError(error, url) {
     return null;
