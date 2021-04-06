@@ -215,9 +215,9 @@ export default class Uploader extends React.Component {
         this.setState({ loaded: true }, onLoad);
     }
 
-    handleImageLoad() {
+    handleImageLoad(img) {
         const fac = new FastAverageColor();
-        const color = fac.getColor(this.cropImg);
+        const color = fac.getColor(img || this.cropImg);
         const { isDark, value } = color;
         let rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
         if (value[3] >= (0.95 * 255)) rgba = [value[0], value[1], value[2], 0.5];
@@ -389,8 +389,12 @@ export default class Uploader extends React.Component {
                             }}>
                                 <img
                                     alt=''
+                                    ref={obj => this.tempCroppingImg = obj}
                                     src={this.props.src}
-                                    onLoad={this.handleLoad}
+                                    onLoad={() => {
+                                        this.handleLoad();
+                                        this.handleImageLoad(this.tempCroppingImg);
+                                    }}
                                     style={{
                                         position: 'fixed',
                                         top: '-9999px',

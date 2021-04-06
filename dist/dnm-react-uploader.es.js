@@ -3659,9 +3659,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     }
   }, {
     key: "handleImageLoad",
-    value: function handleImageLoad() {
+    value: function handleImageLoad(img) {
       var fac = new FastAverageColor();
-      var color = fac.getColor(this.cropImg);
+      var color = fac.getColor(img || this.cropImg);
       var isDark = color.isDark,
           value = color.value;
       var rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
@@ -3851,8 +3851,15 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
                 }
               }, jsx("img", {
                 alt: "",
+                ref: function ref(obj) {
+                  return _this5.tempCroppingImg = obj;
+                },
                 src: this.props.src,
-                onLoad: this.handleLoad,
+                onLoad: function onLoad() {
+                  _this5.handleLoad();
+
+                  _this5.handleImageLoad(_this5.tempCroppingImg);
+                },
                 style: {
                   position: 'fixed',
                   top: '-9999px',
