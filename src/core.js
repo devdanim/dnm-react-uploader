@@ -216,17 +216,13 @@ export default class Uploader extends React.Component {
     }
 
     handleImageLoad() {
-        const srcType = this.getSrcType();
-        if (srcType === "image") {
-            const fac = new FastAverageColor();
-            const color = fac.getColor(this.cropImg);
-            const { isDark, value } = color;
-            let rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
-            if (value[3] >= (0.95 * 255)) rgba = [value[0], value[1], value[2], 0.5];
-            console.log(1, color);
-            this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`, imageIsDark: isDark });
-        }
-        this._forceUpdate();
+        const fac = new FastAverageColor();
+        const color = fac.getColor(this.cropImg);
+        const { isDark, value } = color;
+        let rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
+        if (value[3] >= (0.95 * 255)) rgba = [value[0], value[1], value[2], 0.5];
+        console.log(1, color);
+        this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`, imageIsDark: isDark });
     }
 
     handleVideoLoad() {
