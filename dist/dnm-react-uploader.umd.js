@@ -8184,7 +8184,6 @@
       _this.handleDrop = _this.handleDrop.bind(_assertThisInitialized(_this));
       _this.handleInjectURLClick = _this.handleInjectURLClick.bind(_assertThisInitialized(_this));
       _this.handleLoad = _this.handleLoad.bind(_assertThisInitialized(_this));
-      _this.handleImageLoad = _this.handleImageLoad.bind(_assertThisInitialized(_this));
       _this.handleVideoLoad = _this.handleVideoLoad.bind(_assertThisInitialized(_this));
       _this.handleVideoPlayerError = _this.handleVideoPlayerError.bind(_assertThisInitialized(_this));
       _this.handleRemoveClick = _this.handleRemoveClick.bind(_assertThisInitialized(_this));
@@ -8192,6 +8191,8 @@
       _this.get = _this.get.bind(_assertThisInitialized(_this));
       _this.injectURL = _this.injectURL.bind(_assertThisInitialized(_this));
       _this.change = _this.change.bind(_assertThisInitialized(_this));
+      _this.updateImageBackground = _this.updateImageBackground.bind(_assertThisInitialized(_this));
+      _this.updateImageBackgroundInState = _this.updateImageBackgroundInState.bind(_assertThisInitialized(_this));
       _this._forceUpdate = _this._forceUpdate.bind(_assertThisInitialized(_this));
       _this._handleWindowScroll = _this._handleWindowScroll.bind(_assertThisInitialized(_this));
       _this.forceUpdateOnResize = _.debounce(_this._forceUpdate, 250);
@@ -8206,8 +8207,14 @@
           mounted: true
         });
         this.initializeDrag();
+        this.updateImageBackground();
         window.addEventListener('resize', this.forceUpdateOnResize);
         window.addEventListener('scroll', this.handleWindowScroll);
+      }
+    }, {
+      key: "componentDidUpdate",
+      value: function componentDidUpdate(prevProps) {
+        if (this.props.src !== prevProps.src) this.updateImageBackground();
       }
     }, {
       key: "componentWillUnmount",
@@ -8367,29 +8374,39 @@
         }, onLoad);
       }
     }, {
-      key: "handleImageLoad",
-      value: function handleImageLoad(img) {
-        var fac = new FastAverageColor();
-        var color;
+      key: "updateImageBackground",
+      value: function updateImageBackground() {
+        if (this.props.src && this.getSrcType() === 'image') {
+          var img = new Image();
+          var updateImageBackgroundInState = this.updateImageBackgroundInState;
+          img.crossOrigin = 'anonymous';
 
-        try {
-          color = fac.getColor(this.cropImg || this.tempCroppingImg);
-        } catch (e) {}
+          img.onload = function () {
+            var fac = new FastAverageColor();
+            var color = fac.getColor(img);
 
-        if (color) {
-          var _color = color,
-              isDark = _color.isDark,
-              value = _color.value;
-          var rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
-          if (value[3] >= 0.95 * 255) rgba = [value[0], value[1], value[2], 0.5];
-          console.log(1, color);
-          this.setState({
-            imageBackgroundColor: "rgba(".concat(rgba[0], ", ").concat(rgba[1], ", ").concat(rgba[2], ", ").concat(rgba[3], ")"),
-            imageIsDark: isDark
-          });
+            if (color) {
+              var isDark = color.isDark,
+                  value = color.value;
+              var rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
+              if (value[3] >= 0.95 * 255) rgba = [value[0], value[1], value[2], 0.5];
+              updateImageBackgroundInState(rgba, isDark);
+            }
+          };
+
+          img.src = this.props.src;
+          return true;
         }
 
-        this._forceUpdate();
+        return false;
+      }
+    }, {
+      key: "updateImageBackgroundInState",
+      value: function updateImageBackgroundInState(rgba, imageIsDark) {
+        this.setState({
+          imageBackgroundColor: "rgba(".concat(rgba[0], ", ").concat(rgba[1], ", ").concat(rgba[2], ", ").concat(rgba[3], ")"),
+          imageIsDark: imageIsDark
+        });
       }
     }, {
       key: "handleVideoLoad",
@@ -8489,7 +8506,6 @@
       value: function render() {
         var _this5 = this;
 
-        console.log(2, this.state.imageBackgroundColor, this.state.imageIsDark);
         var srcType = this.getSrcType();
         var media = null,
             icon = null,
@@ -8551,9 +8567,8 @@
                   ref: function ref(obj) {
                     return _this5.cropImg = obj;
                   },
-                  crossOrigin: "anonymous",
                   src: this.props.src,
-                  onLoad: this.handleImageLoad,
+                  onLoad: this._forceUpdate,
                   style: cropStyle
                 });
               } else {
@@ -8570,15 +8585,8 @@
                   }
                 }, jsx("img", {
                   alt: "",
-                  ref: function ref(obj) {
-                    return _this5.tempCroppingImg = obj;
-                  },
                   src: this.props.src,
-                  onLoad: function onLoad() {
-                    _this5.handleLoad();
-
-                    _this5.handleImageLoad(_this5.tempCroppingImg);
-                  },
+                  onLoad: this.handleLoad,
                   style: {
                     position: 'fixed',
                     top: '-9999px',

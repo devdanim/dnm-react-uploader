@@ -67,7 +67,6 @@ export default class Uploader extends React.Component {
         this.handleDrop = this.handleDrop.bind(this);
         this.handleInjectURLClick = this.handleInjectURLClick.bind(this);
         this.handleLoad = this.handleLoad.bind(this);
-        this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleVideoLoad = this.handleVideoLoad.bind(this);
         this.handleVideoPlayerError = this.handleVideoPlayerError.bind(this);
         this.handleRemoveClick = this.handleRemoveClick.bind(this);
@@ -75,6 +74,8 @@ export default class Uploader extends React.Component {
         this.get = this.get.bind(this);
         this.injectURL = this.injectURL.bind(this);
         this.change = this.change.bind(this);
+        this.updateImageBackground = this.updateImageBackground.bind(this);
+        this.updateImageBackgroundInState = this.updateImageBackgroundInState.bind(this);
         this._forceUpdate = this._forceUpdate.bind(this);
         this._handleWindowScroll = this._handleWindowScroll.bind(this);
 
@@ -94,8 +95,13 @@ export default class Uploader extends React.Component {
     componentDidMount() {
         this.setState({mounted: true});
         this.initializeDrag();
+        this.updateImageBackground();
         window.addEventListener('resize', this.forceUpdateOnResize);
         window.addEventListener('scroll', this.handleWindowScroll);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.src !== prevProps.src) this.updateImageBackground();
     }
 
     componentWillUnmount() {
@@ -166,7 +172,6 @@ export default class Uploader extends React.Component {
 
     handleVideoCutClick(ev) {
         ev.stopPropagation();
-
         this.props.onVideoCutClick();
     }
 
@@ -215,20 +220,29 @@ export default class Uploader extends React.Component {
         this.setState({ loaded: true }, onLoad);
     }
 
-    handleImageLoad(img) {
-        const fac = new FastAverageColor();
-        let color;
-        try {
-            color = fac.getColor(this.cropImg || this.tempCroppingImg);
-        } catch(e) {}
-        if (color) {
-            const { isDark, value } = color;
-            let rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
-            if (value[3] >= (0.95 * 255)) rgba = [value[0], value[1], value[2], 0.5];
-            console.log(1, color);
-            this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`, imageIsDark: isDark });
+    updateImageBackground() {
+        if (this.props.src && this.getSrcType() === 'image') {
+            const img = new Image();
+            const updateImageBackgroundInState = this.updateImageBackgroundInState;
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                const fac = new FastAverageColor();
+                const color = fac.getColor(img);
+                if (color) {
+                    const { isDark, value } = color;
+                    let rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
+                    if (value[3] >= (0.95 * 255)) rgba = [value[0], value[1], value[2], 0.5];
+                    updateImageBackgroundInState(rgba, isDark);
+                }
+            };
+            img.src = this.props.src;
+            return true;
         }
-        this._forceUpdate();
+        return false;
+    }
+
+    updateImageBackgroundInState(rgba, imageIsDark) {
+        this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`, imageIsDark });
     }
 
     handleVideoLoad() {
@@ -305,7 +319,6 @@ export default class Uploader extends React.Component {
     }
 
     render() {
-        console.log(2, this.state.imageBackgroundColor, this.state.imageIsDark);
         const srcType = this.getSrcType();
         let media = null,
             icon = null,
@@ -375,9 +388,8 @@ export default class Uploader extends React.Component {
                             <img
                                 alt=''
                                 ref={obj => this.cropImg = obj}
-                                crossOrigin="anonymous"
                                 src={this.props.src}
-                                onLoad={this.handleImageLoad}
+                                onLoad={this._forceUpdate}
                                 style={cropStyle}
                             />
                         );
@@ -395,12 +407,8 @@ export default class Uploader extends React.Component {
                             }}>
                                 <img
                                     alt=''
-                                    ref={obj => this.tempCroppingImg = obj}
                                     src={this.props.src}
-                                    onLoad={() => {
-                                        this.handleLoad();
-                                        this.handleImageLoad(this.tempCroppingImg);
-                                    }}
+                                    onLoad={this.handleLoad}
                                     style={{
                                         position: 'fixed',
                                         top: '-9999px',
