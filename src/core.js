@@ -49,6 +49,7 @@ export default class Uploader extends React.Component {
             url: '',
             width: null,
             imageBackgroundColor: 'rgba(0, 0, 0, 0)',
+            imageIsDark: false,
             _forceUpdateCounter: 0
         };
 
@@ -218,13 +219,11 @@ export default class Uploader extends React.Component {
         const srcType = this.getSrcType();
         if (srcType === "image") {
             const fac = new FastAverageColor();
-            console.log(this.cropImg);
             const color = fac.getColor(this.cropImg);
             const { isDark, value } = color;
-            let rgba = [0, 0, 0, 1];
+            let rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
             if (value[3] >= (0.95 * 255)) rgba = [value[0], value[1], value[2], 0.5];
-            else if (isDark) rgba = [255, 255, 255, 1];
-            this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})` });
+            this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`, imageIsDark: isDark });
         }
         this._forceUpdate();
     }
@@ -349,6 +348,7 @@ export default class Uploader extends React.Component {
                         position: 'absolute',
                         top: '50%',
                         left: '50%',
+                        backgroundColor: this.state.imageIsDark ? 'white' : 'black',
                         transformOrigin: `${(displayCropLeft + displayCropRight) / 2}px ${(displayCropTop + displayCropBottom) / 2}px`,
                         transform: `
                             translateX(-${(displayCropLeft + displayCropRight) / 2}px)
@@ -457,7 +457,7 @@ export default class Uploader extends React.Component {
                     onDragEnter={this.handleDragEnter}
                     onDragLeave={this.handleDragLeave}
                     onDrop={this.handleDrop}
-                    style={srcType === 'image' ? { backgroundColor: this.state.imageBackgroundColor } : null}
+                    style={this.props.src && srcType === 'image' ? { backgroundColor: this.state.imageBackgroundColor } : null}
                 >
                     { media }
                     <div className="uploader-zone-fog" onClick={this.handleClick}>

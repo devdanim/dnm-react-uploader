@@ -3458,6 +3458,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       url: '',
       width: null,
       imageBackgroundColor: 'rgba(0, 0, 0, 0)',
+      imageIsDark: false,
       _forceUpdateCounter: 0
     };
     _this.change = _this.change.bind(_assertThisInitialized(_this));
@@ -3663,14 +3664,14 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
 
       if (srcType === "image") {
         var fac = new FastAverageColor();
-        console.log(this.cropImg);
         var color = fac.getColor(this.cropImg);
         var isDark = color.isDark,
             value = color.value;
-        var rgba = [0, 0, 0, 1];
-        if (value[3] >= 0.95 * 255) rgba = [value[0], value[1], value[2], 0.5];else if (isDark) rgba = [255, 255, 255, 1];
+        var rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
+        if (value[3] >= 0.95 * 255) rgba = [value[0], value[1], value[2], 0.5];
         this.setState({
-          imageBackgroundColor: "rgba(".concat(rgba[0], ", ").concat(rgba[1], ", ").concat(rgba[2], ", ").concat(rgba[3], ")")
+          imageBackgroundColor: "rgba(".concat(rgba[0], ", ").concat(rgba[1], ", ").concat(rgba[2], ", ").concat(rgba[3], ")"),
+          imageIsDark: isDark
         });
       }
 
@@ -3819,6 +3820,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               position: 'absolute',
               top: '50%',
               left: '50%',
+              backgroundColor: this.state.imageIsDark ? 'white' : 'black',
               transformOrigin: "".concat((displayCropLeft + displayCropRight) / 2, "px ").concat((displayCropTop + displayCropBottom) / 2, "px"),
               transform: "\n                            translateX(-".concat((displayCropLeft + displayCropRight) / 2, "px)\n                            translateY(-").concat((displayCropTop + displayCropBottom) / 2, "px)\n                            scale(").concat(scale, ")\n                        "),
               clip: "rect(\n                            ".concat(displayCropTop, "px\n                            ").concat(displayCropRight, "px\n                            ").concat(displayCropBottom, "px\n                            ").concat(displayCropLeft, "px)\n                        ")
@@ -3923,7 +3925,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
         onDragEnter: this.handleDragEnter,
         onDragLeave: this.handleDragLeave,
         onDrop: this.handleDrop,
-        style: srcType === 'image' ? {
+        style: this.props.src && srcType === 'image' ? {
           backgroundColor: this.state.imageBackgroundColor
         } : null
       }, media, jsx("div", {
