@@ -20,6 +20,7 @@ import map from 'lodash-es/map';
 import round from 'lodash-es/round';
 import split from 'lodash-es/split';
 import upperFirst from 'lodash-es/upperFirst';
+import FastAverageColor from 'fast-average-color';
 import 'whatwg-fetch'; // importing will automatically polyfill window.fetch and related APIs
 const _ = {
     camelCase,
@@ -47,6 +48,7 @@ export default class Uploader extends React.Component {
             mounted: false,
             url: '',
             width: null,
+            imageBackgroundColor: 'rgba(0, 0, 0, 0)',
             _forceUpdateCounter: 0
         };
 
@@ -64,6 +66,7 @@ export default class Uploader extends React.Component {
         this.handleDrop = this.handleDrop.bind(this);
         this.handleInjectURLClick = this.handleInjectURLClick.bind(this);
         this.handleLoad = this.handleLoad.bind(this);
+        this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleVideoLoad = this.handleVideoLoad.bind(this);
         this.handleVideoPlayerError = this.handleVideoPlayerError.bind(this);
         this.handleRemoveClick = this.handleRemoveClick.bind(this);
@@ -148,7 +151,10 @@ export default class Uploader extends React.Component {
     }
 
     handleClick(ev) {
-        this.input.click();
+        const { onUploaderClick } = this.props;
+        if (onUploaderClick) {
+            onUploaderClick().then(this.change).catch(e => console.error(e));
+        } else this.input.click();
     }
 
     handleCropClick(ev) {
@@ -206,6 +212,21 @@ export default class Uploader extends React.Component {
             onFirstLoad();
         }
         this.setState({ loaded: true }, onLoad);
+    }
+
+    handleImageLoad() {
+        const srcType = this.getSrcType();
+        if (srcType === "image") {
+            const fac = new FastAverageColor();
+            console.log(this.cropImg);
+            const color = fac.getColor(this.cropImg);
+            const { isDark, value } = color;
+            let rgba = [0, 0, 0, 1];
+            if (value[3] >= (0.95 * 255)) rgba = [value[0], value[1], value[2], 0.5];
+            else if (isDark) rgba = [255, 255, 255, 1];
+            this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})` });
+        }
+        this._forceUpdate();
     }
 
     handleVideoLoad() {
@@ -350,8 +371,9 @@ export default class Uploader extends React.Component {
                             <img
                                 alt=''
                                 ref={obj => this.cropImg = obj}
+                                crossOrigin="anonymous"
                                 src={this.props.src}
-                                onLoad={this._forceUpdate}
+                                onLoad={this.handleImageLoad}
                                 style={cropStyle}
                             />
                         );
@@ -435,6 +457,7 @@ export default class Uploader extends React.Component {
                     onDragEnter={this.handleDragEnter}
                     onDragLeave={this.handleDragLeave}
                     onDrop={this.handleDrop}
+                    style={srcType === 'image' ? { backgroundColor: this.state.imageBackgroundColor } : null}
                 >
                     { media }
                     <div className="uploader-zone-fog" onClick={this.handleClick}>
@@ -652,6 +675,7 @@ Uploader.propTypes = {
     onInvalidURLError: PropTypes.func,
     onLoad: PropTypes.func,
     onRemoveClick: PropTypes.func,
+    onUploaderClick: PropTypes.func,
     onURLInjectionError: PropTypes.func,
     onVideoCutClick: PropTypes.func,
     onVideoLoad: PropTypes.func,
@@ -692,6 +716,7 @@ Uploader.defaultProps = {
     onLoad: () => null,
     onNotSupportedVideoLoad: () => null,
     onRemoveClick: () => null,
+    onUploaderClick: () => null, // Useful with electron to use a custom file dialog
     onURLInjectionError: (error, url) => null,
     onVideoCutClick: () => null,
     onVideoLoad: () => null,

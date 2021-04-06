@@ -20,8 +20,9 @@ class Page extends React.Component {
         this.state = {
             first: {},
             second: {
-                src: 'https://wallpaperplay.com/walls/full/2/5/0/200799.jpg',
-                srcType: 'image/jpeg'
+                // src: 'https://images.unsplash.com/photo-1617642171292-afad99eee7ed?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://app.danim.com/logo.png',
+                srcType: 'image/png'
             },
         };
     }
@@ -103,7 +104,7 @@ class Page extends React.Component {
                         onURLInjectionError={() => alert('onURLInjectionError 3')}
                         onNotSupportedVideoLoad={(err) => console.error("Video source not supported", err)}
                         removeIcon={<Svg.Erase />}
-                        imageCrop={{x: 50, y: 50, width: 1000, height: 500}}
+                        imageCrop={{x: 0, y: 0, width: 100, height: 100}}
                         backgroundSize="contain"
                     />
                 </div>
