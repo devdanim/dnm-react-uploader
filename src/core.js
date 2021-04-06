@@ -232,7 +232,6 @@ export default class Uploader extends React.Component {
                     const { isDark, value } = color;
                     let rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
                     if (value[3] >= (0.95 * 255)) rgba = [value[0], value[1], value[2], 0.5];
-                    console.log(1, color);
                     updateImageBackgroundInState(rgba, isDark);
                 }
             };
@@ -320,7 +319,6 @@ export default class Uploader extends React.Component {
     }
 
     render() {
-        console.log(2, this.state.imageBackgroundColor, this.state.imageIsDark);
         const srcType = this.getSrcType();
         let media = null,
             icon = null,
