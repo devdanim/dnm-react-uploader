@@ -3669,6 +3669,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
             value = color.value;
         var rgba = isDark ? [235, 235, 235, 1] : [20, 20, 20, 1];
         if (value[3] >= 0.95 * 255) rgba = [value[0], value[1], value[2], 0.5];
+        console.log(1, color);
         this.setState({
           imageBackgroundColor: "rgba(".concat(rgba[0], ", ").concat(rgba[1], ", ").concat(rgba[2], ", ").concat(rgba[3], ")"),
           imageIsDark: isDark
@@ -3775,6 +3776,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function render() {
       var _this5 = this;
 
+      console.log(2, this.state.imageBackgroundColor, this.state.imageIsDark);
       var srcType = this.getSrcType();
       var media = null,
           icon = null,
