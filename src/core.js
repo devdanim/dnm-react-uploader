@@ -160,7 +160,9 @@ export default class Uploader extends React.Component {
     handleClick(ev) {
         const { onUploaderClick } = this.props;
         if (onUploaderClick) {
-            onUploaderClick().then(this.change).catch(e => console.error(e));
+            onUploaderClick().then((file) => {
+                if (file) this.change(file);
+            }).catch(e => {});
         } else this.input.click();
     }
 

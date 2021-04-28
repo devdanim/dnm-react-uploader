@@ -44,6 +44,10 @@ class Page extends React.Component {
                     onFirstLoad={() => console.log('onFirstLoad')}
                     onLoad={() => console.log('onLoad')}
                     withURLInput={true}
+                    onUploaderClick={() => new Promise(resolve => {
+                        alert("Custom uploader click");
+                        resolve(null);
+                    })}
                     onFileTooLargeError={() => alert('onFileTooLargeError')}
                     onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
                     onInvalidURLError={() => alert('onInvalidURLError')}
