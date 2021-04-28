@@ -3278,7 +3278,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
                 ref: function ref(obj) {
                   return _this6.cropImg = obj;
                 },
-                src: this.props.src + '?xHtml=true',
+                crossOrigin: "anonymous",
+                crossorigin: "anonymous",
+                src: this.props.src,
                 onLoad: this._forceUpdate,
                 style: cropStyle
               });
@@ -3296,7 +3298,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
                 }
               }, jsx("img", {
                 alt: "",
-                src: this.props.src + '?xHtml=true',
+                crossOrigin: "anonymous",
+                crossorigin: "anonymous",
+                src: this.props.src,
                 onLoad: this.handleLoad,
                 style: {
                   position: 'fixed',
