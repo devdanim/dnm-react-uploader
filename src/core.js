@@ -385,7 +385,6 @@ export default class Uploader extends React.Component {
             }
             switch (srcType) {
                 case 'image':
-                    console.log(123)
                     if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
                         media = (
                             <img
@@ -404,7 +403,7 @@ export default class Uploader extends React.Component {
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center center',
                                 backgroundSize: this.props.backgroundSize,
-                                backgroundImage: this.state.loaded ? `url(${this.props.src})` : null,
+                                backgroundImage: this.state.loaded ? `url(${this.props.src})` : null, // this is no-CORS request, we therefore need to be sure the cached response (e.g. Chrome) has been a CORS one (see the <img /> below) before display
                                 position: 'relative',
                                 width: '100%',
                                 height: '100%',
