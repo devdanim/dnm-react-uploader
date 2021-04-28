@@ -391,7 +391,6 @@ export default class Uploader extends React.Component {
                             <img
                                 alt=''
                                 ref={obj => this.cropImg = obj}
-                                crossorigin="anonymous" // See https://stackoverflow.com/a/34496683
                                 src={this.props.src}
                                 onLoad={this._forceUpdate}
                                 style={cropStyle}
@@ -411,8 +410,7 @@ export default class Uploader extends React.Component {
                             }}>
                                 <img
                                     alt=''
-                                    src={this.props.src}
-                                    crossorigin="anonymous" // See https://stackoverflow.com/a/34496683
+                                    src={this.props.src + '?xHtml=true'}
                                     onLoad={this.handleLoad}
                                     style={{
                                         position: 'fixed',
@@ -430,7 +428,7 @@ export default class Uploader extends React.Component {
                             autoPlay
                             loop
                             muted
-                            src={this.props.src}
+                            src={this.props.src + '?xHtml=true'}
                             onLoadedData={this.handleVideoLoad}
                             onError={this.handleVideoPlayerError}
                             ref={obj => this.video = obj}
