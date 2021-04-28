@@ -404,7 +404,7 @@ export default class Uploader extends React.Component {
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center center',
                                 backgroundSize: this.props.backgroundSize,
-                                // backgroundImage: `url(${this.props.src})`,
+                                backgroundImage: this.state.loaded ? `url(${this.props.src})` : null,
                                 position: 'relative',
                                 width: '100%',
                                 height: '100%',
