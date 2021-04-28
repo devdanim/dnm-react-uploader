@@ -429,6 +429,7 @@ export default class Uploader extends React.Component {
                             autoPlay
                             loop
                             muted
+                            crossOrigin="anonymous"
                             src={this.props.src}
                             onLoadedData={this.handleVideoLoad}
                             onError={this.handleVideoPlayerError}

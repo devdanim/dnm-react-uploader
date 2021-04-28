@@ -3892,6 +3892,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               autoPlay: true,
               loop: true,
               muted: true,
+              crossOrigin: "anonymous",
               src: this.props.src,
               onLoadedData: this.handleVideoLoad,
               onError: this.handleVideoPlayerError,
