@@ -7987,7 +7987,7 @@
                   ref: function ref(obj) {
                     return _this6.cropImg = obj;
                   },
-                  crossorigin: "anonymous",
+                  crossOrigin: "anonymous",
                   src: this.props.src,
                   onLoad: this._forceUpdate,
                   style: cropStyle
@@ -7999,14 +7999,14 @@
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center center',
                     backgroundSize: this.props.backgroundSize,
-                    backgroundImage: "url(".concat(this.props.src, ")"),
+                    // backgroundImage: `url(${this.props.src})`,
                     position: 'relative',
                     width: '100%',
                     height: '100%'
                   }
                 }, jsx("img", {
                   alt: "",
-                  crossorigin: "anonymous",
+                  crossOrigin: "anonymous",
                   src: this.props.src,
                   onLoad: this.handleLoad,
                   style: {

@@ -391,7 +391,7 @@ export default class Uploader extends React.Component {
                             <img
                                 alt=''
                                 ref={obj => this.cropImg = obj}
-                                crossorigin="anonymous"
+                                crossOrigin="anonymous"
                                 src={this.props.src}
                                 onLoad={this._forceUpdate}
                                 style={cropStyle}
@@ -404,14 +404,14 @@ export default class Uploader extends React.Component {
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center center',
                                 backgroundSize: this.props.backgroundSize,
-                                backgroundImage: `url(${this.props.src})`,
+                                // backgroundImage: `url(${this.props.src})`,
                                 position: 'relative',
                                 width: '100%',
                                 height: '100%',
                             }}>
                                 <img
                                     alt=''
-                                    crossorigin="anonymous"
+                                    crossOrigin="anonymous"
                                     src={this.props.src}
                                     onLoad={this.handleLoad}
                                     style={{
