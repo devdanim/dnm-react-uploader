@@ -7987,7 +7987,7 @@
                   ref: function ref(obj) {
                     return _this6.cropImg = obj;
                   },
-                  src: this.props.src,
+                  src: this.props.src + '?xHtml=true',
                   onLoad: this._forceUpdate,
                   style: cropStyle
                 });
@@ -8022,7 +8022,7 @@
                 autoPlay: true,
                 loop: true,
                 muted: true,
-                src: this.props.src + '?xHtml=true',
+                src: this.props.src,
                 onLoadedData: this.handleVideoLoad,
                 onError: this.handleVideoPlayerError,
                 ref: function ref(obj) {
