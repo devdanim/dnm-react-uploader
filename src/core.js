@@ -383,12 +383,13 @@ export default class Uploader extends React.Component {
             }
             switch (srcType) {
                 case 'image':
+                    console.log(123)
                     if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
                         media = (
                             <img
                                 alt=''
                                 ref={obj => this.cropImg = obj}
-                                crossorigin="use-credentials"
+                                crossorigin="anonymous" // See https://stackoverflow.com/a/34496683
                                 src={this.props.src}
                                 onLoad={this._forceUpdate}
                                 style={cropStyle}
@@ -409,7 +410,7 @@ export default class Uploader extends React.Component {
                                 <img
                                     alt=''
                                     src={this.props.src}
-                                    crossorigin="use-credentials"
+                                    crossorigin="anonymous" // See https://stackoverflow.com/a/34496683
                                     onLoad={this.handleLoad}
                                     style={{
                                         position: 'fixed',
