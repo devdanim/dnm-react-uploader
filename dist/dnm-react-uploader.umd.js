@@ -7983,7 +7983,7 @@
                   ref: function ref(obj) {
                     return _this5.cropImg = obj;
                   },
-                  crossorigin: "anonymous",
+                  crossorigin: "use-credentials",
                   src: this.props.src,
                   onLoad: this._forceUpdate,
                   style: cropStyle
@@ -8003,7 +8003,7 @@
                 }, jsx("img", {
                   alt: "",
                   src: this.props.src,
-                  crossorigin: "anonymous",
+                  crossorigin: "use-credentials",
                   onLoad: this.handleLoad,
                   style: {
                     position: 'fixed',
