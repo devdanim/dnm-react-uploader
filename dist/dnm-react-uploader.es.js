@@ -3866,7 +3866,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center center',
                   backgroundSize: this.props.backgroundSize,
-                  backgroundImage: this.state.loaded ? "url(".concat(this.props.src, ")") : null,
+                  backgroundImage: this.state.loaded ? "url(".concat(this.props.src).concat(this.props.src.includes('?') ? '&' : '?', "xCssCors=1)") : null,
                   // this is no-CORS request, we therefore need to be sure the cached response (e.g. Chrome) has been a CORS one (see the <img /> below) before display
                   position: 'relative',
                   width: '100%',
