@@ -8176,14 +8176,14 @@
       _this.handleDragLeave = _this.handleDragLeave.bind(_assertThisInitialized(_this));
       _this.handleDragEnter = _this.handleDragEnter.bind(_assertThisInitialized(_this));
       _this.handleDrop = _this.handleDrop.bind(_assertThisInitialized(_this));
-      _this.handleInjectURLClick = _this.handleInjectURLClick.bind(_assertThisInitialized(_this));
+      _this.handleInjectUrlClick = _this.handleInjectUrlClick.bind(_assertThisInitialized(_this));
       _this.handleLoad = _this.handleLoad.bind(_assertThisInitialized(_this));
       _this.handleVideoLoad = _this.handleVideoLoad.bind(_assertThisInitialized(_this));
       _this.handleVideoPlayerError = _this.handleVideoPlayerError.bind(_assertThisInitialized(_this));
       _this.handleRemoveClick = _this.handleRemoveClick.bind(_assertThisInitialized(_this));
-      _this.handleURLChange = _this.handleURLChange.bind(_assertThisInitialized(_this));
+      _this.handleUrlChange = _this.handleUrlChange.bind(_assertThisInitialized(_this));
       _this.get = _this.get.bind(_assertThisInitialized(_this));
-      _this.injectURL = _this.injectURL.bind(_assertThisInitialized(_this));
+      _this.injectUrl = _this.injectUrl.bind(_assertThisInitialized(_this));
       _this.change = _this.change.bind(_assertThisInitialized(_this));
       _this.updateImageBackground = _this.updateImageBackground.bind(_assertThisInitialized(_this));
       _this.updateImageBackgroundInState = _this.updateImageBackgroundInState.bind(_assertThisInitialized(_this));
@@ -8336,9 +8336,9 @@
         if (file) this.change(file);
       }
     }, {
-      key: "handleInjectURLClick",
-      value: function handleInjectURLClick() {
-        this.injectURL(this.state.url, true);
+      key: "handleInjectUrlClick",
+      value: function handleInjectUrlClick() {
+        this.injectUrl(this.state.url, true);
       }
     }, {
       key: "_handleWindowScroll",
@@ -8434,8 +8434,8 @@
         this.props.onRemoveClick();
       }
     }, {
-      key: "handleURLChange",
-      value: function handleURLChange(ev) {
+      key: "handleUrlChange",
+      value: function handleUrlChange(ev) {
         var value = ev.target.value;
         this.setState({
           url: value
@@ -8474,8 +8474,8 @@
         });
       }
     }, {
-      key: "injectURL",
-      value: function injectURL(url) {
+      key: "injectUrl",
+      value: function injectUrl(url) {
         var _this5 = this;
 
         var validate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -8484,7 +8484,7 @@
         };
 
         if (validate && !validator.isURL(url)) {
-          this.props.onInvalidURLError(url);
+          this.props.onInvalidUrlError(url);
           return;
         }
 
@@ -8496,7 +8496,7 @@
 
           _this5.change(file, false, callback);
         })["catch"](function (error) {
-          _this5.props.onURLInjectionError(error, url);
+          _this5.props.onUrlInjectionError(error, url);
         });
       }
     }, {
@@ -8640,7 +8640,7 @@
           "data-attr": "root"
         }, _.get(this.props.customAttributes, 'root', {}), {
           className: "\n                    uploader\n                    ".concat(_.get(this.props.customAttributes, 'root.className', ''), "\n                "),
-          css: css(_templateObject$1(), styles.uploader, this.props.fetching ? styles['uploader/fetching'] : null, this.props.withURLInput ? styles['uploader/withUrl'] : null, withControls ? styles['uploader/withControls'] : null)
+          css: css(_templateObject$1(), styles.uploader, this.props.fetching ? styles['uploader/fetching'] : null, this.props.withUrlInput ? styles['uploader/withUrl'] : null, withControls ? styles['uploader/withControls'] : null)
         }), jsx("input", {
           "data-attr": "input",
           ref: function ref(obj) {
@@ -8653,7 +8653,7 @@
           ref: function ref(obj) {
             return _this6.zone = obj;
           },
-          className: "\n                        uploader-zone\n                        ".concat(this.props.withURLInput ? 'uploader-zone/withUrl' : '', "\n                    "),
+          className: "\n                        uploader-zone\n                        ".concat(this.props.withUrlInput ? 'uploader-zone/withUrl' : '', "\n                    "),
           onDragEnter: this.handleDragEnter,
           onDragLeave: this.handleDragLeave,
           onDrop: this.handleDrop,
@@ -8671,7 +8671,7 @@
           className: "uploader-zone-fog-img"
         }) : icon, jsx("div", {
           className: "uploader-zone-fog-caption"
-        }, "".concat(this.props.catalogue.click).concat(this.props.catalogue.drop ? "/".concat(this.props.catalogue.drop) : '').concat(this.props.withURLInput ? "/".concat(this.props.catalogue.typeURL) : ''))) : null, withControls === true && jsx(React__default.Fragment, null, !this.props.compact ? jsx("div", {
+        }, "".concat(this.props.catalogue.click).concat(this.props.catalogue.drop ? "/".concat(this.props.catalogue.drop) : '').concat(this.props.withUrlInput ? "/".concat(this.props.catalogue.typeUrl) : ''))) : null, withControls === true && jsx(React__default.Fragment, null, !this.props.compact ? jsx("div", {
           className: "uploader-zone-fog-or"
         }, jsx("div", {
           className: "uploader-zone-fog-or-wing"
@@ -8690,7 +8690,7 @@
         }, this.props.cutIcon || jsx(Cut, null)), this.props.removable === true && jsx("span", {
           className: "uploader-zone-fog-controls-control",
           onClick: this.handleRemoveClick
-        }, this.props.removeIcon || jsx(Garbage, null))))))), this.props.withURLInput === true && jsx("div", {
+        }, this.props.removeIcon || jsx(Garbage, null))))))), this.props.withUrlInput === true && jsx("div", {
           className: "uploader-url"
         }, jsx("input", {
           className: "uploader-url-input",
@@ -8698,18 +8698,18 @@
           value: this.state.url,
           placeholder: this.props.catalogue.urlInputPlaceholder,
           type: "text",
-          onChange: this.handleURLChange,
+          onChange: this.handleUrlChange,
           onKeyPress: function onKeyPress(ev) {
             if (ev.which === 13) {
               // enter would otherwise submit form
               ev.preventDefault();
 
-              _this6.handleInjectURLClick();
+              _this6.handleInjectUrlClick();
             }
           }
         }), jsx("span", {
           className: "uploader-url-addon",
-          onClick: this.handleInjectURLClick
+          onClick: this.handleInjectUrlClick
         }, jsx(InternetGlobe, {
           className: "uploader-url-addon-icon"
         }), this.props.catalogue.urlSubmitText)));
@@ -8877,11 +8877,11 @@
     onFileTooLargeError: PropTypes.func,
     onFirstLoad: PropTypes.func,
     onInvalidFileExtensionError: PropTypes.func,
-    onInvalidURLError: PropTypes.func,
+    onInvalidUrlError: PropTypes.func,
     onLoad: PropTypes.func,
     onRemoveClick: PropTypes.func,
     onUploaderClick: PropTypes.func,
-    onURLInjectionError: PropTypes.func,
+    onUrlInjectionError: PropTypes.func,
     onVideoCutClick: PropTypes.func,
     onVideoLoad: PropTypes.func,
     removable: PropTypes.bool,
@@ -8889,7 +8889,7 @@
     srcType: PropTypes.string,
     // mime
     videoRange: PropTypes.array,
-    withURLInput: PropTypes.bool
+    withUrlInput: PropTypes.bool
   };
   Uploader.defaultProps = {
     backgroundColor: 'transparent',
@@ -8897,7 +8897,7 @@
     catalogue: {
       click: null,
       drop: null,
-      typeURL: null,
+      typeUrl: null,
       loading: null,
       or: null,
       urlInputPlaceholder: null,
@@ -8931,7 +8931,7 @@
     onInvalidFileExtensionError: function onInvalidFileExtensionError(extension, expectedExtensions) {
       return null;
     },
-    onInvalidURLError: function onInvalidURLError(url) {
+    onInvalidUrlError: function onInvalidUrlError(url) {
       return null;
     },
     onLoad: function onLoad() {
@@ -8945,7 +8945,7 @@
     },
     onUploaderClick: null,
     // Useful with electron to use a custom file dialog
-    onURLInjectionError: function onURLInjectionError(error, url) {
+    onUrlInjectionError: function onUrlInjectionError(error, url) {
       return null;
     },
     onVideoCutClick: function onVideoCutClick() {
@@ -8961,7 +8961,7 @@
     srcType: null,
     // e.g. video, video/mp4 (which is a more detailed MIME), etc.
     videoRange: null,
-    withURLInput: false
+    withUrlInput: false
   };
 
   return Uploader;

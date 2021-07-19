@@ -65,14 +65,14 @@ export default class Uploader extends React.Component {
         this.handleDragLeave = this.handleDragLeave.bind(this);
         this.handleDragEnter = this.handleDragEnter.bind(this);
         this.handleDrop = this.handleDrop.bind(this);
-        this.handleInjectURLClick = this.handleInjectURLClick.bind(this);
+        this.handleInjectUrlClick = this.handleInjectUrlClick.bind(this);
         this.handleLoad = this.handleLoad.bind(this);
         this.handleVideoLoad = this.handleVideoLoad.bind(this);
         this.handleVideoPlayerError = this.handleVideoPlayerError.bind(this);
         this.handleRemoveClick = this.handleRemoveClick.bind(this);
-        this.handleURLChange = this.handleURLChange.bind(this);
+        this.handleUrlChange = this.handleUrlChange.bind(this);
         this.get = this.get.bind(this);
-        this.injectURL = this.injectURL.bind(this);
+        this.injectUrl = this.injectUrl.bind(this);
         this.change = this.change.bind(this);
         this.updateImageBackground = this.updateImageBackground.bind(this);
         this.updateImageBackgroundInState = this.updateImageBackgroundInState.bind(this);
@@ -199,8 +199,8 @@ export default class Uploader extends React.Component {
         if (file) this.change(file);
     }
 
-    handleInjectURLClick() {
-        this.injectURL(this.state.url, true);
+    handleInjectUrlClick() {
+        this.injectUrl(this.state.url, true);
     }
 
     _handleWindowScroll() {
@@ -273,7 +273,7 @@ export default class Uploader extends React.Component {
         this.props.onRemoveClick();
     }
 
-    handleURLChange(ev) {
+    handleUrlChange(ev) {
         const value = ev.target.value;
         this.setState({url: value});
     }
@@ -306,9 +306,9 @@ export default class Uploader extends React.Component {
         });
     }
 
-    injectURL(url, validate = false, callback = data => null) {
+    injectUrl(url, validate = false, callback = data => null) {
         if (validate && ! validator.isURL(url)) {
-            this.props.onInvalidURLError(url);
+            this.props.onInvalidUrlError(url);
 
             return;
         }
@@ -319,7 +319,7 @@ export default class Uploader extends React.Component {
                     file = new File([response], name, {type: response.type});
                 this.change(file, false, callback);
             }).catch(error => {
-                this.props.onURLInjectionError(error, url);
+                this.props.onUrlInjectionError(error, url);
             });
     }
 
@@ -467,7 +467,7 @@ export default class Uploader extends React.Component {
                 css={css`
                     ${styles.uploader};
                     ${this.props.fetching ? styles['uploader/fetching'] : null};
-                    ${this.props.withURLInput ? styles['uploader/withUrl'] : null};
+                    ${this.props.withUrlInput ? styles['uploader/withUrl'] : null};
                     ${withControls ? styles['uploader/withControls'] : null};
                 `}
             >
@@ -476,7 +476,7 @@ export default class Uploader extends React.Component {
                     ref={obj => this.zone = obj}
                     className={`
                         uploader-zone
-                        ${this.props.withURLInput ? 'uploader-zone/withUrl' : ''}
+                        ${this.props.withUrlInput ? 'uploader-zone/withUrl' : ''}
                     `}
                     onDragEnter={this.handleDragEnter}
                     onDragLeave={this.handleDragLeave}
@@ -498,7 +498,7 @@ export default class Uploader extends React.Component {
                                         : icon
                                     }
                                     <div className="uploader-zone-fog-caption">
-                                        { `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withURLInput ? `/${this.props.catalogue.typeURL}` : ''}` }
+                                        { `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withUrlInput ? `/${this.props.catalogue.typeUrl}` : ''}` }
                                     </div>
                                 </React.Fragment>
                             ) : null }
@@ -533,7 +533,7 @@ export default class Uploader extends React.Component {
                         </div>
                     </div>
                 </div>
-                { this.props.withURLInput === true &&
+                { this.props.withUrlInput === true &&
                 <div className="uploader-url">
                     <input
                         className="uploader-url-input"
@@ -541,15 +541,15 @@ export default class Uploader extends React.Component {
                         value={this.state.url}
                         placeholder={this.props.catalogue.urlInputPlaceholder}
                         type="text"
-                        onChange={this.handleURLChange}
+                        onChange={this.handleUrlChange}
                         onKeyPress={ev => {
                             if (ev.which === 13) { // enter would otherwise submit form
                                 ev.preventDefault();
-                                this.handleInjectURLClick();
+                                this.handleInjectUrlClick();
                             }
                         }}
                     />
-                    <span className="uploader-url-addon" onClick={this.handleInjectURLClick}>
+                    <span className="uploader-url-addon" onClick={this.handleInjectUrlClick}>
                         <Svg.InternetGlobe className="uploader-url-addon-icon" />
                         {this.props.catalogue.urlSubmitText}
                     </span>
@@ -696,18 +696,18 @@ Uploader.propTypes = {
     onFileTooLargeError: PropTypes.func,
     onFirstLoad: PropTypes.func,
     onInvalidFileExtensionError: PropTypes.func,
-    onInvalidURLError: PropTypes.func,
+    onInvalidUrlError: PropTypes.func,
     onLoad: PropTypes.func,
     onRemoveClick: PropTypes.func,
     onUploaderClick: PropTypes.func,
-    onURLInjectionError: PropTypes.func,
+    onUrlInjectionError: PropTypes.func,
     onVideoCutClick: PropTypes.func,
     onVideoLoad: PropTypes.func,
     removable: PropTypes.bool,
     src: PropTypes.string,
     srcType: PropTypes.string, // mime
     videoRange: PropTypes.array,
-    withURLInput: PropTypes.bool,
+    withUrlInput: PropTypes.bool,
 };
 
 Uploader.defaultProps = {
@@ -716,7 +716,7 @@ Uploader.defaultProps = {
     catalogue: {
         click: null,
         drop: null,
-        typeURL: null,
+        typeUrl: null,
         loading: null,
         or: null,
         urlInputPlaceholder: null,
@@ -736,12 +736,12 @@ Uploader.defaultProps = {
     onFileTooLargeError: (size, maxSize) => null,
     onFirstLoad: () => null,
     onInvalidFileExtensionError: (extension, expectedExtensions) => null,
-    onInvalidURLError: url => null,
+    onInvalidUrlError: url => null,
     onLoad: () => null,
     onNotSupportedVideoLoad: () => null,
     onRemoveClick: () => null,
     onUploaderClick: null, // Useful with electron to use a custom file dialog
-    onURLInjectionError: (error, url) => null,
+    onUrlInjectionError: (error, url) => null,
     onVideoCutClick: () => null,
     onVideoLoad: () => null,
     removable: false,
@@ -749,5 +749,5 @@ Uploader.defaultProps = {
     src: null,
     srcType: null, // e.g. video, video/mp4 (which is a more detailed MIME), etc.
     videoRange: null,
-    withURLInput: false,
+    withUrlInput: false,
 };
