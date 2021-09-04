@@ -103,7 +103,7 @@ export default class Uploader extends React.Component {
     componentDidUpdate(prevProps) {
         if (this.props.src !== prevProps.src) this.updateImageBackground();
 
-        cl(
+        if (this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded) cl(
             '=====',
             1,
             this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded,
@@ -118,8 +118,8 @@ export default class Uploader extends React.Component {
             6,
             this.state.loaded,
         )
-        // if (this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded) // if the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
-        //     this.props.onLoad();
+        // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
+        if (this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded) this.props.onLoad();
     }
 
     componentWillUnmount() {
