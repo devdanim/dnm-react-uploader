@@ -3500,7 +3500,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       if (this.props.src !== prevProps.src) this.updateImageBackground();
-      if (this.props.fetching && !prevProps.fetching && prevProps.src === this.props.src) // if the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
+      if (this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded) // if the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
         this.props.onLoad();
     }
   }, {
