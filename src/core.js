@@ -103,21 +103,6 @@ export default class Uploader extends React.Component {
     componentDidUpdate(prevProps) {
         if (this.props.src !== prevProps.src) this.updateImageBackground();
 
-        if (this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded) cl(
-            '=====',
-            1,
-            this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded,
-            2,
-            this.props.fetching,
-            3,
-            !prevProps.fetching,
-            4,
-            this.props.src,
-            5,
-            prevProps.src,
-            6,
-            this.state.loaded,
-        )
         // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
         if (this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded) this.props.onLoad();
     }
