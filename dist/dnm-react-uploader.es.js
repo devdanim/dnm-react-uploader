@@ -3868,7 +3868,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center center',
                   backgroundSize: this.props.backgroundSize,
-                  backgroundImage: this.state.loaded ? "url(".concat(this.props.src).concat(this.props.src.match(/^http/) ? "".concat(this.props.src.includes('?') ? '&' : '?', "xCssCors=1") : '', ")") : null,
+                  backgroundImage: this.state.loaded ? "url(".concat(this.props.src).concat((typeof this.props.corsProof === 'boolean' ? this.props.corsProof : this.props.corsProof(this.props.src)) ? "".concat(this.props.src.match(/^http/) ? "".concat(this.props.src.includes('?') ? '&' : '?', "xCssCors=1") : '') : '', ")") : null,
                   // this is no-CORS request, we therefore need to be sure the cached response (e.g. Chrome) has been a CORS one (see the <img /> below) before display
                   position: 'relative',
                   width: '100%',
@@ -4155,6 +4155,8 @@ Uploader.propTypes = {
     if (diffKeys.length) throw new Error('Given catalogue is insufficient. Missing keys: ' + JSON.stringify(diffKeys));
   },
   compact: PropTypes.bool,
+  corsProof: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  // func is a callback with src as its unique arg (e.g. we want to apply the CORS trick only for some urls, and not for others...)
   croppable: PropTypes.bool,
   customAttributes: PropTypes.object,
   cuttable: PropTypes.bool,
@@ -4195,6 +4197,7 @@ Uploader.defaultProps = {
     urlSubmitText: null
   },
   compact: true,
+  corsProof: true,
   croppable: false,
   cropIcon: null,
   // if let null, it will be default one
