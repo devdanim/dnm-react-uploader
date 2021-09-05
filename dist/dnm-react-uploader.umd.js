@@ -8748,7 +8748,7 @@
       key: "extension",
       value: function extension(input) {
         input = _.isString(input) ? input : input.name;
-        return _.last(_.split(input, '.'));
+        return _.last(_.split(_.split(input, '?')[0], '.'));
       }
     }, {
       key: "extensions",

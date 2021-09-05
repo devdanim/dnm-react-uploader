@@ -589,7 +589,7 @@ export default class Uploader extends React.Component {
      */
     extension(input) {
         input = _.isString(input) ? input : input.name;
-        return _.last(_.split(input, '.'));
+        return _.last(_.split(_.split(input, '?')[0], '.'));
     }
 
     extensions() {
