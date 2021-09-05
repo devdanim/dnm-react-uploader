@@ -532,7 +532,7 @@ export default class Uploader extends React.Component {
                             }
                         </div>
                         { this.props.credits !== null &&
-                        <span className="uploader-zone-fog-credits" onClick={ev => ev.preventDefault() & ev.stopPropagation()}>{this.props.credits}</span>
+                        <span className="uploader-zone-fog-credits" onClick={ev => ev.stopPropagation()}>{this.props.credits}</span>
                         }
                     </div>
                 </div>

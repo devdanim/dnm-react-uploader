@@ -123,9 +123,13 @@ export default {
         .uploader-zone-fog-credits {
             background: rgba(0, 0, 0, 0.3);
             padding: .2rem .4rem;
-            font-size: 80%;
+            font-size: 75%;
             color: white;
             border-radius: .3rem .3rem 0 0;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         .uploader-zone-fog-caption {
