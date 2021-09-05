@@ -120,6 +120,14 @@ export default {
             height: 100%;
         }
         
+        .uploader-zone-fog-credits {
+            background: rgba(0, 0, 0, 0.3);
+            padding: .2rem .4rem;
+            font-size: 80%;
+            color: white;
+            border-radius: .3rem .3rem 0 0;
+        }
+        
         .uploader-zone-fog-caption {
             width: 80%;
             text-align: center;

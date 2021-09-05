@@ -110,6 +110,7 @@ class Page extends React.Component {
                         removeIcon={<Svg.Erase />}
                         imageCrop={{x: 0, y: 0, width: 100, height: 100}}
                         backgroundSize="contain"
+                        credits={<a target="_blank" href="https://google.com" style={{color: 'lightgreen'}}>Signed</a>}
                     />
                 </div>
             </React.Fragment>

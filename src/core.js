@@ -531,6 +531,9 @@ export default class Uploader extends React.Component {
                                 </React.Fragment>
                             }
                         </div>
+                        { this.props.credits !== null &&
+                        <span className="uploader-zone-fog-credits" onClick={ev => ev.preventDefault() & ev.stopPropagation()}>{this.props.credits}</span>
+                        }
                     </div>
                 </div>
                 { this.props.withUrlInput === true &&
@@ -685,6 +688,7 @@ Uploader.propTypes = {
     },
     compact: PropTypes.bool,
     corsProof: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]), // func is a callback with src as its unique arg (e.g. we want to apply the CORS trick only for some urls, and not for others...)
+    credits: PropTypes.oneOfType([PropTypes.string, PropTypes.node]), // e.g. you may directly provide the <a>
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
@@ -725,6 +729,7 @@ Uploader.defaultProps = {
     },
     compact: true,
     corsProof: true,
+    credits: null,
     croppable: false,
     cropIcon: null, // if let null, it will be default one
     customAttributes: {},
