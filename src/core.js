@@ -531,7 +531,7 @@ export default class Uploader extends React.Component {
                                 </React.Fragment>
                             }
                         </div>
-                        { this.props.credits !== null &&
+                        { (this.props.src && this.state.loaded && this.props.credits !== null) === true &&
                         <span className="uploader-zone-fog-credits" onClick={ev => ev.stopPropagation()}>{this.props.credits}</span>
                         }
                     </div>

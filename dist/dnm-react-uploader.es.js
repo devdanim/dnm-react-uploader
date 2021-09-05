@@ -3981,7 +3981,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       }, this.props.cutIcon || jsx(Cut, null)), this.props.removable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleRemoveClick
-      }, this.props.removeIcon || jsx(Garbage, null))))), this.props.credits !== null && jsx("span", {
+      }, this.props.removeIcon || jsx(Garbage, null))))), (this.props.src && this.state.loaded && this.props.credits !== null) === true && jsx("span", {
         className: "uploader-zone-fog-credits",
         onClick: function onClick(ev) {
           return ev.stopPropagation();
