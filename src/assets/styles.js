@@ -89,7 +89,6 @@ export default {
             height: 14rem;
             overflow: hidden;
             position: relative;
-            border-radius: 500rem;
             color: white;
         }
     
