@@ -89,6 +89,7 @@ export default {
             height: 14rem;
             overflow: hidden;
             position: relative;
+            border-radius: 500rem;
             color: white;
         }
     
@@ -119,18 +120,6 @@ export default {
             height: 100%;
         }
         
-        .uploader-zone-fog-credits {
-            background: rgba(0, 0, 0, 0.3);
-            padding: .2rem .4rem;
-            font-size: 75%;
-            color: white;
-            border-radius: .3rem .3rem 0 0;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
         .uploader-zone-fog-caption {
             width: 80%;
             text-align: center;
@@ -151,6 +140,32 @@ export default {
             position: fixed;
             top: -9999px;
             left: -9999px;
+        }
+
+        .uploader-waveform {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            z-index: 0;
+        }
+
+        .wavesurfer-region {
+            z-index: 3 !important;
+          }
+          
+        .wavesurfer-handle {
+            background-color: rgba(146, 210, 117, 0.9) !important;
+            width: 4px !important;
+        }
+    `,
+    'uploader/compact': css`
+        .uploader-zone {
+            border-radius: .5rem;
+            height: 4rem;
+        }
+        .uploader-zone-fog-img {
+            width: 3rem;
+            top: 0;
         }
     `,
     'uploader/fetching': css`

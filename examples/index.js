@@ -6,7 +6,7 @@ import * as Svg from '../src/svg';
 const catalogue = {
     click: 'Custom: Click!',
     drop: null,
-    typeURL: 'Type URL',
+    typeUrl: 'Type URL',
     loading: 'Loading...',
     or: 'Custom OR',
     urlInputPlaceholder: 'Custom URL input',
@@ -21,8 +21,9 @@ class Page extends React.Component {
             first: {},
             second: {
                 // src: 'https://images.unsplash.com/photo-1617642171292-afad99eee7ed?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
-                src: 'https://app.danim.com/logo.png',
-                srcType: 'image/png'
+                // src: 'https://app.danim.com/logo.png',
+                src: null,
+                // srcType: 'image/png'
             },
         };
     }
@@ -36,7 +37,7 @@ class Page extends React.Component {
                             id: 'first-uploader'
                         }
                     }}
-                    compact={true}
+                    compact={false}
                     fileType={['image', 'video']}
                     catalogue={catalogue}
                     maxSize={50 * 1000 * 1000}
@@ -59,7 +60,7 @@ class Page extends React.Component {
                             id: 'second-uploader'
                         }
                     }}
-                    compact={true}
+                    compact={false}
                     fetching={true}
                     fileType="image"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Osmium_crystals.jpg/2880px-Osmium_crystals.jpg"
@@ -84,7 +85,7 @@ class Page extends React.Component {
                             }
                         }}
                         catalogue={catalogue}
-                        compact
+                        compact={true}
                         removable
                         onRemoveClick={() => alert('onRemoveClick 3')}
                         croppable
@@ -99,7 +100,7 @@ class Page extends React.Component {
                                 srcType: file.type,
                             }
                         }))}
-                        fileType={['image', 'video']}
+                        fileType={'audio'}
                         onFirstLoad={() => console.log('onFirstLoad 3')}
                         onLoad={() => console.log('onLoad 3')}
                         onFileTooLargeError={() => alert('onFileTooLargeError 3')}
@@ -110,7 +111,6 @@ class Page extends React.Component {
                         removeIcon={<Svg.Erase />}
                         imageCrop={{x: 0, y: 0, width: 100, height: 100}}
                         backgroundSize="contain"
-                        credits={<a target="_blank" href="https://google.com" style={{color: 'lightgreen'}}>Signed</a>}
                     />
                 </div>
             </React.Fragment>

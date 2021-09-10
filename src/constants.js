@@ -20,6 +20,22 @@ const Constants = {
             'png',
         ]
     },
+    audio: {
+        mimeTypes: [
+            'audio/wav',
+            'audio/x-wav',
+            'audio/mpeg',
+            'audio/mp3',
+            'audio/mpeg3',
+            'audio/x-mpeg',
+            'audio/x-mp3',
+            'audio/x-mpeg3',
+        ],
+        extensions: [
+            'wav',
+            'mp3',
+        ]
+    }
 };
 
 export default Constants;

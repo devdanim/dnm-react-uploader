@@ -35,6 +35,7 @@ const _ = {
     split,
     upperFirst,
 };
+import Waveform from './components/Waveform';
 
 export default class Uploader extends React.Component {
     constructor(props) {
@@ -444,6 +445,16 @@ export default class Uploader extends React.Component {
                         />
                     );
                     break;
+                case 'audio':
+                    media = (
+                        <Waveform 
+                            className="uploader-waveform"
+                            height={this.zone ? this.zone.clientHeight : 100}
+                            range={this.props.videoRange}
+                            src={this.props.src}
+                        />
+                    )
+                    break;
             }
         }
 
@@ -453,6 +464,9 @@ export default class Uploader extends React.Component {
                 break;
             case 'video':
                 icon = <Svg.Video className="uploader-zone-fog-img" /> ;
+                break;     
+            case 'audio': 
+                icon = <Svg.Audio className="uploader-zone-fog-img" /> ;
                 break;
         }
 
@@ -467,6 +481,7 @@ export default class Uploader extends React.Component {
                 css={css`
                     ${styles.uploader};
                     ${this.props.fetching ? styles['uploader/fetching'] : null};
+                    ${this.props.compact ? styles['uploader/compact'] : null};
                     ${this.props.withUrlInput ? styles['uploader/withUrl'] : null};
                     ${withControls ? styles['uploader/withControls'] : null};
                 `}
@@ -497,9 +512,13 @@ export default class Uploader extends React.Component {
                                         ? <Svg.CloudComputing className="uploader-zone-fog-img" />
                                         : icon
                                     }
-                                    <div className="uploader-zone-fog-caption">
-                                        { `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withUrlInput ? `/${this.props.catalogue.typeUrl}` : ''}` }
-                                    </div>
+                                    {
+                                        !this.props.compact ? (
+                                            <div className="uploader-zone-fog-caption">
+                                                { `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withUrlInput ? `/${this.props.catalogue.typeUrl}` : ''}` }
+                                            </div>
+                                        ) : null
+                                    }
                                 </React.Fragment>
                             ) : null }
                             { withControls === true &&
@@ -517,7 +536,7 @@ export default class Uploader extends React.Component {
                                                 {this.props.cropIcon || <Svg.Crop />}
                                             </span>
                                         }
-                                        {srcType === "video" && this.props.cuttable === true &&
+                                        {(srcType === "video" || srcType === "audio") && this.props.cuttable === true &&
                                             <span className="uploader-zone-fog-controls-control" onClick={this.handleVideoCutClick}>
                                                 {this.props.cutIcon || <Svg.Cut />}
                                             </span>
@@ -596,6 +615,7 @@ export default class Uploader extends React.Component {
         return {
             video: Constants.video.extensions,
             image: Constants.image.extensions,
+            audio: Constants.audio.extensions,
         };
     }
 
@@ -603,6 +623,7 @@ export default class Uploader extends React.Component {
         return {
             video: Constants.video.mimeTypes,
             image: Constants.image.mimeTypes,
+            audio: Constants.audio.mimeTypes,
         };
     }
 
@@ -727,7 +748,7 @@ Uploader.defaultProps = {
         urlInputPlaceholder: null,
         urlSubmitText: null,
     },
-    compact: true,
+    compact: false,
     corsProof: true,
     credits: null,
     croppable: false,
