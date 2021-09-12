@@ -68,6 +68,8 @@ export default class Uploader extends React.Component {
         this.handleDrop = this.handleDrop.bind(this);
         this.handleInjectUrlClick = this.handleInjectUrlClick.bind(this);
         this.handleLoad = this.handleLoad.bind(this);
+        this.handleImageLoad = this.handleImageLoad.bind(this);
+        this.handleAudioLoad = this.handleAudioLoad.bind(this);
         this.handleVideoLoad = this.handleVideoLoad.bind(this);
         this.handleVideoPlayerError = this.handleVideoPlayerError.bind(this);
         this.handleRemoveClick = this.handleRemoveClick.bind(this);
@@ -251,6 +253,14 @@ export default class Uploader extends React.Component {
         this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`, imageIsDark });
     }
 
+    handleAudioLoad() {
+        this.handleLoad();
+    }
+
+    handleImageLoad() {
+        this.handleLoad();
+    }
+
     handleVideoLoad() {
         if (this.video) {
             const { onVideoLoad } = this.props;
@@ -280,9 +290,9 @@ export default class Uploader extends React.Component {
     }
 
     updateVideoLoop() {
-        const { videoRange } = this.props;
-        if (this.video && videoRange) {
-            if (this.video.currentTime < videoRange[0] || this.video.currentTime > videoRange[1]) this.video.currentTime = videoRange[0];
+        const { range } = this.props;
+        if (this.video && range) {
+            if (this.video.currentTime < range[0] || this.video.currentTime > range[1]) this.video.currentTime = range[0];
         }
     }
 
@@ -416,7 +426,7 @@ export default class Uploader extends React.Component {
                                     alt=''
                                     crossOrigin="anonymous"
                                     src={this.props.src}
-                                    onLoad={this.handleLoad}
+                                    onLoad={this.handleImageLoad}
                                     style={{
                                         position: 'fixed',
                                         top: '-9999px',
@@ -450,8 +460,9 @@ export default class Uploader extends React.Component {
                         <Waveform 
                             className="uploader-waveform"
                             height={this.zone ? this.zone.clientHeight : 100}
-                            range={this.props.videoRange}
+                            range={this.props.range}
                             src={this.props.src}
+                            onReady={this.handleAudioLoad}
                         />
                     )
                     break;
@@ -729,10 +740,10 @@ Uploader.propTypes = {
     onUrlInjectionError: PropTypes.func,
     onVideoCutClick: PropTypes.func,
     onVideoLoad: PropTypes.func,
+    range: PropTypes.array,
     removable: PropTypes.bool,
     src: PropTypes.string,
     srcType: PropTypes.string, // mime
-    videoRange: PropTypes.array,
     withUrlInput: PropTypes.bool,
 };
 
@@ -772,10 +783,10 @@ Uploader.defaultProps = {
     onUrlInjectionError: (error, url) => null,
     onVideoCutClick: () => null,
     onVideoLoad: () => null,
+    range: null,
     removable: false,
     removeIcon: null, // if let null, it will be default one
     src: null,
     srcType: null, // e.g. video, video/mp4 (which is a more detailed MIME), etc.
-    videoRange: null,
     withUrlInput: false,
 };

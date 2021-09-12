@@ -37,8 +37,11 @@ export default class Waveform extends React.Component {
     };
 
     onReady() {
+        const { onReady } = this.props;
         const { wavesurfer } = this.state;
         this.setState({ duration: wavesurfer.getDuration() });
+
+        if (onReady) onReady();
     }
 
     getRegions() {
@@ -92,6 +95,7 @@ export default class Waveform extends React.Component {
 Waveform.propTypes = {
     className: PropTypes.string,
     height: PropTypes.number,
+    onReady: PropTypes.func,
     range: PropTypes.array,
     src: PropTypes.string,
 };
@@ -99,6 +103,7 @@ Waveform.propTypes = {
 Waveform.defaultProps = {
     className: '',
     height: 100,
+    onReady: () => null,
     range: null,
     src: null,
 };
