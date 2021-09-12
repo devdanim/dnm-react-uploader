@@ -205,7 +205,6 @@ export default class Uploader extends React.Component {
     }
 
     handleMouseEnter() {
-        console.log(11)
         if (!this.playing && this.props.hoverPlay) {
             this.playing = true;
 

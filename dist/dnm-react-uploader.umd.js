@@ -18216,8 +18216,6 @@
     }, {
       key: "handleMouseEnter",
       value: function handleMouseEnter() {
-        console.log(11);
-
         if (!this.playing && this.props.hoverPlay) {
           this.playing = true;
 
