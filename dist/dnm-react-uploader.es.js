@@ -13800,6 +13800,8 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
 
           case 'audio':
             media = jsx(Waveform$1, {
+              key: this.props.src // Waves would otherwise cumulate and give a final homogeneous color...
+              ,
               className: "uploader-waveform",
               height: this.zone ? this.zone.clientHeight : 100,
               range: this.props.range,

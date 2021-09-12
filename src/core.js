@@ -457,7 +457,8 @@ export default class Uploader extends React.Component {
                     break;
                 case 'audio':
                     media = (
-                        <Waveform 
+                        <Waveform
+                            key={this.props.src} // Waves would otherwise cumulate and give a final homogeneous color...
                             className="uploader-waveform"
                             height={this.zone ? this.zone.clientHeight : 100}
                             range={this.props.range}
