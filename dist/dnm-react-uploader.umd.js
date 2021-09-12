@@ -17989,6 +17989,8 @@
     src: null
   };
 
+  var _Uploader$propTypes;
+
   function _templateObject$1() {
     var data = _taggedTemplateLiteral(["\n                    ", ";\n                    ", ";\n                    ", ";\n                    ", ";\n                    ", ";\n                "]);
 
@@ -18047,7 +18049,7 @@
       _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
       _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
       _this.handleCropClick = _this.handleCropClick.bind(_assertThisInitialized(_this));
-      _this.handleVideoCutClick = _this.handleVideoCutClick.bind(_assertThisInitialized(_this));
+      _this.handleCutClick = _this.handleCutClick.bind(_assertThisInitialized(_this));
       _this.handleDragLeave = _this.handleDragLeave.bind(_assertThisInitialized(_this));
       _this.handleDragEnter = _this.handleDragEnter.bind(_assertThisInitialized(_this));
       _this.handleMouseOver = _this.handleMouseOver.bind(_assertThisInitialized(_this));
@@ -18088,7 +18090,16 @@
     }, {
       key: "componentDidUpdate",
       value: function componentDidUpdate(prevProps) {
-        if (this.props.src !== prevProps.src) this.updateImageBackground(); // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
+        if (this.props.src !== prevProps.src) {
+          this.updateImageBackground();
+
+          if (this.audio && this.playing) {
+            // the browser would otherwise not consider the new source
+            this.audio.load();
+            this.audio.play();
+          }
+        } // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
+
 
         if (this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded) this.props.onLoad();
       }
@@ -18179,10 +18190,10 @@
         this.props.onCropClick();
       }
     }, {
-      key: "handleVideoCutClick",
-      value: function handleVideoCutClick(ev) {
+      key: "handleCutClick",
+      value: function handleCutClick(ev) {
         ev.stopPropagation();
-        this.props.onVideoCutClick();
+        this.props.onCutClick();
       }
     }, {
       key: "handleDragLeave",
@@ -18205,9 +18216,17 @@
     }, {
       key: "handleMouseEnter",
       value: function handleMouseEnter() {
+        console.log(11);
+
         if (!this.playing && this.props.hoverPlay) {
           this.playing = true;
-          if (this.audio) this.audio.play();
+
+          if (this.audio) {
+            this.audio.load(); // just in case the source has changed since
+
+            this.audio.play();
+          }
+
           if (this.video) this.video.play();
         }
       }
@@ -18216,7 +18235,13 @@
       value: function handleMouseOver() {
         if (!this.playing && this.props.hoverPlay) {
           this.playing = true;
-          if (this.audio) this.audio.play();
+
+          if (this.audio) {
+            this.audio.load(); // just in case the source has changed since
+
+            this.audio.play();
+          }
+
           if (this.video) this.video.play();
         }
       }
@@ -18424,7 +18449,8 @@
         var srcType = this.getSrcType();
         var media = null,
             icon = null,
-            withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable);
+            withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable),
+            autoPlay = null === this.props.autoPlay ? srcType === 'video' ? true : false : this.props.autoPlay;
 
         if (this.props.src) {
           var cropStyle = null;
@@ -18517,7 +18543,7 @@
 
             case 'video':
               media = jsx("video", {
-                autoPlay: this.props.autoPlay,
+                autoPlay: autoPlay,
                 loop: true,
                 muted: true,
                 crossOrigin: "anonymous",
@@ -18538,16 +18564,19 @@
               break;
 
             case 'audio':
-              media = jsx(React__default.Fragment, null, jsx(Waveform$1, {
-                key: this.props.src // Waves would otherwise cumulate and give a final homogeneous color...
-                ,
+              // Why key={...}?
+              //      1. Waves would otherwise cumulate and give a final homogeneous color...
+              //      2. The browser would otherwise not consider any new source for <audio
+              media = jsx(React__default.Fragment, {
+                key: this.props.src
+              }, jsx(Waveform$1, {
                 className: "uploader-waveform",
                 height: this.zone ? this.zone.clientHeight : 100,
                 range: this.props.range,
                 src: this.props.src,
                 onReady: this.handleAudioLoad
               }), jsx("audio", {
-                autoPlay: this.props.autoPlay,
+                autoPlay: autoPlay,
                 loop: true,
                 controls: true,
                 ref: function ref(obj) {
@@ -18559,8 +18588,7 @@
                   left: '-9999px'
                 }
               }, jsx("source", {
-                src: this.props.src,
-                type: "audio/mp3"
+                src: this.props.src
               }), "This a debug placeholder."));
               break;
           }
@@ -18639,7 +18667,7 @@
           onClick: this.handleCropClick
         }, this.props.cropIcon || jsx(Crop, null)), (srcType === "video" || srcType === "audio") && this.props.cuttable === true && jsx("span", {
           className: "uploader-zone-fog-controls-control",
-          onClick: this.handleVideoCutClick
+          onClick: this.handleCutClick
         }, this.props.cutIcon || jsx(Cut, null)), this.props.removable === true && jsx("span", {
           className: "uploader-zone-fog-controls-control",
           onClick: this.handleRemoveClick
@@ -18809,7 +18837,7 @@
 
     return Uploader;
   }(React__default.Component);
-  Uploader.propTypes = {
+  Uploader.propTypes = (_Uploader$propTypes = {
     // optional
     autoPlay: PropTypes.bool,
     backgroundColor: PropTypes.string,
@@ -18847,18 +18875,11 @@
     onLoad: PropTypes.func,
     onRemoveClick: PropTypes.func,
     onUploaderClick: PropTypes.func,
-    onUrlInjectionError: PropTypes.func,
-    onVideoCutClick: PropTypes.func,
-    onVideoLoad: PropTypes.func,
-    range: PropTypes.array,
-    removable: PropTypes.bool,
-    src: PropTypes.string,
-    srcType: PropTypes.string,
-    // mime
-    withUrlInput: PropTypes.bool
-  };
+    onUrlInjectionError: PropTypes.func
+  }, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
   Uploader.defaultProps = {
-    autoPlay: true,
+    autoPlay: null,
+    // true for video, false for audio
     backgroundColor: 'transparent',
     backgroundSize: 'cover',
     catalogue: {
@@ -18918,7 +18939,7 @@
     onUrlInjectionError: function onUrlInjectionError(error, url) {
       return null;
     },
-    onVideoCutClick: function onVideoCutClick() {
+    onCutClick: function onCutClick() {
       return null;
     },
     onVideoLoad: function onVideoLoad() {

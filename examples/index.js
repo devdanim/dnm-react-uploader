@@ -92,7 +92,17 @@ class Page extends React.Component {
                         croppable
                         onCropClick={() => alert('onCropClick 3')}
                         cuttable
-                        onVideoCutClick={() => alert('onCutClick 3')}
+                        onCutClick={() => {
+                            alert('onCutClick 3')
+                            console.log('Fireplace replaced with rain in 4s')
+                            setTimeout(() => {
+                                this.setState({
+                                    second: {
+                                        src: 'https://s3.eu-west-3.amazonaws.com/com.danim.test/rain.mp3',
+                                    }
+                                })
+                            }, 4000)
+                        }}
                         maxSize={500 * 1000 * 1000}
                         onChange={file => this.setState(prevState => ({
                             second: {

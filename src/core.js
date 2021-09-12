@@ -62,7 +62,7 @@ export default class Uploader extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleCropClick = this.handleCropClick.bind(this);
-        this.handleVideoCutClick = this.handleVideoCutClick.bind(this);
+        this.handleCutClick = this.handleCutClick.bind(this);
         this.handleDragLeave = this.handleDragLeave.bind(this);
         this.handleDragEnter = this.handleDragEnter.bind(this);
         this.handleMouseOver = this.handleMouseOver.bind(this);
@@ -107,7 +107,14 @@ export default class Uploader extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.src !== prevProps.src) this.updateImageBackground();
+        if (this.props.src !== prevProps.src) {
+            this.updateImageBackground();
+
+            if (this.audio && this.playing) { // the browser would otherwise not consider the new source
+                this.audio.load();
+                this.audio.play();
+            }
+        }
 
         // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
         if (this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded) this.props.onLoad();
@@ -181,9 +188,9 @@ export default class Uploader extends React.Component {
         this.props.onCropClick();
     }
 
-    handleVideoCutClick(ev) {
+    handleCutClick(ev) {
         ev.stopPropagation();
-        this.props.onVideoCutClick();
+        this.props.onCutClick();
     }
 
     handleDragLeave() {
@@ -198,10 +205,14 @@ export default class Uploader extends React.Component {
     }
 
     handleMouseEnter() {
+        console.log(11)
         if (!this.playing && this.props.hoverPlay) {
             this.playing = true;
 
-            if (this.audio) this.audio.play();
+            if (this.audio) {
+                this.audio.load(); // just in case the source has changed since
+                this.audio.play();
+            }
             if (this.video) this.video.play();
         }
     }
@@ -210,7 +221,10 @@ export default class Uploader extends React.Component {
         if (!this.playing && this.props.hoverPlay) {
             this.playing = true;
 
-            if (this.audio) this.audio.play();
+            if (this.audio) {
+                this.audio.load(); // just in case the source has changed since
+                this.audio.play();
+            }
             if (this.video) this.video.play();
         }
     }
@@ -368,7 +382,8 @@ export default class Uploader extends React.Component {
         const srcType = this.getSrcType();
         let media = null,
             icon = null,
-            withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable);
+            withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable),
+            autoPlay = null === this.props.autoPlay ? (srcType === 'video' ? true : false) : this.props.autoPlay;
 
         if (this.props.src) {
             let cropStyle = null;
@@ -470,7 +485,7 @@ export default class Uploader extends React.Component {
                 case 'video':
                     media = (
                         <video
-                            autoPlay={this.props.autoPlay}
+                            autoPlay={autoPlay}
                             loop
                             muted
                             crossOrigin="anonymous"
@@ -486,9 +501,11 @@ export default class Uploader extends React.Component {
                     );
                     break;
                 case 'audio':
-                    media = <React.Fragment>
+                    // Why key={...}?
+                    //      1. Waves would otherwise cumulate and give a final homogeneous color...
+                    //      2. The browser would otherwise not consider any new source for <audio
+                    media = <React.Fragment key={this.props.src}>
                         <Waveform
-                            key={this.props.src} // Waves would otherwise cumulate and give a final homogeneous color...
                             className="uploader-waveform"
                             height={this.zone ? this.zone.clientHeight : 100}
                             range={this.props.range}
@@ -496,7 +513,7 @@ export default class Uploader extends React.Component {
                             onReady={this.handleAudioLoad}
                         />
                         <audio
-                            autoPlay={this.props.autoPlay}
+                            autoPlay={autoPlay}
                             loop
                             controls
                             ref={obj => this.audio = obj}
@@ -505,7 +522,7 @@ export default class Uploader extends React.Component {
                                 top: '-9999px',
                                 left: '-9999px',
                             }}
-                        ><source src={this.props.src} type="audio/mp3" />This a debug placeholder.</audio>
+                        ><source src={this.props.src} />This a debug placeholder.</audio>
                     </React.Fragment>
                     break;
             }
@@ -593,7 +610,7 @@ export default class Uploader extends React.Component {
                                             </span>
                                         }
                                         {(srcType === "video" || srcType === "audio") && this.props.cuttable === true &&
-                                            <span className="uploader-zone-fog-controls-control" onClick={this.handleVideoCutClick}>
+                                            <span className="uploader-zone-fog-controls-control" onClick={this.handleCutClick}>
                                                 {this.props.cutIcon || <Svg.Cut />}
                                             </span>
                                         }
@@ -785,7 +802,7 @@ Uploader.propTypes = {
     onRemoveClick: PropTypes.func,
     onUploaderClick: PropTypes.func,
     onUrlInjectionError: PropTypes.func,
-    onVideoCutClick: PropTypes.func,
+    onCutClick: PropTypes.func,
     onVideoLoad: PropTypes.func,
     range: PropTypes.array,
     removable: PropTypes.bool,
@@ -795,7 +812,7 @@ Uploader.propTypes = {
 };
 
 Uploader.defaultProps = {
-    autoPlay: true,
+    autoPlay: null, // true for video, false for audio
     backgroundColor: 'transparent',
     backgroundSize: 'cover',
     catalogue: {
@@ -830,7 +847,7 @@ Uploader.defaultProps = {
     onRemoveClick: () => null,
     onUploaderClick: null, // Useful with electron to use a custom file dialog
     onUrlInjectionError: (error, url) => null,
-    onVideoCutClick: () => null,
+    onCutClick: () => null,
     onVideoLoad: () => null,
     range: null,
     removable: false,
