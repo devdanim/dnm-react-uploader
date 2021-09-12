@@ -586,7 +586,7 @@ export default class Uploader extends React.Component {
                                     }
                                     {
                                         !this.props.compact ? (
-                                            <div className="uploader-zone-fog-caption">
+                                            <div className="uploader-zone-fog-text">
                                                 { `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withUrlInput ? `/${this.props.catalogue.typeUrl}` : ''}` }
                                             </div>
                                         ) : null
@@ -622,8 +622,8 @@ export default class Uploader extends React.Component {
                                 </React.Fragment>
                             }
                         </div>
-                        { (this.props.src && this.state.loaded && this.props.credits !== null) === true &&
-                        <span className="uploader-zone-fog-credits" onClick={ev => ev.stopPropagation()}>{this.props.credits}</span>
+                        { (this.props.src && this.state.loaded && this.props.caption !== null) === true &&
+                        <span className="uploader-zone-fog-caption" onClick={ev => ev.stopPropagation()}>{this.props.caption}</span>
                         }
                     </div>
                 </div>
@@ -769,6 +769,7 @@ Uploader.propTypes = {
     autoPlay: PropTypes.bool,
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
+    caption: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     catalogue: (props, propName, componentName) => {
         const givenCatalogue = props[propName],
             givenPropsKeys = Object.keys(props[propName]),
@@ -782,7 +783,6 @@ Uploader.propTypes = {
     },
     compact: PropTypes.bool,
     corsProof: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]), // func is a callback with src as its unique arg (e.g. we want to apply the CORS trick only for some urls, and not for others...)
-    credits: PropTypes.oneOfType([PropTypes.string, PropTypes.node]), // e.g. you may directly provide the <a>
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
@@ -814,6 +814,7 @@ Uploader.defaultProps = {
     autoPlay: null, // true for video, false for audio
     backgroundColor: 'transparent',
     backgroundSize: 'cover',
+    caption: null,
     catalogue: {
         click: null,
         drop: null,
@@ -825,7 +826,6 @@ Uploader.defaultProps = {
     },
     compact: false,
     corsProof: true,
-    credits: null,
     croppable: false,
     cropIcon: null, // if let null, it will be default one
     customAttributes: {},

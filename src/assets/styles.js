@@ -119,7 +119,7 @@ export default {
             height: 100%;
         }
         
-        .uploader-zone-fog-caption {
+        .uploader-zone-fog-text {
             width: 80%;
             text-align: center;
             position: relative;
@@ -133,6 +133,18 @@ export default {
             fill: white;
             position: relative;
             top: 1rem;
+        }
+        
+        .uploader-zone-fog-caption {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            font-size: 75%;
+            color: white;
+            border-radius: 0.3rem 0.3rem 0px 0px;
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         .uploader-input {
@@ -183,7 +195,7 @@ export default {
         }
     `,
     'uploader/withControls': css`
-        .uploader-zone-fog-caption {
+        .uploader-zone-fog-text {
             margin-top: 0;
             bottom: 0;
         }
