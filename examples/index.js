@@ -22,7 +22,8 @@ class Page extends React.Component {
             second: {
                 // src: 'https://images.unsplash.com/photo-1617642171292-afad99eee7ed?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
                 // src: 'https://app.danim.com/logo.png',
-                src: null,
+                // src: null,
+                src: 'https://s3.eu-west-3.amazonaws.com/com.danim.test/fireplace.mp3',
                 // srcType: 'image/png'
             },
         };
@@ -100,7 +101,7 @@ class Page extends React.Component {
                                 srcType: file.type,
                             }
                         }))}
-                        fileType={'audio'}
+                        fileType="audio"
                         onFirstLoad={() => console.log('onFirstLoad 3')}
                         onLoad={() => console.log('onLoad 3')}
                         onFileTooLargeError={() => alert('onFileTooLargeError 3')}

@@ -13341,6 +13341,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     _this.handleVideoCutClick = _this.handleVideoCutClick.bind(_assertThisInitialized(_this));
     _this.handleDragLeave = _this.handleDragLeave.bind(_assertThisInitialized(_this));
     _this.handleDragEnter = _this.handleDragEnter.bind(_assertThisInitialized(_this));
+    _this.handleMouseOver = _this.handleMouseOver.bind(_assertThisInitialized(_this));
+    _this.handleMouseEnter = _this.handleMouseEnter.bind(_assertThisInitialized(_this));
+    _this.handleMouseLeave = _this.handleMouseLeave.bind(_assertThisInitialized(_this));
     _this.handleDrop = _this.handleDrop.bind(_assertThisInitialized(_this));
     _this.handleInjectUrlClick = _this.handleInjectUrlClick.bind(_assertThisInitialized(_this));
     _this.handleLoad = _this.handleLoad.bind(_assertThisInitialized(_this));
@@ -13489,6 +13492,33 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       this.setState({
         beingDropTarget: true
       });
+    }
+  }, {
+    key: "handleMouseEnter",
+    value: function handleMouseEnter() {
+      if (!this.playing && this.props.hoverPlay) {
+        this.playing = true;
+        if (this.audio) this.audio.play();
+        if (this.video) this.video.play();
+      }
+    }
+  }, {
+    key: "handleMouseOver",
+    value: function handleMouseOver() {
+      if (!this.playing && this.props.hoverPlay) {
+        this.playing = true;
+        if (this.audio) this.audio.play();
+        if (this.video) this.video.play();
+      }
+    }
+  }, {
+    key: "handleMouseLeave",
+    value: function handleMouseLeave() {
+      if (this.playing && this.props.hoverPlay) {
+        this.playing = false;
+        if (this.audio) this.audio.pause();
+        if (this.video) this.video.pause();
+      }
     }
   }, {
     key: "handleDrop",
@@ -13778,7 +13808,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
 
           case 'video':
             media = jsx("video", {
-              autoPlay: true,
+              autoPlay: this.props.autoPlay,
               loop: true,
               muted: true,
               crossOrigin: "anonymous",
@@ -13799,7 +13829,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
             break;
 
           case 'audio':
-            media = jsx(Waveform$1, {
+            media = jsx(React.Fragment, null, jsx(Waveform$1, {
               key: this.props.src // Waves would otherwise cumulate and give a final homogeneous color...
               ,
               className: "uploader-waveform",
@@ -13807,7 +13837,22 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               range: this.props.range,
               src: this.props.src,
               onReady: this.handleAudioLoad
-            });
+            }), jsx("audio", {
+              autoPlay: this.props.autoPlay,
+              loop: true,
+              controls: true,
+              ref: function ref(obj) {
+                return _this6.audio = obj;
+              },
+              style: {
+                position: 'fixed',
+                top: '-9999px',
+                left: '-9999px'
+              }
+            }, jsx("source", {
+              src: this.props.src,
+              type: "audio/mp3"
+            }), "This a debug placeholder."));
             break;
         }
       }
@@ -13852,6 +13897,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
         className: "\n                        uploader-zone\n                        ".concat(this.props.withUrlInput ? 'uploader-zone/withUrl' : '', "\n                    "),
         onDragEnter: this.handleDragEnter,
         onDragLeave: this.handleDragLeave,
+        onMouseEnter: this.handleMouseEnter,
+        onMouseOver: this.handleMouseOver,
+        onMouseLeave: this.handleMouseLeave,
         onDrop: this.handleDrop,
         style: this.props.src && srcType === 'image' ? {
           backgroundColor: this.state.imageBackgroundColor
@@ -14054,6 +14102,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
 }(React.Component);
 Uploader.propTypes = {
   // optional
+  autoPlay: PropTypes.bool,
   backgroundColor: PropTypes.string,
   backgroundSize: PropTypes.oneOf(['contain', 'cover']),
   catalogue: function catalogue(props, propName, componentName) {
@@ -14076,6 +14125,7 @@ Uploader.propTypes = {
   cuttable: PropTypes.bool,
   fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   // expected file type
+  hoverPlay: PropTypes.bool,
   imageCrop: PropTypes.object,
   maxSize: PropTypes.number,
   onChange: PropTypes.func,
@@ -14099,6 +14149,7 @@ Uploader.propTypes = {
   withUrlInput: PropTypes.bool
 };
 Uploader.defaultProps = {
+  autoPlay: true,
   backgroundColor: 'transparent',
   backgroundSize: 'cover',
   catalogue: {
@@ -14122,6 +14173,7 @@ Uploader.defaultProps = {
   // if let null, it will be default one
   fileType: 'image',
   // may be one (or several) of: image, video
+  hoverPlay: true,
   imageCrop: null,
   maxSize: 10 * 1000 * 1000,
   onChange: function onChange(file, manual, type) {

@@ -65,6 +65,9 @@ export default class Uploader extends React.Component {
         this.handleVideoCutClick = this.handleVideoCutClick.bind(this);
         this.handleDragLeave = this.handleDragLeave.bind(this);
         this.handleDragEnter = this.handleDragEnter.bind(this);
+        this.handleMouseOver = this.handleMouseOver.bind(this);
+        this.handleMouseEnter = this.handleMouseEnter.bind(this);
+        this.handleMouseLeave = this.handleMouseLeave.bind(this);
         this.handleDrop = this.handleDrop.bind(this);
         this.handleInjectUrlClick = this.handleInjectUrlClick.bind(this);
         this.handleLoad = this.handleLoad.bind(this);
@@ -192,6 +195,33 @@ export default class Uploader extends React.Component {
         if (this.dndCounter === undefined) this.dndCounter = 0;
         this.dndCounter++;
         this.setState({beingDropTarget: true});
+    }
+
+    handleMouseEnter() {
+        if (!this.playing && this.props.hoverPlay) {
+            this.playing = true;
+
+            if (this.audio) this.audio.play();
+            if (this.video) this.video.play();
+        }
+    }
+
+    handleMouseOver() {
+        if (!this.playing && this.props.hoverPlay) {
+            this.playing = true;
+
+            if (this.audio) this.audio.play();
+            if (this.video) this.video.play();
+        }
+    }
+
+    handleMouseLeave() {
+        if (this.playing && this.props.hoverPlay) {
+            this.playing = false;
+
+            if (this.audio) this.audio.pause();
+            if (this.video) this.video.pause();
+        }
     }
 
     handleDrop(ev) {
@@ -440,7 +470,7 @@ export default class Uploader extends React.Component {
                 case 'video':
                     media = (
                         <video
-                            autoPlay
+                            autoPlay={this.props.autoPlay}
                             loop
                             muted
                             crossOrigin="anonymous"
@@ -456,7 +486,7 @@ export default class Uploader extends React.Component {
                     );
                     break;
                 case 'audio':
-                    media = (
+                    media = <React.Fragment>
                         <Waveform
                             key={this.props.src} // Waves would otherwise cumulate and give a final homogeneous color...
                             className="uploader-waveform"
@@ -465,7 +495,18 @@ export default class Uploader extends React.Component {
                             src={this.props.src}
                             onReady={this.handleAudioLoad}
                         />
-                    )
+                        <audio
+                            autoPlay={this.props.autoPlay}
+                            loop
+                            controls
+                            ref={obj => this.audio = obj}
+                            style={{
+                                position: 'fixed',
+                                top: '-9999px',
+                                left: '-9999px',
+                            }}
+                        ><source src={this.props.src} type="audio/mp3" />This a debug placeholder.</audio>
+                    </React.Fragment>
                     break;
             }
         }
@@ -507,6 +548,9 @@ export default class Uploader extends React.Component {
                     `}
                     onDragEnter={this.handleDragEnter}
                     onDragLeave={this.handleDragLeave}
+                    onMouseEnter={this.handleMouseEnter}
+                    onMouseOver={this.handleMouseOver}
+                    onMouseLeave={this.handleMouseLeave}
                     onDrop={this.handleDrop}
                     style={this.props.src && srcType === 'image' ? { backgroundColor: this.state.imageBackgroundColor } : null}
                 >
@@ -706,6 +750,7 @@ export default class Uploader extends React.Component {
 
 Uploader.propTypes = {
     // optional
+    autoPlay: PropTypes.bool,
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
     catalogue: (props, propName, componentName) => {
@@ -726,6 +771,7 @@ Uploader.propTypes = {
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
     fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]), // expected file type
+    hoverPlay: PropTypes.bool,
     imageCrop: PropTypes.object,
     maxSize: PropTypes.number,
     onChange: PropTypes.func,
@@ -749,6 +795,7 @@ Uploader.propTypes = {
 };
 
 Uploader.defaultProps = {
+    autoPlay: true,
     backgroundColor: 'transparent',
     backgroundSize: 'cover',
     catalogue: {
@@ -769,6 +816,7 @@ Uploader.defaultProps = {
     cuttable: false,
     cutIcon: null, // if let null, it will be default one
     fileType: 'image', // may be one (or several) of: image, video
+    hoverPlay: true,
     imageCrop: null,
     maxSize: 10 * 1000 * 1000,
     onChange: (file, manual, type) => null, // manual: does it follow a manual action (vs. injections, for instance) ; type: image|video|...|null
