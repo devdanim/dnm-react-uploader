@@ -140,7 +140,7 @@ export default class Uploader extends React.Component {
         const fileTypes = this.getFileTypes();
         return this.guessType(this.props.srcType)
             || this.guessType(this.props.src)
-            || fileTypes[0];
+            || (fileTypes.indexOf('video') !== -1 ? 'video' : fileTypes[0]);
     }
 
     getAcceptedExtensions() {
@@ -578,30 +578,16 @@ export default class Uploader extends React.Component {
                         </div>
                         }
                         <div className="uploader-zone-fog-core">
-                            { !this.props.compact || (!this.props.removable && !this.props.croppable && !this.props.cuttable) || !this.props.src ? (
+                            { !withControls ? (
                                 <React.Fragment>
                                     { this.state.beingDropTarget
                                         ? <Svg.CloudComputing className="uploader-zone-fog-img" />
                                         : icon
                                     }
-                                    {
-                                        !this.props.compact ? (
-                                            <div className="uploader-zone-fog-text">
-                                                { `${this.props.catalogue.click}${this.props.catalogue.drop ? `/${this.props.catalogue.drop}` : ''}${this.props.withUrlInput ? `/${this.props.catalogue.typeUrl}` : ''}` }
-                                            </div>
-                                        ) : null
-                                    }
                                 </React.Fragment>
                             ) : null }
                             { withControls === true &&
                                 <React.Fragment>
-                                    { !this.props.compact ? (
-                                        <div className="uploader-zone-fog-or">
-                                            <div className="uploader-zone-fog-or-wing" />
-                                            <div className="uploader-zone-fog-or-body">{ this.props.catalogue.or }</div>
-                                            <div className="uploader-zone-fog-or-wing" />
-                                        </div>
-                                    ) : null }
                                     <div className="uploader-zone-fog-controls">
                                         {srcType === "image" && this.props.croppable === true &&
                                             <span className="uploader-zone-fog-controls-control" onClick={this.handleCropClick}>

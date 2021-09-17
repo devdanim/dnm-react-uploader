@@ -131,8 +131,6 @@ export default {
         .uploader-zone-fog-img {
             width: 5rem;
             fill: white;
-            position: relative;
-            top: 1rem;
         }
         
         .uploader-zone-fog-caption {
@@ -167,16 +165,6 @@ export default {
         .wavesurfer-handle {
             background-color: rgba(146, 210, 117, 0.9) !important;
             width: 4px !important;
-        }
-    `,
-    'uploader/compact': css`
-        .uploader-zone {
-            border-radius: .5rem;
-            height: 4rem;
-        }
-        .uploader-zone-fog-img {
-            width: 3rem;
-            top: 0;
         }
     `,
     'uploader/fetching': css`
@@ -235,9 +223,23 @@ export default {
             user-select: none;
         }
         .uploader-zone-fog-controls-control {
-            height: 1.6rem;
-            width: 1.6rem;
+            height: 2rem;
+            width: 2rem;
             fill: white;
         }
-    `
+    `,
+    'uploader/compact': css`
+        .uploader-zone {
+            border-radius: .5rem;
+            height: 4rem;
+        }
+        .uploader-zone-fog-img {
+            width: 2rem;
+            top: 0;
+        }
+        .uploader-zone-fog-controls-control {
+            width: 1.5rem !important;
+            height: 1.5rem !important;
+        }
+    `,
 };

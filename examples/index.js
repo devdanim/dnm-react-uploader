@@ -61,8 +61,9 @@ class Page extends React.Component {
                             id: 'second-uploader'
                         }
                     }}
-                    compact={false}
-                    fetching={true}
+                    compact={true}
+                    fetching={false}
+                    croppable={true}
                     fileType="image"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Osmium_crystals.jpg/2880px-Osmium_crystals.jpg"
                     catalogue={catalogue}
