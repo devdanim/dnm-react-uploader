@@ -156,6 +156,10 @@ export default {
             padding: 0;
             margin: 0;
             z-index: 0;
+            canvas {
+                max-width: none;
+                width: 100% !important;
+            }
         }
 
         .wavesurfer-region {

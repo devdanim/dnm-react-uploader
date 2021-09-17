@@ -22,13 +22,24 @@ export default class Waveform extends React.Component {
         window.addEventListener('resize', this.redraw);
     }
 
+    componentDidUpdate(prevProps) {
+      const { height } = this.props;
+      if (prevProps.height !== height) {
+        this.redraw();
+      }
+    }
+
     componentWillUnmount() {
         window.removeEventListener('resize', this.redraw);
     }
 
     _redraw() {
         const { wavesurfer } = this.state;
-        if (wavesurfer) wavesurfer.drawBuffer();
+        const { height } = this.props;
+        if (wavesurfer) {
+          wavesurfer.setHeight(height);
+          wavesurfer.drawBuffer();
+        }
     }
   
     onLoading({ wavesurfer }) {
@@ -40,21 +51,21 @@ export default class Waveform extends React.Component {
         const { onReady } = this.props;
         const { wavesurfer } = this.state;
         this.setState({ duration: wavesurfer.getDuration() });
-
+        this.redraw();
         if (onReady) onReady();
     }
 
     getRegions() {
         const { duration } = this.state;
         const { range } = this.props;
-        return {
+        return range ? {
             cut: {
                 id: 'cut',
-                start: range ? range[0] : 0,
-                end: range ? range[1] : duration,
+                start: range[0],
+                end: range[1],
                 color: 'rgba(146, 210, 117, 0.3)',
             }
-        };
+        } : null;
     }
  
     render () {

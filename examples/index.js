@@ -61,7 +61,7 @@ class Page extends React.Component {
                             id: 'second-uploader'
                         }
                     }}
-                    compact={true}
+                    compact={false}
                     fetching={false}
                     croppable={true}
                     fileType="image"
