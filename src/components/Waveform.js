@@ -8,9 +8,9 @@ export default class Waveform extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        wavesurfer: null,
         duration: 0,
       }
+      this.wavesurfer = null;
       this.onLoading = this.onLoading.bind(this);
       this.onReady = this.onReady.bind(this);
       this.getRegions = this.getRegions.bind(this);
@@ -34,23 +34,21 @@ export default class Waveform extends React.Component {
     }
 
     _redraw() {
-        const { wavesurfer } = this.state;
         const { height } = this.props;
-        if (wavesurfer) {
-          wavesurfer.setHeight(height);
-          wavesurfer.drawBuffer();
+        if (this.wavesurfer) {
+          this.wavesurfer.setHeight(height);
+          this.wavesurfer.drawBuffer();
         }
     }
   
     onLoading({ wavesurfer }) {
-        wavesurfer.toggleInteraction();
-        this.setState(({ wavesurfer }));
+        this.wavesurfer = wavesurfer;
+        this.wavesurfer.toggleInteraction();
     };
 
     onReady() {
         const { onReady } = this.props;
-        const { wavesurfer } = this.state;
-        this.setState({ duration: wavesurfer.getDuration() });
+        if (this.wavesurfer) this.setState({ duration: this.wavesurfer.getDuration() });
         this.redraw();
         if (onReady) onReady();
     }

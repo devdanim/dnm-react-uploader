@@ -13166,9 +13166,9 @@ var Waveform$1 = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      wavesurfer: null,
       duration: 0
     };
+    _this.wavesurfer = null;
     _this.onLoading = _this.onLoading.bind(_assertThisInitialized(_this));
     _this.onReady = _this.onReady.bind(_assertThisInitialized(_this));
     _this.getRegions = _this.getRegions.bind(_assertThisInitialized(_this));
@@ -13199,30 +13199,26 @@ var Waveform$1 = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "_redraw",
     value: function _redraw() {
-      var wavesurfer = this.state.wavesurfer;
       var height = this.props.height;
 
-      if (wavesurfer) {
-        wavesurfer.setHeight(height);
-        wavesurfer.drawBuffer();
+      if (this.wavesurfer) {
+        this.wavesurfer.setHeight(height);
+        this.wavesurfer.drawBuffer();
       }
     }
   }, {
     key: "onLoading",
     value: function onLoading(_ref) {
       var wavesurfer = _ref.wavesurfer;
-      wavesurfer.toggleInteraction();
-      this.setState({
-        wavesurfer: wavesurfer
-      });
+      this.wavesurfer = wavesurfer;
+      this.wavesurfer.toggleInteraction();
     }
   }, {
     key: "onReady",
     value: function onReady() {
       var onReady = this.props.onReady;
-      var wavesurfer = this.state.wavesurfer;
-      this.setState({
-        duration: wavesurfer.getDuration()
+      if (this.wavesurfer) this.setState({
+        duration: this.wavesurfer.getDuration()
       });
       this.redraw();
       if (onReady) onReady();
