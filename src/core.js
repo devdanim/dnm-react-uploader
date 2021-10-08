@@ -54,12 +54,11 @@ export default class Uploader extends React.Component {
             _forceUpdateCounter: 0
         };
 
-        this.wavesurfer = null;
         this.change = this.change.bind(this);
         this.getFileTypes = this.getFileTypes.bind(this);
         this.getSrcType = this.getSrcType.bind(this);
         this.getAcceptedExtensions = this.getAcceptedExtensions.bind(this);
-        this.updateVideoLoop = this.updateVideoLoop.bind(this);
+        this.updateMediaLoop = this.updateMediaLoop.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleCropClick = this.handleCropClick.bind(this);
@@ -125,11 +124,6 @@ export default class Uploader extends React.Component {
     _forceUpdate() {
         const srcType = this.getSrcType();
         if (srcType !== "video") this.setState({ _forceUpdateCounter: this.state._forceUpdateCounter++ });
-    }
-
-    getWavesurfer() {
-        if (this.getSrcType() === "audio") return this.wavesurfer;
-        return null;
     }
 
     getFileTypes() {
@@ -209,8 +203,7 @@ export default class Uploader extends React.Component {
         if (!this.playing && this.props.hoverPlay) {
             this.playing = true;
 
-            const wavesurfer = this.getWavesurfer();
-            if (wavesurfer) wavesurfer.play();
+            if (this.audio) this.audio.play();
             if (this.video) this.video.play();
         }
     }
@@ -219,8 +212,7 @@ export default class Uploader extends React.Component {
         if (!this.playing && this.props.hoverPlay) {
             this.playing = true;
 
-            const wavesurfer = this.getWavesurfer();
-            if (wavesurfer) wavesurfer.play();
+            if (this.audio) this.audio.play();
             if (this.video) this.video.play();
         }
     }
@@ -229,8 +221,7 @@ export default class Uploader extends React.Component {
         if (this.playing && this.props.hoverPlay) {
             this.playing = false;
 
-            const wavesurfer = this.getWavesurfer();
-            if (wavesurfer) wavesurfer.pause();
+            if (this.audio) this.audio.pause();
             if (this.video) this.video.pause();
         }
     }
@@ -294,8 +285,12 @@ export default class Uploader extends React.Component {
         this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`, imageIsDark });
     }
 
-    handleAudioLoad(wavesurfer) {
-        this.wavesurfer = wavesurfer;
+    handleAudioLoad() {
+        if (this.audio) {
+            const { onAudioLoad } = this.props;
+            this.audio.addEventListener('timeupdate', () => this.updateMediaLoop(this.audio), false);
+            onAudioLoad(this.audio);
+        }
         this.handleLoad();
     }
 
@@ -306,7 +301,7 @@ export default class Uploader extends React.Component {
     handleVideoLoad() {
         if (this.video) {
             const { onVideoLoad } = this.props;
-            this.video.addEventListener('timeupdate', this.updateVideoLoop, false);
+            this.video.addEventListener('timeupdate', () => this.updateMediaLoop(this.video), false);
             onVideoLoad(this.video);
         }
         this.handleLoad();
@@ -331,10 +326,10 @@ export default class Uploader extends React.Component {
         this.setState({url: value});
     }
 
-    updateVideoLoop() {
+    updateMediaLoop(media) {
         const { range } = this.props;
-        if (this.video && range) {
-            if (this.video.currentTime < range[0] || this.video.currentTime > range[1]) this.video.currentTime = range[0];
+        if (media && range) {
+            if (media.currentTime < range[0] || media.currentTime > range[1]) media.currentTime = range[0];
         }
     }
 
@@ -512,6 +507,7 @@ export default class Uploader extends React.Component {
                         />
                         <audio
                             autoPlay={autoPlay}
+                            ref={obj => this.audio = obj}
                             loop
                             controls
                             style={{
@@ -786,6 +782,7 @@ Uploader.propTypes = {
     onUploaderClick: PropTypes.func,
     onUrlInjectionError: PropTypes.func,
     onCutClick: PropTypes.func,
+    onAudioLoad: PropTypes.func,
     onVideoLoad: PropTypes.func,
     range: PropTypes.array,
     removable: PropTypes.bool,
@@ -831,6 +828,7 @@ Uploader.defaultProps = {
     onUploaderClick: null, // Useful with electron to use a custom file dialog
     onUrlInjectionError: (error, url) => null,
     onCutClick: () => null,
+    onAudioLoad: () => null,
     onVideoLoad: () => null,
     range: null,
     removable: false,

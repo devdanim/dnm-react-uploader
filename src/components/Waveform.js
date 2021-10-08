@@ -44,13 +44,14 @@ export default class Waveform extends React.Component {
     onLoading({ wavesurfer }) {
         this.wavesurfer = wavesurfer;
         this.wavesurfer.toggleInteraction();
+        this.setState({ duration: this.wavesurfer.getDuration() });
     };
 
     onReady() {
         const { onReady } = this.props;
         if (this.wavesurfer) this.setState({ duration: this.wavesurfer.getDuration() });
         this.redraw();
-        if (onReady) onReady();
+        if (onReady) onReady(this.wavesurfer);
     }
 
     getRegions() {

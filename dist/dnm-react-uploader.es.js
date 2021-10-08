@@ -13212,6 +13212,9 @@ var Waveform$1 = /*#__PURE__*/function (_React$Component) {
       var wavesurfer = _ref.wavesurfer;
       this.wavesurfer = wavesurfer;
       this.wavesurfer.toggleInteraction();
+      this.setState({
+        duration: this.wavesurfer.getDuration()
+      });
     }
   }, {
     key: "onReady",
@@ -13221,7 +13224,7 @@ var Waveform$1 = /*#__PURE__*/function (_React$Component) {
         duration: this.wavesurfer.getDuration()
       });
       this.redraw();
-      if (onReady) onReady();
+      if (onReady) onReady(this.wavesurfer);
     }
   }, {
     key: "getRegions",
@@ -13343,12 +13346,11 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       imageIsDark: false,
       _forceUpdateCounter: 0
     };
-    _this.wavesurfer = null;
     _this.change = _this.change.bind(_assertThisInitialized(_this));
     _this.getFileTypes = _this.getFileTypes.bind(_assertThisInitialized(_this));
     _this.getSrcType = _this.getSrcType.bind(_assertThisInitialized(_this));
     _this.getAcceptedExtensions = _this.getAcceptedExtensions.bind(_assertThisInitialized(_this));
-    _this.updateVideoLoop = _this.updateVideoLoop.bind(_assertThisInitialized(_this));
+    _this.updateMediaLoop = _this.updateMediaLoop.bind(_assertThisInitialized(_this));
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
     _this.handleCropClick = _this.handleCropClick.bind(_assertThisInitialized(_this));
@@ -13414,12 +13416,6 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       if (srcType !== "video") this.setState({
         _forceUpdateCounter: this.state._forceUpdateCounter++
       });
-    }
-  }, {
-    key: "getWavesurfer",
-    value: function getWavesurfer() {
-      if (this.getSrcType() === "audio") return this.wavesurfer;
-      return null;
     }
   }, {
     key: "getFileTypes",
@@ -13521,8 +13517,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function handleMouseEnter() {
       if (!this.playing && this.props.hoverPlay) {
         this.playing = true;
-        var wavesurfer = this.getWavesurfer();
-        if (wavesurfer) wavesurfer.play();
+        if (this.audio) this.audio.play();
         if (this.video) this.video.play();
       }
     }
@@ -13531,8 +13526,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function handleMouseOver() {
       if (!this.playing && this.props.hoverPlay) {
         this.playing = true;
-        var wavesurfer = this.getWavesurfer();
-        if (wavesurfer) wavesurfer.play();
+        if (this.audio) this.audio.play();
         if (this.video) this.video.play();
       }
     }
@@ -13541,8 +13535,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function handleMouseLeave() {
       if (this.playing && this.props.hoverPlay) {
         this.playing = false;
-        var wavesurfer = this.getWavesurfer();
-        if (wavesurfer) wavesurfer.pause();
+        if (this.audio) this.audio.pause();
         if (this.video) this.video.pause();
       }
     }
@@ -13632,8 +13625,17 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     }
   }, {
     key: "handleAudioLoad",
-    value: function handleAudioLoad(wavesurfer) {
-      this.wavesurfer = wavesurfer;
+    value: function handleAudioLoad() {
+      var _this4 = this;
+
+      if (this.audio) {
+        var onAudioLoad = this.props.onAudioLoad;
+        this.audio.addEventListener('timeupdate', function () {
+          return _this4.updateMediaLoop(_this4.audio);
+        }, false);
+        onAudioLoad(this.audio);
+      }
+
       this.handleLoad();
     }
   }, {
@@ -13644,9 +13646,13 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "handleVideoLoad",
     value: function handleVideoLoad() {
+      var _this5 = this;
+
       if (this.video) {
         var onVideoLoad = this.props.onVideoLoad;
-        this.video.addEventListener('timeupdate', this.updateVideoLoop, false);
+        this.video.addEventListener('timeupdate', function () {
+          return _this5.updateMediaLoop(_this5.video);
+        }, false);
         onVideoLoad(this.video);
       }
 
@@ -13677,41 +13683,41 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
-    key: "updateVideoLoop",
-    value: function updateVideoLoop() {
+    key: "updateMediaLoop",
+    value: function updateMediaLoop(media) {
       var range = this.props.range;
 
-      if (this.video && range) {
-        if (this.video.currentTime < range[0] || this.video.currentTime > range[1]) this.video.currentTime = range[0];
+      if (media && range) {
+        if (media.currentTime < range[0] || media.currentTime > range[1]) media.currentTime = range[0];
       }
     }
   }, {
     key: "get",
     value: function get(url) {
-      var _this4 = this;
+      var _this6 = this;
 
       // return fetch(url, {mode: 'cors'}).then(response => response.blob());
       return new Promise(function (resolve, reject) {
-        _this4.xhr = new XMLHttpRequest();
-        _this4.xhr.responseType = 'blob';
+        _this6.xhr = new XMLHttpRequest();
+        _this6.xhr.responseType = 'blob';
 
-        _this4.xhr.open('GET', url, true);
+        _this6.xhr.open('GET', url, true);
 
-        _this4.xhr.onload = function () {
-          if (_this4.xhr.status === 200) resolve(_this4.xhr.response);else reject(Error(_this4.xhr.statusText));
+        _this6.xhr.onload = function () {
+          if (_this6.xhr.status === 200) resolve(_this6.xhr.response);else reject(Error(_this6.xhr.statusText));
         };
 
-        _this4.xhr.onerror = function () {
+        _this6.xhr.onerror = function () {
           return reject(Error('Network Error'));
         };
 
-        _this4.xhr.send();
+        _this6.xhr.send();
       });
     }
   }, {
     key: "injectUrl",
     value: function injectUrl(url) {
-      var _this5 = this;
+      var _this7 = this;
 
       var validate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (data) {
@@ -13729,15 +13735,15 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
           type: response.type
         });
 
-        _this5.change(file, false, callback);
+        _this7.change(file, false, callback);
       })["catch"](function (error) {
-        _this5.props.onUrlInjectionError(error, url);
+        _this7.props.onUrlInjectionError(error, url);
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this6 = this;
+      var _this8 = this;
 
       var srcType = this.getSrcType();
       var media = null,
@@ -13799,7 +13805,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               media = jsx("img", {
                 alt: "",
                 ref: function ref(obj) {
-                  return _this6.cropImg = obj;
+                  return _this8.cropImg = obj;
                 },
                 crossOrigin: "anonymous",
                 src: this.props.src,
@@ -13844,7 +13850,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               onLoadedData: this.handleVideoLoad,
               onError: this.handleVideoPlayerError,
               ref: function ref(obj) {
-                return _this6.video = obj;
+                return _this8.video = obj;
               },
               style: cropStyle ? cropStyle : this.props.backgroundSize === 'cover' ? {
                 height: '100%'
@@ -13870,6 +13876,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               onReady: this.handleAudioLoad
             }), jsx("audio", {
               autoPlay: autoPlay,
+              ref: function ref(obj) {
+                return _this8.audio = obj;
+              },
               loop: true,
               controls: true,
               style: {
@@ -13912,14 +13921,14 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       }), jsx("input", {
         "data-attr": "input",
         ref: function ref(obj) {
-          return _this6.input = obj;
+          return _this8.input = obj;
         },
         type: "file",
         className: "uploader-input",
         onChange: this.handleChange
       }), jsx("div", {
         ref: function ref(obj) {
-          return _this6.zone = obj;
+          return _this8.zone = obj;
         },
         className: "\n                        uploader-zone\n                        ".concat(this.props.withUrlInput ? 'uploader-zone/withUrl' : '', "\n                    "),
         onDragEnter: this.handleDragEnter,
@@ -13970,7 +13979,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
             // enter would otherwise submit form
             ev.preventDefault();
 
-            _this6.handleInjectUrlClick();
+            _this8.handleInjectUrlClick();
           }
         }
       }), jsx("span", {
@@ -14155,7 +14164,7 @@ Uploader.propTypes = (_Uploader$propTypes = {
   onRemoveClick: PropTypes.func,
   onUploaderClick: PropTypes.func,
   onUrlInjectionError: PropTypes.func
-}, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
+}, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onAudioLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
 Uploader.defaultProps = {
   autoPlay: null,
   // true for video, false for audio
@@ -14219,6 +14228,9 @@ Uploader.defaultProps = {
     return null;
   },
   onCutClick: function onCutClick() {
+    return null;
+  },
+  onAudioLoad: function onAudioLoad() {
     return null;
   },
   onVideoLoad: function onVideoLoad() {
