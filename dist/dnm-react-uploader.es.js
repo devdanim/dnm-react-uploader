@@ -13343,6 +13343,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       imageIsDark: false,
       _forceUpdateCounter: 0
     };
+    _this.wavesurfer = null;
     _this.change = _this.change.bind(_assertThisInitialized(_this));
     _this.getFileTypes = _this.getFileTypes.bind(_assertThisInitialized(_this));
     _this.getSrcType = _this.getSrcType.bind(_assertThisInitialized(_this));
@@ -13394,12 +13395,6 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function componentDidUpdate(prevProps) {
       if (this.props.src !== prevProps.src) {
         this.updateImageBackground();
-
-        if (this.audio && this.playing) {
-          // the browser would otherwise not consider the new source
-          this.audio.load();
-          this.audio.play();
-        }
       } // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
 
 
@@ -13419,6 +13414,12 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       if (srcType !== "video") this.setState({
         _forceUpdateCounter: this.state._forceUpdateCounter++
       });
+    }
+  }, {
+    key: "getWavesurfer",
+    value: function getWavesurfer() {
+      if (this.getSrcType() === "audio") return this.wavesurfer;
+      return null;
     }
   }, {
     key: "getFileTypes",
@@ -13520,13 +13521,8 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function handleMouseEnter() {
       if (!this.playing && this.props.hoverPlay) {
         this.playing = true;
-
-        if (this.audio) {
-          this.audio.load(); // just in case the source has changed since
-
-          this.audio.play();
-        }
-
+        var wavesurfer = this.getWavesurfer();
+        if (wavesurfer) wavesurfer.play();
         if (this.video) this.video.play();
       }
     }
@@ -13535,13 +13531,8 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function handleMouseOver() {
       if (!this.playing && this.props.hoverPlay) {
         this.playing = true;
-
-        if (this.audio) {
-          this.audio.load(); // just in case the source has changed since
-
-          this.audio.play();
-        }
-
+        var wavesurfer = this.getWavesurfer();
+        if (wavesurfer) wavesurfer.play();
         if (this.video) this.video.play();
       }
     }
@@ -13550,7 +13541,8 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function handleMouseLeave() {
       if (this.playing && this.props.hoverPlay) {
         this.playing = false;
-        if (this.audio) this.audio.pause();
+        var wavesurfer = this.getWavesurfer();
+        if (wavesurfer) wavesurfer.pause();
         if (this.video) this.video.pause();
       }
     }
@@ -13640,7 +13632,8 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     }
   }, {
     key: "handleAudioLoad",
-    value: function handleAudioLoad() {
+    value: function handleAudioLoad(wavesurfer) {
+      this.wavesurfer = wavesurfer;
       this.handleLoad();
     }
   }, {
@@ -13879,9 +13872,6 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               autoPlay: autoPlay,
               loop: true,
               controls: true,
-              ref: function ref(obj) {
-                return _this6.audio = obj;
-              },
               style: {
                 position: 'fixed',
                 top: '-9999px',

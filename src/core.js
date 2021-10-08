@@ -54,6 +54,7 @@ export default class Uploader extends React.Component {
             _forceUpdateCounter: 0
         };
 
+        this.wavesurfer = null;
         this.change = this.change.bind(this);
         this.getFileTypes = this.getFileTypes.bind(this);
         this.getSrcType = this.getSrcType.bind(this);
@@ -109,11 +110,6 @@ export default class Uploader extends React.Component {
     componentDidUpdate(prevProps) {
         if (this.props.src !== prevProps.src) {
             this.updateImageBackground();
-
-            if (this.audio && this.playing) { // the browser would otherwise not consider the new source
-                this.audio.load();
-                this.audio.play();
-            }
         }
 
         // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
@@ -129,6 +125,11 @@ export default class Uploader extends React.Component {
     _forceUpdate() {
         const srcType = this.getSrcType();
         if (srcType !== "video") this.setState({ _forceUpdateCounter: this.state._forceUpdateCounter++ });
+    }
+
+    getWavesurfer() {
+        if (this.getSrcType() === "audio") return this.wavesurfer;
+        return null;
     }
 
     getFileTypes() {
@@ -208,10 +209,8 @@ export default class Uploader extends React.Component {
         if (!this.playing && this.props.hoverPlay) {
             this.playing = true;
 
-            if (this.audio) {
-                this.audio.load(); // just in case the source has changed since
-                this.audio.play();
-            }
+            const wavesurfer = this.getWavesurfer();
+            if (wavesurfer) wavesurfer.play();
             if (this.video) this.video.play();
         }
     }
@@ -220,10 +219,8 @@ export default class Uploader extends React.Component {
         if (!this.playing && this.props.hoverPlay) {
             this.playing = true;
 
-            if (this.audio) {
-                this.audio.load(); // just in case the source has changed since
-                this.audio.play();
-            }
+            const wavesurfer = this.getWavesurfer();
+            if (wavesurfer) wavesurfer.play();
             if (this.video) this.video.play();
         }
     }
@@ -232,7 +229,8 @@ export default class Uploader extends React.Component {
         if (this.playing && this.props.hoverPlay) {
             this.playing = false;
 
-            if (this.audio) this.audio.pause();
+            const wavesurfer = this.getWavesurfer();
+            if (wavesurfer) wavesurfer.pause();
             if (this.video) this.video.pause();
         }
     }
@@ -296,7 +294,8 @@ export default class Uploader extends React.Component {
         this.setState({ imageBackgroundColor: `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`, imageIsDark });
     }
 
-    handleAudioLoad() {
+    handleAudioLoad(wavesurfer) {
+        this.wavesurfer = wavesurfer;
         this.handleLoad();
     }
 
@@ -515,7 +514,6 @@ export default class Uploader extends React.Component {
                             autoPlay={autoPlay}
                             loop
                             controls
-                            ref={obj => this.audio = obj}
                             style={{
                                 position: 'fixed',
                                 top: '-9999px',
