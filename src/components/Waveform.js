@@ -11,7 +11,6 @@ export default class Waveform extends React.Component {
         duration: 0,
       }
       this.wavesurfer = null;
-      this.onLoading = this.onLoading.bind(this);
       this.onReady = this.onReady.bind(this);
       this.getRegions = this.getRegions.bind(this);
       this._redraw = this._redraw.bind(this);
@@ -19,7 +18,7 @@ export default class Waveform extends React.Component {
     }
 
     componentDidMount() {
-        window.addEventListener('resize', this.redraw);
+      window.addEventListener('resize', this.redraw);
     }
 
     componentDidUpdate(prevProps) {
@@ -40,18 +39,14 @@ export default class Waveform extends React.Component {
           this.wavesurfer.drawBuffer();
         }
     }
-  
-    onLoading({ wavesurfer }) {
-        this.wavesurfer = wavesurfer;
-        this.wavesurfer.toggleInteraction();
-        this.setState({ duration: this.wavesurfer.getDuration() });
-    };
 
-    onReady() {
-        const { onReady } = this.props;
-        if (this.wavesurfer) this.setState({ duration: this.wavesurfer.getDuration() });
-        this.redraw();
-        if (onReady) onReady(this.wavesurfer);
+    onReady({ wavesurfer }) {
+      const { onReady } = this.props;
+      this.wavesurfer = wavesurfer;
+      this.wavesurfer.toggleInteraction();
+      this.setState({ duration: this.wavesurfer.getDuration() });
+      this.redraw();
+      if (onReady) onReady(this.wavesurfer);
     }
 
     getRegions() {
@@ -60,8 +55,8 @@ export default class Waveform extends React.Component {
         return range ? {
             cut: {
                 id: 'cut',
-                start: range[0],
-                end: range[1],
+                start: (range[0] / duration) * 100,
+                end: (range[1] / duration) * 100,
                 color: 'rgba(146, 210, 117, 0.3)',
             }
         } : null;
@@ -70,7 +65,6 @@ export default class Waveform extends React.Component {
     render () {
         const { src, range, className, height } = this.props;
         const regions = this.getRegions();
-
         return (
           <ReactWaves
             audioFile={src}
@@ -84,14 +78,12 @@ export default class Waveform extends React.Component {
               hideScrollbar: true,
               height,
               progressColor: '#46be8ae6',
-              responsive: true,
               waveColor: '#D1D6DA',
             }}
             zoom={1}
             pos={0}
             playing={false} 
             onReady={this.onReady}
-            onLoading={this.onLoading}
           >
             <Regions
                 regions={regions}

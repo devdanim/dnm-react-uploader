@@ -7,22 +7,6 @@
   var React__default = 'default' in React ? React['default'] : React;
   PropTypes = PropTypes && Object.prototype.hasOwnProperty.call(PropTypes, 'default') ? PropTypes['default'] : PropTypes;
 
-  function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function (obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
-  }
-
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
       throw new TypeError("Cannot call a class as a function");
@@ -16447,7 +16431,7 @@
       }
   }
 
-  var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
     return typeof obj;
   } : function (obj) {
     return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
@@ -17297,7 +17281,7 @@
         isReady: false
       };
 
-      if ((typeof WaveSurfer === "undefined" ? "undefined" : _typeof$1(WaveSurfer)) === undefined) {
+      if ((typeof WaveSurfer === "undefined" ? "undefined" : _typeof(WaveSurfer)) === undefined) {
         throw new Error("WaveSurfer is undefined!");
       }
       return _this;
@@ -17878,7 +17862,6 @@
         duration: 0
       };
       _this.wavesurfer = null;
-      _this.onLoading = _this.onLoading.bind(_assertThisInitialized(_this));
       _this.onReady = _this.onReady.bind(_assertThisInitialized(_this));
       _this.getRegions = _this.getRegions.bind(_assertThisInitialized(_this));
       _this._redraw = _this._redraw.bind(_assertThisInitialized(_this));
@@ -17916,20 +17899,13 @@
         }
       }
     }, {
-      key: "onLoading",
-      value: function onLoading(_ref) {
+      key: "onReady",
+      value: function onReady(_ref) {
         var wavesurfer = _ref.wavesurfer;
+        var onReady = this.props.onReady;
         this.wavesurfer = wavesurfer;
         this.wavesurfer.toggleInteraction();
         this.setState({
-          duration: this.wavesurfer.getDuration()
-        });
-      }
-    }, {
-      key: "onReady",
-      value: function onReady() {
-        var onReady = this.props.onReady;
-        if (this.wavesurfer) this.setState({
           duration: this.wavesurfer.getDuration()
         });
         this.redraw();
@@ -17943,8 +17919,8 @@
         return range ? {
           cut: {
             id: 'cut',
-            start: range[0],
-            end: range[1],
+            start: range[0] / duration * 100,
+            end: range[1] / duration * 100,
             color: 'rgba(146, 210, 117, 0.3)'
           }
         } : null;
@@ -17970,14 +17946,12 @@
             hideScrollbar: true,
             height: height,
             progressColor: '#46be8ae6',
-            responsive: true,
             waveColor: '#D1D6DA'
           },
           zoom: 1,
           pos: 0,
           playing: false,
-          onReady: this.onReady,
-          onLoading: this.onLoading
+          onReady: this.onReady
         }, /*#__PURE__*/React__default.createElement(Regions, {
           regions: regions
         }));
@@ -18573,8 +18547,7 @@
 
             case 'audio':
               // Why key={...}?
-              //      1. Waves would otherwise cumulate and give a final homogeneous color...
-              //      2. The browser would otherwise not consider any new source for <audio
+              // Waves would otherwise cumulate and give a final homogeneous color because of an issue in the Waveform module...
               media = jsx(React__default.Fragment, {
                 key: this.props.src
               }, jsx(Waveform$1, {
@@ -18588,6 +18561,7 @@
                 ref: function ref(obj) {
                   return _this8.audio = obj;
                 },
+                src: this.props.src,
                 loop: true,
                 controls: true,
                 style: {
@@ -18595,9 +18569,7 @@
                   top: '-9999px',
                   left: '-9999px'
                 }
-              }, jsx("source", {
-                src: this.props.src
-              }), "This a debug placeholder."));
+              }));
               break;
           }
         }
@@ -18841,16 +18813,7 @@
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
     caption: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-    catalogue: function catalogue(props, propName, componentName) {
-      var givenCatalogue = props[propName],
-          givenPropsKeys = Object.keys(props[propName]),
-          expectedPropsKeys = Object.keys(Uploader.defaultProps[propName]);
-      if (!givenCatalogue || _typeof(givenCatalogue) !== 'object') throw new Error('Catalogue must be an object.');
-
-      var diffKeys = _.difference(expectedPropsKeys, givenPropsKeys);
-
-      if (diffKeys.length) throw new Error('Given catalogue is insufficient. Missing keys: ' + JSON.stringify(diffKeys));
-    },
+    catalogue: PropTypes.object,
     compact: PropTypes.bool,
     corsProof: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     // func is a callback with src as its unique arg (e.g. we want to apply the CORS trick only for some urls, and not for others...)

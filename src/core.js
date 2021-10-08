@@ -51,7 +51,7 @@ export default class Uploader extends React.Component {
             width: null,
             imageBackgroundColor: 'rgba(0, 0, 0, 0)',
             imageIsDark: false,
-            _forceUpdateCounter: 0
+            _forceUpdateCounter: 0,
         };
 
         this.change = this.change.bind(this);
@@ -495,8 +495,7 @@ export default class Uploader extends React.Component {
                     break;
                 case 'audio':
                     // Why key={...}?
-                    //      1. Waves would otherwise cumulate and give a final homogeneous color...
-                    //      2. The browser would otherwise not consider any new source for <audio
+                    // Waves would otherwise cumulate and give a final homogeneous color because of an issue in the Waveform module...
                     media = <React.Fragment key={this.props.src}>
                         <Waveform
                             className="uploader-waveform"
@@ -508,6 +507,7 @@ export default class Uploader extends React.Component {
                         <audio
                             autoPlay={autoPlay}
                             ref={obj => this.audio = obj}
+                            src={this.props.src}
                             loop
                             controls
                             style={{
@@ -515,7 +515,7 @@ export default class Uploader extends React.Component {
                                 top: '-9999px',
                                 left: '-9999px',
                             }}
-                        ><source src={this.props.src} />This a debug placeholder.</audio>
+                        />
                     </React.Fragment>
                     break;
             }
@@ -750,17 +750,7 @@ Uploader.propTypes = {
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
     caption: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-    catalogue: (props, propName, componentName) => {
-        const givenCatalogue = props[propName],
-            givenPropsKeys = Object.keys(props[propName]),
-            expectedPropsKeys = Object.keys(Uploader.defaultProps[propName]);
-
-        if (!givenCatalogue || typeof givenCatalogue !== 'object') throw new Error('Catalogue must be an object.');
-
-        const diffKeys = _.difference(expectedPropsKeys, givenPropsKeys);
-
-        if (diffKeys.length) throw new Error('Given catalogue is insufficient. Missing keys: ' + JSON.stringify(diffKeys));
-    },
+    catalogue: PropTypes.object,
     compact: PropTypes.bool,
     corsProof: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]), // func is a callback with src as its unique arg (e.g. we want to apply the CORS trick only for some urls, and not for others...)
     croppable: PropTypes.bool,
