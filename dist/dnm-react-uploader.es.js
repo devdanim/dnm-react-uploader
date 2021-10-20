@@ -13489,28 +13489,31 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "handleMouseEnter",
     value: function handleMouseEnter() {
-      if (!this.playing && this.props.hoverPlay) {
+      var srcType = this.getSrcType();
+
+      if (!this.playing && this.props.hoverPlay && srcType === 'audio') {
         this.playing = true;
         if (this.audio) this.audio.play();
-        if (this.video) this.video.play();
       }
     }
   }, {
     key: "handleMouseOver",
     value: function handleMouseOver() {
-      if (!this.playing && this.props.hoverPlay) {
+      var srcType = this.getSrcType();
+
+      if (!this.playing && this.props.hoverPlay && srcType === 'audio') {
         this.playing = true;
         if (this.audio) this.audio.play();
-        if (this.video) this.video.play();
       }
     }
   }, {
     key: "handleMouseLeave",
     value: function handleMouseLeave() {
-      if (this.playing && this.props.hoverPlay) {
+      var srcType = this.getSrcType();
+
+      if (this.playing && this.props.hoverPlay && srcType === 'audio') {
         this.playing = false;
         if (this.audio) this.audio.pause();
-        if (this.video) this.video.pause();
       }
     }
   }, {

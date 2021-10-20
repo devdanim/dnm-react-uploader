@@ -200,29 +200,26 @@ export default class Uploader extends React.Component {
     }
 
     handleMouseEnter() {
-        if (!this.playing && this.props.hoverPlay) {
+        const srcType = this.getSrcType();
+        if (!this.playing && this.props.hoverPlay && srcType === 'audio') {
             this.playing = true;
-
             if (this.audio) this.audio.play();
-            if (this.video) this.video.play();
         }
     }
 
     handleMouseOver() {
-        if (!this.playing && this.props.hoverPlay) {
+        const srcType = this.getSrcType();
+        if (!this.playing && this.props.hoverPlay && srcType === 'audio') {
             this.playing = true;
-
             if (this.audio) this.audio.play();
-            if (this.video) this.video.play();
         }
     }
 
     handleMouseLeave() {
-        if (this.playing && this.props.hoverPlay) {
+        const srcType = this.getSrcType();
+        if (this.playing && this.props.hoverPlay && srcType === 'audio') {
             this.playing = false;
-
             if (this.audio) this.audio.pause();
-            if (this.video) this.video.pause();
         }
     }
 
