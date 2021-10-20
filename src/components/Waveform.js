@@ -7,9 +7,6 @@ export default class Waveform extends React.Component {
 
     constructor(props) {
       super(props);
-      this.state = {
-        duration: 0,
-      }
       this.wavesurfer = null;
       this.onReady = this.onReady.bind(this);
       this.getRegions = this.getRegions.bind(this);
@@ -44,20 +41,20 @@ export default class Waveform extends React.Component {
       const { onReady } = this.props;
       this.wavesurfer = wavesurfer;
       this.wavesurfer.toggleInteraction();
-      this.setState({ duration: this.wavesurfer.getDuration() });
       this.redraw();
       if (onReady) onReady(this.wavesurfer);
     }
 
     getRegions() {
-        const { duration } = this.state;
         const { range } = this.props;
         return range ? {
             cut: {
                 id: 'cut',
-                start: (range[0] / duration) * 100,
-                end: (range[1] / duration) * 100,
+                start: range[0],
+                end: range[1],
                 color: 'rgba(146, 210, 117, 0.3)',
+                drag: false,
+                resize: false,
             }
         } : null;
     }
@@ -77,10 +74,11 @@ export default class Waveform extends React.Component {
               cursorWidth: 0,
               hideScrollbar: true,
               height,
+              interact: false,
               progressColor: '#46be8ae6',
               waveColor: '#D1D6DA',
             }}
-            zoom={1}
+            zoom={0}
             pos={0}
             playing={false} 
             onReady={this.onReady}

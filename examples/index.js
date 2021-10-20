@@ -26,7 +26,12 @@ class Page extends React.Component {
                 src: 'https://s3.eu-west-3.amazonaws.com/com.danim.test/fireplace.mp3',
                 // srcType: 'image/png'
             },
+            range: [10, 60]
         };
+    }
+
+    componentDidMount() {
+        window.editRange = (range) => this.setState({ range })
     }
 
     render() {
@@ -93,7 +98,7 @@ class Page extends React.Component {
                         croppable
                         onCropClick={() => alert('onCropClick 3')}
                         cuttable
-                        range={[10, 60]}
+                        range={this.state.range}
                         onCutClick={() => {
                             alert('onCutClick 3')
                             console.log('Fireplace replaced with rain in 4s')

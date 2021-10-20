@@ -13149,9 +13149,6 @@ var Waveform$1 = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, Waveform);
 
     _this = _super.call(this, props);
-    _this.state = {
-      duration: 0
-    };
     _this.wavesurfer = null;
     _this.onReady = _this.onReady.bind(_assertThisInitialized(_this));
     _this.getRegions = _this.getRegions.bind(_assertThisInitialized(_this));
@@ -13196,23 +13193,21 @@ var Waveform$1 = /*#__PURE__*/function (_React$Component) {
       var onReady = this.props.onReady;
       this.wavesurfer = wavesurfer;
       this.wavesurfer.toggleInteraction();
-      this.setState({
-        duration: this.wavesurfer.getDuration()
-      });
       this.redraw();
       if (onReady) onReady(this.wavesurfer);
     }
   }, {
     key: "getRegions",
     value: function getRegions() {
-      var duration = this.state.duration;
       var range = this.props.range;
       return range ? {
         cut: {
           id: 'cut',
-          start: range[0] / duration * 100,
-          end: range[1] / duration * 100,
-          color: 'rgba(146, 210, 117, 0.3)'
+          start: range[0],
+          end: range[1],
+          color: 'rgba(146, 210, 117, 0.3)',
+          drag: false,
+          resize: false
         }
       } : null;
     }
@@ -13236,10 +13231,11 @@ var Waveform$1 = /*#__PURE__*/function (_React$Component) {
           cursorWidth: 0,
           hideScrollbar: true,
           height: height,
+          interact: false,
           progressColor: '#46be8ae6',
           waveColor: '#D1D6DA'
         },
-        zoom: 1,
+        zoom: 0,
         pos: 0,
         playing: false,
         onReady: this.onReady
