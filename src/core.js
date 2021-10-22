@@ -599,7 +599,7 @@ export default class Uploader extends React.Component {
                                 </React.Fragment>
                             }
                         </div>
-                        { (this.state.loaded && this.props.caption !== null) === true &&
+                        { this.props.caption !== null &&
                         <span className="uploader-zone-fog-caption" onClick={ev => ev.stopPropagation()}>{this.props.caption}</span>
                         }
                     </div>
