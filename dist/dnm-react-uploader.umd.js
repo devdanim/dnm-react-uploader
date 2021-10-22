@@ -18640,7 +18640,7 @@
         }, this.props.cutIcon || jsx(Cut, null)), this.props.removable === true && jsx("span", {
           className: "uploader-zone-fog-controls-control",
           onClick: this.handleRemoveClick
-        }, this.props.removeIcon || jsx(Garbage, null))))), (this.props.src && this.state.loaded && this.props.caption !== null) === true && jsx("span", {
+        }, this.props.removeIcon || jsx(Garbage, null))))), (this.state.loaded && this.props.caption !== null) === true && jsx("span", {
           className: "uploader-zone-fog-caption",
           onClick: function onClick(ev) {
             return ev.stopPropagation();
