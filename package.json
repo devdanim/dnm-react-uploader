@@ -1,6 +1,6 @@
 {
   "name": "dnm-react-uploader",
-  "version": "1.19.13",
+  "version": "1.19.14",
   "description": "React file uploader",
   "main": "dist/dnm-react-uploader.umd.min.js",
   "module": "dist/dnm-react-uploader.es.min.js",
