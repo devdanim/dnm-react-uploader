@@ -23,7 +23,7 @@ import upperFirst from 'lodash-es/upperFirst';
 import FastAverageColor from 'fast-average-color';
 import 'whatwg-fetch'; // importing will automatically polyfill window.fetch and related APIs
 const _ = {
-    camelCase,  
+    camelCase,
     concat,
     debounce,
     difference,
