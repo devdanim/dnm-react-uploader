@@ -74,6 +74,7 @@ export default class Uploader extends React.Component {
         this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleAudioLoad = this.handleAudioLoad.bind(this);
         this.handleVideoLoad = this.handleVideoLoad.bind(this);
+        this.handleVideoLoadMetadata = this.handleVideoLoadMetadata.bind(this);
         this.handleVideoPlayerError = this.handleVideoPlayerError.bind(this);
         this.handleRemoveClick = this.handleRemoveClick.bind(this);
         this.handleUrlChange = this.handleUrlChange.bind(this);
@@ -304,6 +305,14 @@ export default class Uploader extends React.Component {
         this.handleLoad();
     }
 
+    handleVideoLoadMetadata(event) {
+        const { videoHeight } = event.target;
+        if (videoHeight === 0) {
+            const { onNotSupportedVideoLoad } = this.props;
+            if (onNotSupportedVideoLoad) onNotSupportedVideoLoad('Video format is not supported');
+        }
+    }
+
     handleVideoPlayerError(event) {
         const { error } = event.target;
         if (error && error.code === 4) {
@@ -481,6 +490,7 @@ export default class Uploader extends React.Component {
                             crossOrigin="anonymous"
                             src={this.props.src}
                             onLoadedData={this.handleVideoLoad}
+                            onLoadedMetadata={this.handleVideoLoadMetadata}
                             onError={this.handleVideoPlayerError}
                             ref={obj => this.video = obj}
                             style={cropStyle ? cropStyle : this.props.backgroundSize === 'cover'
