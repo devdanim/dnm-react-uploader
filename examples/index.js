@@ -56,9 +56,11 @@ class Page extends React.Component {
                         resolve(null);
                     })}
                     onFileTooLargeError={() => alert('onFileTooLargeError')}
-                    onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError')}
+                    onInvalidFileExtensionError={(actualExtension, expectedExtensions) => console.log('onInvalidFileExtensionError: actual extension is ', actualExtension, ' and the expected are ', expectedExtensions)}
                     onInvalidURLError={() => alert('onInvalidURLError')}
                     onURLInjectionError={() => alert('onURLInjectionError')}
+                    additionalExtensions={{video: ['avi', 'avi']}} // Leave the 'avi' duplicate as it is, to ensure that the extensions are unique in the array provided by onInvalidFileExtensionError
+                    additionalMimeTypes={{video: ['video/avi']}} // Leave the 'mp4' duplicate as it is, to ensure that the extensions are unique in the array provided by onInvalidFileExtensionError
                 />
                 <Uploader
                     customAttributes={{

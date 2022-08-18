@@ -19,6 +19,7 @@ import last from 'lodash-es/last';
 import map from 'lodash-es/map';
 import round from 'lodash-es/round';
 import split from 'lodash-es/split';
+import uniq from 'lodash-es/uniq';
 import upperFirst from 'lodash-es/upperFirst';
 import FastAverageColor from 'fast-average-color';
 import 'whatwg-fetch'; // importing will automatically polyfill window.fetch and related APIs
@@ -33,6 +34,7 @@ const _ = {
     map,
     round,
     split,
+    uniq,
     upperFirst,
 };
 import Waveform from './components/Waveform';
@@ -674,9 +676,9 @@ export default class Uploader extends React.Component {
         const { additionalExtensions } = this.props;
 
         return {
-            audio: [...Constants.audio.extensions, ...(_.get(additionalExtensions, 'audio') || [])],
-            image: [...Constants.image.extensions, ...(_.get(additionalExtensions, 'image') || [])],
-            video: [...Constants.video.extensions, ...(_.get(additionalExtensions, 'video') || [])],
+            audio: _.uniq([...Constants.audio.extensions, ...(_.get(additionalExtensions, 'audio') || [])]),
+            image: _.uniq([...Constants.image.extensions, ...(_.get(additionalExtensions, 'image') || [])]),
+            video: _.uniq([...Constants.video.extensions, ...(_.get(additionalExtensions, 'video') || [])]),
         };
     }
 
@@ -684,9 +686,9 @@ export default class Uploader extends React.Component {
         const { additionalMimeTypes } = this.props;
 
         return {
-            audio: [...Constants.audio.mimeTypes, ...(_.get(additionalMimeTypes, 'audio') || [])],
-            image: [...Constants.image.mimeTypes, ...(_.get(additionalMimeTypes, 'image') || [])],
-            video: [...Constants.video.mimeTypes, ...(_.get(additionalMimeTypes, 'video') || [])],
+            audio: _.uniq([...Constants.audio.mimeTypes, ...(_.get(additionalMimeTypes, 'audio') || [])]),
+            image: _.uniq([...Constants.image.mimeTypes, ...(_.get(additionalMimeTypes, 'image') || [])]),
+            video: _.uniq([...Constants.video.mimeTypes, ...(_.get(additionalMimeTypes, 'video') || [])]),
         };
     }
 

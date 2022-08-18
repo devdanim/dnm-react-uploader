@@ -6977,6 +6977,122 @@
     return string.split(separator, limit);
   }
 
+  /**
+   * This method returns `undefined`.
+   *
+   * @static
+   * @memberOf _
+   * @since 2.3.0
+   * @category Util
+   * @example
+   *
+   * _.times(2, _.noop);
+   * // => [undefined, undefined]
+   */
+  function noop() {
+    // No operation performed.
+  }
+
+  /** Used as references for various `Number` constants. */
+  var INFINITY$3 = 1 / 0;
+
+  /**
+   * Creates a set object of `values`.
+   *
+   * @private
+   * @param {Array} values The values to add to the set.
+   * @returns {Object} Returns the new set.
+   */
+  var createSet = !(Set && (1 / setToArray(new Set([,-0]))[1]) == INFINITY$3) ? noop : function(values) {
+    return new Set(values);
+  };
+
+  /** Used as the size to enable large array optimizations. */
+  var LARGE_ARRAY_SIZE$2 = 200;
+
+  /**
+   * The base implementation of `_.uniqBy` without support for iteratee shorthands.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {Function} [iteratee] The iteratee invoked per element.
+   * @param {Function} [comparator] The comparator invoked per element.
+   * @returns {Array} Returns the new duplicate free array.
+   */
+  function baseUniq(array, iteratee, comparator) {
+    var index = -1,
+        includes = arrayIncludes,
+        length = array.length,
+        isCommon = true,
+        result = [],
+        seen = result;
+
+    if (comparator) {
+      isCommon = false;
+      includes = arrayIncludesWith;
+    }
+    else if (length >= LARGE_ARRAY_SIZE$2) {
+      var set = iteratee ? null : createSet(array);
+      if (set) {
+        return setToArray(set);
+      }
+      isCommon = false;
+      includes = cacheHas;
+      seen = new SetCache;
+    }
+    else {
+      seen = iteratee ? [] : result;
+    }
+    outer:
+    while (++index < length) {
+      var value = array[index],
+          computed = iteratee ? iteratee(value) : value;
+
+      value = (comparator || value !== 0) ? value : 0;
+      if (isCommon && computed === computed) {
+        var seenIndex = seen.length;
+        while (seenIndex--) {
+          if (seen[seenIndex] === computed) {
+            continue outer;
+          }
+        }
+        if (iteratee) {
+          seen.push(computed);
+        }
+        result.push(value);
+      }
+      else if (!includes(seen, computed, comparator)) {
+        if (seen !== result) {
+          seen.push(computed);
+        }
+        result.push(value);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Creates a duplicate-free version of an array, using
+   * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+   * for equality comparisons, in which only the first occurrence of each element
+   * is kept. The order of result values is determined by the order they occur
+   * in the array.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Array
+   * @param {Array} array The array to inspect.
+   * @returns {Array} Returns the new duplicate free array.
+   * @example
+   *
+   * _.uniq([2, 1, 2]);
+   * // => [2, 1]
+   */
+  function uniq(array) {
+    return (array && array.length) ? baseUniq(array) : [];
+  }
+
   /*! Fast Average Color | © 2021 Denis Seleznev | MIT License | https://github.com/fast-average-color/fast-average-color */
   function toHex(num) {
       const str = num.toString(16);
@@ -18032,6 +18148,7 @@
     map: map,
     round: round,
     split: split,
+    uniq: uniq,
     upperFirst: upperFirst
   };
 
@@ -18750,9 +18867,9 @@
       value: function extensions() {
         var additionalExtensions = this.props.additionalExtensions;
         return {
-          audio: [].concat(_toConsumableArray(Constants.audio.extensions), _toConsumableArray(_.get(additionalExtensions, 'audio') || [])),
-          image: [].concat(_toConsumableArray(Constants.image.extensions), _toConsumableArray(_.get(additionalExtensions, 'image') || [])),
-          video: [].concat(_toConsumableArray(Constants.video.extensions), _toConsumableArray(_.get(additionalExtensions, 'video') || []))
+          audio: _.uniq([].concat(_toConsumableArray(Constants.audio.extensions), _toConsumableArray(_.get(additionalExtensions, 'audio') || []))),
+          image: _.uniq([].concat(_toConsumableArray(Constants.image.extensions), _toConsumableArray(_.get(additionalExtensions, 'image') || []))),
+          video: _.uniq([].concat(_toConsumableArray(Constants.video.extensions), _toConsumableArray(_.get(additionalExtensions, 'video') || [])))
         };
       }
     }, {
@@ -18760,9 +18877,9 @@
       value: function mimeTypes() {
         var additionalMimeTypes = this.props.additionalMimeTypes;
         return {
-          audio: [].concat(_toConsumableArray(Constants.audio.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'audio') || [])),
-          image: [].concat(_toConsumableArray(Constants.image.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'image') || [])),
-          video: [].concat(_toConsumableArray(Constants.video.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'video') || []))
+          audio: _.uniq([].concat(_toConsumableArray(Constants.audio.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'audio') || []))),
+          image: _.uniq([].concat(_toConsumableArray(Constants.image.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'image') || []))),
+          video: _.uniq([].concat(_toConsumableArray(Constants.video.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'video') || [])))
         };
       }
       /**
