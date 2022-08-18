@@ -321,6 +321,7 @@ export default class Uploader extends React.Component {
             const { onNotSupportedVideoLoad } = this.props;
             onNotSupportedVideoLoad(error.message);
         }
+        this.handleLoad();
     }
 
     handleRemoveClick(ev) {
