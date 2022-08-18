@@ -671,18 +671,22 @@ export default class Uploader extends React.Component {
     }
 
     extensions() {
+        const { additionalExtensions } = this.props;
+
         return {
-            video: Constants.video.extensions,
-            image: Constants.image.extensions,
-            audio: Constants.audio.extensions,
+            audio: [...Constants.audio.extensions, ...(_.get(additionalExtensions, 'audio') || [])],
+            image: [...Constants.image.extensions, ...(_.get(additionalExtensions, 'image') || [])],
+            video: [...Constants.video.extensions, ...(_.get(additionalExtensions, 'video') || [])],
         };
     }
 
     mimeTypes() {
+        const { additionalMimeTypes } = this.props;
+
         return {
-            video: Constants.video.mimeTypes,
-            image: Constants.image.mimeTypes,
-            audio: Constants.audio.mimeTypes,
+            audio: [...Constants.audio.mimeTypes, ...(_.get(additionalMimeTypes, 'audio') || [])],
+            image: [...Constants.image.mimeTypes, ...(_.get(additionalMimeTypes, 'image') || [])],
+            video: [...Constants.video.mimeTypes, ...(_.get(additionalMimeTypes, 'video') || [])],
         };
     }
 
@@ -753,6 +757,16 @@ export default class Uploader extends React.Component {
 
 Uploader.propTypes = {
     // optional
+    additionalExtensions: PropTypes.shape({
+        audio: PropTypes.array,
+        image: PropTypes.array,
+        video: PropTypes.array,
+    }),
+    additionalMimeTypes: PropTypes.shape({
+        audio: PropTypes.array,
+        image: PropTypes.array,
+        video: PropTypes.array,
+    }),
     autoPlay: PropTypes.bool,
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
@@ -789,6 +803,8 @@ Uploader.propTypes = {
 };
 
 Uploader.defaultProps = {
+    additionalExtensions: {},
+    additionalMimeTypes: {},
     autoPlay: null, // true for video, false for audio
     backgroundColor: 'transparent',
     backgroundSize: 'cover',

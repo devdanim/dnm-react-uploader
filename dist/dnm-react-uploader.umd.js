@@ -7,32 +7,6 @@
   var React__default = 'default' in React ? React['default'] : React;
   PropTypes = PropTypes && Object.prototype.hasOwnProperty.call(PropTypes, 'default') ? PropTypes['default'] : PropTypes;
 
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
-    if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      enumerableOnly && (symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      })), keys.push.apply(keys, symbols);
-    }
-
-    return keys;
-  }
-
-  function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = null != arguments[i] ? arguments[i] : {};
-      i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-
-    return target;
-  }
-
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
       throw new TypeError("Cannot call a class as a function");
@@ -52,9 +26,6 @@
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -91,6 +62,40 @@
     return _extends.apply(this, arguments);
   }
 
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      if (enumerableOnly) symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
   function _inherits(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function");
@@ -102,9 +107,6 @@
         writable: true,
         configurable: true
       }
-    });
-    Object.defineProperty(subClass, "prototype", {
-      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -131,7 +133,7 @@
     if (typeof Proxy === "function") return true;
 
     try {
-      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -149,8 +151,6 @@
   function _possibleConstructorReturn(self, call) {
     if (call && (typeof call === "object" || typeof call === "function")) {
       return call;
-    } else if (call !== void 0) {
-      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -187,20 +187,46 @@
     }));
   }
 
-  function _setPrototypeOf$1(o, p) {
-    _setPrototypeOf$1 = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-      o.__proto__ = p;
-      return o;
-    };
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+  }
 
-    return _setPrototypeOf$1(o, p);
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+  }
+
+  function _iterableToArray(iter) {
+    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  }
+
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   function _inheritsLoose(subClass, superClass) {
     subClass.prototype = Object.create(superClass.prototype);
     subClass.prototype.constructor = subClass;
-    _setPrototypeOf$1(subClass, superClass);
+    subClass.__proto__ = superClass;
   }
+
+  var inheritsLoose = _inheritsLoose;
 
   /*
 
@@ -1729,33 +1755,42 @@
     };
   };
 
-  var isBrowser$2 = typeof document !== 'undefined';
-  var hasOwnProperty = Object.prototype.hasOwnProperty;
+  function css() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
 
-  var EmotionCacheContext = /*#__PURE__*/React.createContext( // we're doing this to avoid preconstruct's dead code elimination in this one case
+    return serializeStyles(args);
+  }
+
+  var isBrowser$2 = typeof document !== 'undefined';
+
+  var EmotionCacheContext = React.createContext( // we're doing this to avoid preconstruct's dead code elimination in this one case
   // because this module is primarily intended for the browser and node
   // but it's also required in react native and similar environments sometimes
   // and we could have a special build just for that
   // but this is much easier and the native packages
   // might use a different theme context in the future anyway
   typeof HTMLElement !== 'undefined' ? createCache() : null);
-  var ThemeContext = /*#__PURE__*/React.createContext({});
+  var ThemeContext = React.createContext({});
   var CacheProvider = EmotionCacheContext.Provider;
 
   var withEmotionCache = function withEmotionCache(func) {
     var render = function render(props, ref) {
-      return /*#__PURE__*/React.createElement(EmotionCacheContext.Consumer, null, function (cache) {
+      return React.createElement(EmotionCacheContext.Consumer, null, function (cache) {
         return func(props, cache, ref);
       });
     }; // $FlowFixMe
 
 
-    return /*#__PURE__*/React.forwardRef(render);
+    return React.forwardRef(render);
   };
 
   if (!isBrowser$2) {
-    var BasicProvider = /*#__PURE__*/function (_React$Component) {
-      _inheritsLoose(BasicProvider, _React$Component);
+    var BasicProvider =
+    /*#__PURE__*/
+    function (_React$Component) {
+      inheritsLoose(BasicProvider, _React$Component);
 
       function BasicProvider(props, context, updater) {
         var _this;
@@ -1770,7 +1805,7 @@
       var _proto = BasicProvider.prototype;
 
       _proto.render = function render() {
-        return /*#__PURE__*/React.createElement(EmotionCacheContext.Provider, this.state, this.props.children(this.state.value));
+        return React.createElement(EmotionCacheContext.Provider, this.state, this.props.children(this.state.value));
       };
 
       return BasicProvider;
@@ -1778,9 +1813,9 @@
 
     withEmotionCache = function withEmotionCache(func) {
       return function (props) {
-        return /*#__PURE__*/React.createElement(EmotionCacheContext.Consumer, null, function (context) {
+        return React.createElement(EmotionCacheContext.Consumer, null, function (context) {
           if (context === null) {
-            return /*#__PURE__*/React.createElement(BasicProvider, null, function (newContext) {
+            return React.createElement(BasicProvider, null, function (newContext) {
               return func(props, newContext);
             });
           } else {
@@ -1799,46 +1834,7 @@
 
   var typePropName = '__EMOTION_TYPE_PLEASE_DO_NOT_USE__';
   var labelPropName = '__EMOTION_LABEL_PLEASE_DO_NOT_USE__';
-  var createEmotionProps = function createEmotionProps(type, props) {
-    if (process.env.NODE_ENV !== 'production' && typeof props.css === 'string' && // check if there is a css declaration
-    props.css.indexOf(':') !== -1) {
-      throw new Error("Strings are not allowed as css prop values, please wrap it in a css template literal from '@emotion/css' like this: css`" + props.css + "`");
-    }
-
-    var newProps = {};
-
-    for (var key in props) {
-      if (hasOwnProperty.call(props, key)) {
-        newProps[key] = props[key];
-      }
-    }
-
-    newProps[typePropName] = type; // TODO: check if this still works with all of those different JSX functions
-
-    if (process.env.NODE_ENV !== 'production') {
-      var error = new Error();
-
-      if (error.stack) {
-        // chrome
-        var match = error.stack.match(/at (?:Object\.|Module\.|)(?:jsx|createEmotionProps).*\n\s+at (?:Object\.|)([A-Z][A-Za-z$]+) /);
-
-        if (!match) {
-          // safari and firefox
-          match = error.stack.match(/.*\n([A-Z][A-Za-z$]+)@/);
-        }
-
-        if (match) {
-          newProps[labelPropName] = sanitizeIdentifier(match[1]);
-        }
-      }
-    }
-
-    return newProps;
-  };
-
-  var Noop = function Noop() {
-    return null;
-  };
+  var hasOwnProperty = Object.prototype.hasOwnProperty;
 
   var render = function render(cache, props, theme, ref) {
     var cssProp = theme === null ? props.css : props.css(theme); // so that using `css` from `emotion` and passing the result to the css prop works
@@ -1881,8 +1877,7 @@
 
     newProps.ref = ref;
     newProps.className = className;
-    var ele = /*#__PURE__*/React.createElement(type, newProps);
-    var possiblyStyleElement = /*#__PURE__*/React.createElement(Noop, null);
+    var ele = React.createElement(type, newProps);
 
     if (!isBrowser$2 && rules !== undefined) {
       var _ref;
@@ -1895,19 +1890,20 @@
         next = next.next;
       }
 
-      possiblyStyleElement = /*#__PURE__*/React.createElement("style", (_ref = {}, _ref["data-emotion-" + cache.key] = serializedNames, _ref.dangerouslySetInnerHTML = {
+      return React.createElement(React.Fragment, null, React.createElement("style", (_ref = {}, _ref["data-emotion-" + cache.key] = serializedNames, _ref.dangerouslySetInnerHTML = {
         __html: rules
-      }, _ref.nonce = cache.sheet.nonce, _ref));
-    } // Need to return the same number of siblings or else `React.useId` will cause hydration mismatches.
+      }, _ref.nonce = cache.sheet.nonce, _ref)), ele);
+    }
 
+    return ele;
+  };
 
-    return /*#__PURE__*/React.createElement(React.Fragment, null, possiblyStyleElement, ele);
-  }; // eslint-disable-next-line no-undef
-
-
-  var Emotion = /* #__PURE__ */withEmotionCache(function (props, cache, ref) {
+  var Emotion =
+  /* #__PURE__ */
+  withEmotionCache(function (props, cache, ref) {
+    // use Context.read for the theme when it's stable
     if (typeof props.css === 'function') {
-      return /*#__PURE__*/React.createElement(ThemeContext.Consumer, null, function (theme) {
+      return React.createElement(ThemeContext.Consumer, null, function (theme) {
         return render(cache, props, theme, ref);
       });
     }
@@ -1917,15 +1913,8 @@
 
   if (process.env.NODE_ENV !== 'production') {
     Emotion.displayName = 'EmotionCssPropInternal';
-  }
+  } // $FlowFixMe
 
-  function css() {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return serializeStyles(args);
-  }
 
   var jsx = function jsx(type, props) {
     var args = arguments;
@@ -1935,10 +1924,43 @@
       return React.createElement.apply(undefined, args);
     }
 
+    if (process.env.NODE_ENV !== 'production' && typeof props.css === 'string' && // check if there is a css declaration
+    props.css.indexOf(':') !== -1) {
+      throw new Error("Strings are not allowed as css prop values, please wrap it in a css template literal from '@emotion/css' like this: css`" + props.css + "`");
+    }
+
     var argsLength = args.length;
     var createElementArgArray = new Array(argsLength);
     createElementArgArray[0] = Emotion;
-    createElementArgArray[1] = createEmotionProps(type, props);
+    var newProps = {};
+
+    for (var key in props) {
+      if (hasOwnProperty.call(props, key)) {
+        newProps[key] = props[key];
+      }
+    }
+
+    newProps[typePropName] = type;
+
+    if (process.env.NODE_ENV !== 'production') {
+      var error = new Error();
+
+      if (error.stack) {
+        // chrome
+        var match = error.stack.match(/at (?:Object\.|Module\.|)jsx.*\n\s+at (?:Object\.|)([A-Z][A-Za-z$]+) /);
+
+        if (!match) {
+          // safari and firefox
+          match = error.stack.match(/.*\n([A-Z][A-Za-z$]+)@/);
+        }
+
+        if (match) {
+          newProps[labelPropName] = sanitizeIdentifier(match[1]);
+        }
+      }
+    }
+
+    createElementArgArray[1] = newProps;
 
     for (var i = 2; i < argsLength; i++) {
       createElementArgArray[i] = args[i];
@@ -2020,12 +2042,8 @@
     return rawClassName + css(registeredStyles);
   }
 
-  var Noop$1 = function Noop() {
-    return null;
-  };
-
   var ClassNames = withEmotionCache(function (props, context) {
-    return /*#__PURE__*/React.createElement(ThemeContext.Consumer, null, function (theme) {
+    return React.createElement(ThemeContext.Consumer, null, function (theme) {
       var rules = '';
       var serializedHashes = '';
       var hasRendered = false;
@@ -2077,29 +2095,85 @@
       };
       var ele = props.children(content);
       hasRendered = true;
-      var possiblyStyleElement = /*#__PURE__*/React.createElement(Noop$1, null);
 
       if (!isBrowser$2 && rules.length !== 0) {
         var _ref;
 
-        possiblyStyleElement = /*#__PURE__*/React.createElement("style", (_ref = {}, _ref["data-emotion-" + context.key] = serializedHashes.substring(1), _ref.dangerouslySetInnerHTML = {
+        return React.createElement(React.Fragment, null, React.createElement("style", (_ref = {}, _ref["data-emotion-" + context.key] = serializedHashes.substring(1), _ref.dangerouslySetInnerHTML = {
           __html: rules
-        }, _ref.nonce = context.sheet.nonce, _ref));
-      } // Need to return the same number of siblings or else `React.useId` will cause hydration mismatches.
+        }, _ref.nonce = context.sheet.nonce, _ref)), ele);
+      }
 
-
-      return /*#__PURE__*/React.createElement(React.Fragment, null, possiblyStyleElement, ele);
+      return ele;
     });
   });
 
-  var _templateObject, _templateObject2, _templateObject3, _templateObject4, _templateObject5, _templateObject6;
-  var pulse = keyframes(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n    from {\n        transform: scale(0.7);\n    }\n    50% {\n        transform: scale(1);\n    }\n    to {\n        transform: scale(0.7);\n    }\n"])));
+  function _templateObject6() {
+    var data = _taggedTemplateLiteral(["\n        .uploader-zone {\n            border-radius: .5rem;\n            height: 4rem;\n        }\n        .uploader-zone-fog-img {\n            width: 2rem;\n            top: 0;\n        }\n        .uploader-zone-fog-controls-control {\n            width: 1.5rem !important;\n            height: 1.5rem !important;\n        }\n    "]);
+
+    _templateObject6 = function _templateObject6() {
+      return data;
+    };
+
+    return data;
+  }
+
+  function _templateObject5() {
+    var data = _taggedTemplateLiteral(["\n        .uploader-zone-fog-text {\n            margin-top: 0;\n            bottom: 0;\n        }\n        .uploader-zone-fog-img {\n            width: 2.6rem;\n            top: 0.3rem;\n        }\n        .uploader-zone-fog-controls {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row wrap;\n            position: relative;\n            bottom: 0.3rem;\n            \n            > * {\n                margin: 0 0.3rem;\n            }\n        }\n        .uploader-zone-fog-or {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row;\n            font-size: 80%;\n            width: 100%;\n        }\n        .uploader-zone-fog-or-wing {\n            flex-grow: 1;\n            height: 0;\n            border-style: solid;\n            border-width: .06rem 0 0 0;\n            border-color: white;\n        }\n        .uploader-zone-fog-or-body {\n            padding: 0.5rem 0.7rem;\n            user-select: none;\n        }\n        .uploader-zone-fog-controls-control {\n            height: 2rem;\n            width: 2rem;\n            fill: white;\n        }\n    "]);
+
+    _templateObject5 = function _templateObject5() {
+      return data;
+    };
+
+    return data;
+  }
+
+  function _templateObject4() {
+    var data = _taggedTemplateLiteral(["\n        .uploader-zone {\n            border-top-left-radius: 0.25rem !important;\n            border-top-right-radius: 0.25rem !important;\n            border-bottom-left-radius: 0 !important;\n            border-bottom-right-radius: 0 !important;\n        }\n    "]);
+
+    _templateObject4 = function _templateObject4() {
+      return data;
+    };
+
+    return data;
+  }
+
+  function _templateObject3() {
+    var data = _taggedTemplateLiteral(["\n        .uploader-zone-fog-core {\n            position: fixed;\n            top: -9999px;\n            left: -9999px;\n        }\n    "]);
+
+    _templateObject3 = function _templateObject3() {
+      return data;
+    };
+
+    return data;
+  }
+
+  function _templateObject2() {
+    var data = _taggedTemplateLiteral(["\n        position: relative;\n        \n        img {\n            max-height: 100%;\n            max-width: 100%;\n            height: auto;\n            width: auto;\n        }\n        \n        .uploader-url-addon {\n            display: flex;\n            align-items: center;\n            padding: .375rem .75rem;\n            margin-bottom: 0;\n            font-weight: 400;\n            line-height: 1.5;\n            color: #495057;\n            text-align: center;\n            white-space: nowrap;\n            background-color: #e9ecef;\n            border: 1px solid #ced4da;\n            border-left-width: 0;\n            border-top-right-radius: 0;\n            border-top-left-radius: 0;\n            border-bottom-left-radius: 0;\n            border-bottom-right-radius: .25rem;\n            \n            svg {\n                margin-right: 0.6rem;\n                fill: #495057;\n                height: 1.4rem;\n            }\n        }\n        \n        .uploader-url-input {\n            display: block;\n            height: calc(1.5em + .75rem + 2px);\n            padding: .375rem .75rem;\n            font-weight: 400;\n            font-size: 1rem;\n            line-height: 1.5;\n            color: #495057;\n            background-color: #fff;\n            background-clip: padding-box;\n            border: 1px solid #ced4da;\n            border-radius: .25rem;\n            border-top-left-radius: 0;\n            border-top-right-radius: 0;\n            border-bottom-right-radius: 0;\n            position: relative;\n            flex-grow: 1;\n            margin-bottom: 0;\n            \n            &:focus {\n                outline: none;\n            }\n        }\n        \n        .uploader-url {\n            width: 100%;\n            display: flex;\n            justify-content: center;\n            align-items: stretch;\n            flex-flow: row;\n            cursor: pointer;\n        }\n        \n        .uploader-zone {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row wrap;\n            width: 100%;\n            height: 14rem;\n            overflow: hidden;\n            position: relative;\n            color: white;\n        }\n    \n        .uploader-zone-fog {\n            display: flex;\n            justify-content: space-evenly;\n            align-items: center;\n            flex-flow: column;\n            background: rgba(0, 0, 0, 0.2);\n            position: absolute;\n            top: 0;\n            left: 0;\n            width: 100%;\n            height: 100%;\n            cursor: pointer;\n            \n            &:hover {\n                background: rgba(0, 0, 0, 0.5);\n            }\n        }\n        \n        .uploader-zone-fog-core {\n            display: flex;\n            justify-content: space-evenly;\n            align-items: center;\n            flex-flow: column;\n            width: 100%;\n            height: 100%;\n        }\n        \n        .uploader-zone-fog-text {\n            width: 80%;\n            text-align: center;\n            position: relative;\n            bottom: 1rem;\n            margin-top: 1rem;\n            text-shadow: 0 0 0.5rem black;\n        }\n        \n        .uploader-zone-fog-img {\n            width: 5rem;\n            fill: white;\n        }\n        \n        .uploader-zone-fog-caption {\n            background: rgba(0, 0, 0, 0.3);\n            padding: 0.2rem 0.4rem;\n            font-size: 75%;\n            color: white;\n            border-radius: 0.3rem 0.3rem 0px 0px;\n            position: absolute;\n            bottom: 0px;\n            left: 50%;\n            transform: translateX(-50%);\n        }\n        \n        .uploader-input {\n            position: fixed;\n            top: -9999px;\n            left: -9999px;\n        }\n\n        .uploader-waveform {\n            width: 100%;\n            padding: 0;\n            margin: 0;\n            z-index: 0;\n            canvas {\n                max-width: none;\n                width: 100% !important;\n            }\n        }\n\n        .wavesurfer-region {\n            z-index: 3 !important;\n          }\n          \n        .wavesurfer-handle {\n            background-color: rgba(146, 210, 117, 0.9) !important;\n            width: 4px !important;\n        }\n    "]);
+
+    _templateObject2 = function _templateObject2() {
+      return data;
+    };
+
+    return data;
+  }
+
+  function _templateObject() {
+    var data = _taggedTemplateLiteral(["\n    from {\n        transform: scale(0.7);\n    }\n    50% {\n        transform: scale(1);\n    }\n    to {\n        transform: scale(0.7);\n    }\n"]);
+
+    _templateObject = function _templateObject() {
+      return data;
+    };
+
+    return data;
+  }
+  var pulse = keyframes(_templateObject());
   var styles = {
-    uploader: css(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n        position: relative;\n        \n        img {\n            max-height: 100%;\n            max-width: 100%;\n            height: auto;\n            width: auto;\n        }\n        \n        .uploader-url-addon {\n            display: flex;\n            align-items: center;\n            padding: .375rem .75rem;\n            margin-bottom: 0;\n            font-weight: 400;\n            line-height: 1.5;\n            color: #495057;\n            text-align: center;\n            white-space: nowrap;\n            background-color: #e9ecef;\n            border: 1px solid #ced4da;\n            border-left-width: 0;\n            border-top-right-radius: 0;\n            border-top-left-radius: 0;\n            border-bottom-left-radius: 0;\n            border-bottom-right-radius: .25rem;\n            \n            svg {\n                margin-right: 0.6rem;\n                fill: #495057;\n                height: 1.4rem;\n            }\n        }\n        \n        .uploader-url-input {\n            display: block;\n            height: calc(1.5em + .75rem + 2px);\n            padding: .375rem .75rem;\n            font-weight: 400;\n            font-size: 1rem;\n            line-height: 1.5;\n            color: #495057;\n            background-color: #fff;\n            background-clip: padding-box;\n            border: 1px solid #ced4da;\n            border-radius: .25rem;\n            border-top-left-radius: 0;\n            border-top-right-radius: 0;\n            border-bottom-right-radius: 0;\n            position: relative;\n            flex-grow: 1;\n            margin-bottom: 0;\n            \n            &:focus {\n                outline: none;\n            }\n        }\n        \n        .uploader-url {\n            width: 100%;\n            display: flex;\n            justify-content: center;\n            align-items: stretch;\n            flex-flow: row;\n            cursor: pointer;\n        }\n        \n        .uploader-zone {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row wrap;\n            width: 100%;\n            height: 14rem;\n            overflow: hidden;\n            position: relative;\n            color: white;\n        }\n    \n        .uploader-zone-fog {\n            display: flex;\n            justify-content: space-evenly;\n            align-items: center;\n            flex-flow: column;\n            background: rgba(0, 0, 0, 0.2);\n            position: absolute;\n            top: 0;\n            left: 0;\n            width: 100%;\n            height: 100%;\n            cursor: pointer;\n            \n            &:hover {\n                background: rgba(0, 0, 0, 0.5);\n            }\n        }\n        \n        .uploader-zone-fog-core {\n            display: flex;\n            justify-content: space-evenly;\n            align-items: center;\n            flex-flow: column;\n            width: 100%;\n            height: 100%;\n        }\n        \n        .uploader-zone-fog-text {\n            width: 80%;\n            text-align: center;\n            position: relative;\n            bottom: 1rem;\n            margin-top: 1rem;\n            text-shadow: 0 0 0.5rem black;\n        }\n        \n        .uploader-zone-fog-img {\n            width: 5rem;\n            fill: white;\n        }\n        \n        .uploader-zone-fog-caption {\n            background: rgba(0, 0, 0, 0.3);\n            padding: 0.2rem 0.4rem;\n            font-size: 75%;\n            color: white;\n            border-radius: 0.3rem 0.3rem 0px 0px;\n            position: absolute;\n            bottom: 0px;\n            left: 50%;\n            transform: translateX(-50%);\n        }\n        \n        .uploader-input {\n            position: fixed;\n            top: -9999px;\n            left: -9999px;\n        }\n\n        .uploader-waveform {\n            width: 100%;\n            padding: 0;\n            margin: 0;\n            z-index: 0;\n            canvas {\n                max-width: none;\n                width: 100% !important;\n            }\n        }\n\n        .wavesurfer-region {\n            z-index: 3 !important;\n          }\n          \n        .wavesurfer-handle {\n            background-color: rgba(146, 210, 117, 0.9) !important;\n            width: 4px !important;\n        }\n    "]))),
-    'uploader/fetching': css(_templateObject3 || (_templateObject3 = _taggedTemplateLiteral(["\n        .uploader-zone-fog-core {\n            position: fixed;\n            top: -9999px;\n            left: -9999px;\n        }\n    "]))),
-    'uploader/withUrl': css(_templateObject4 || (_templateObject4 = _taggedTemplateLiteral(["\n        .uploader-zone {\n            border-top-left-radius: 0.25rem !important;\n            border-top-right-radius: 0.25rem !important;\n            border-bottom-left-radius: 0 !important;\n            border-bottom-right-radius: 0 !important;\n        }\n    "]))),
-    'uploader/withControls': css(_templateObject5 || (_templateObject5 = _taggedTemplateLiteral(["\n        .uploader-zone-fog-text {\n            margin-top: 0;\n            bottom: 0;\n        }\n        .uploader-zone-fog-img {\n            width: 2.6rem;\n            top: 0.3rem;\n        }\n        .uploader-zone-fog-controls {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row wrap;\n            position: relative;\n            bottom: 0.3rem;\n            \n            > * {\n                margin: 0 0.3rem;\n            }\n        }\n        .uploader-zone-fog-or {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row;\n            font-size: 80%;\n            width: 100%;\n        }\n        .uploader-zone-fog-or-wing {\n            flex-grow: 1;\n            height: 0;\n            border-style: solid;\n            border-width: .06rem 0 0 0;\n            border-color: white;\n        }\n        .uploader-zone-fog-or-body {\n            padding: 0.5rem 0.7rem;\n            user-select: none;\n        }\n        .uploader-zone-fog-controls-control {\n            height: 2rem;\n            width: 2rem;\n            fill: white;\n        }\n    "]))),
-    'uploader/compact': css(_templateObject6 || (_templateObject6 = _taggedTemplateLiteral(["\n        .uploader-zone {\n            border-radius: .5rem;\n            height: 4rem;\n        }\n        .uploader-zone-fog-img {\n            width: 2rem;\n            top: 0;\n        }\n        .uploader-zone-fog-controls-control {\n            width: 1.5rem !important;\n            height: 1.5rem !important;\n        }\n    "])))
+    uploader: css(_templateObject2()),
+    'uploader/fetching': css(_templateObject3()),
+    'uploader/withUrl': css(_templateObject4()),
+    'uploader/withControls': css(_templateObject5()),
+    'uploader/compact': css(_templateObject6())
   };
 
   function unwrapExports (x) {
@@ -3569,42 +3643,11 @@
     return root.Date.now();
   };
 
-  /** Used to match a single whitespace character. */
-  var reWhitespace = /\s/;
-
-  /**
-   * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
-   * character of `string`.
-   *
-   * @private
-   * @param {string} string The string to inspect.
-   * @returns {number} Returns the index of the last non-whitespace character.
-   */
-  function trimmedEndIndex(string) {
-    var index = string.length;
-
-    while (index-- && reWhitespace.test(string.charAt(index))) {}
-    return index;
-  }
-
-  /** Used to match leading whitespace. */
-  var reTrimStart = /^\s+/;
-
-  /**
-   * The base implementation of `_.trim`.
-   *
-   * @private
-   * @param {string} string The string to trim.
-   * @returns {string} Returns the trimmed string.
-   */
-  function baseTrim(string) {
-    return string
-      ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
-      : string;
-  }
-
   /** Used as references for various `Number` constants. */
   var NAN = 0 / 0;
+
+  /** Used to match leading and trailing whitespace. */
+  var reTrim = /^\s+|\s+$/g;
 
   /** Used to detect bad signed hexadecimal string values. */
   var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
@@ -3655,7 +3698,7 @@
     if (typeof value != 'string') {
       return value === 0 ? value : +value;
     }
-    value = baseTrim(value);
+    value = value.replace(reTrim, '');
     var isBinary = reIsBinary.test(value);
     return (isBinary || reIsOctal.test(value))
       ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
@@ -5385,11 +5428,10 @@
     if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
       return false;
     }
-    // Check that cyclic values are equal.
-    var arrStacked = stack.get(array);
-    var othStacked = stack.get(other);
-    if (arrStacked && othStacked) {
-      return arrStacked == other && othStacked == array;
+    // Assume cyclic values are equal.
+    var stacked = stack.get(array);
+    if (stacked && stack.get(other)) {
+      return stacked == other;
     }
     var index = -1,
         result = true,
@@ -6049,11 +6091,10 @@
         return false;
       }
     }
-    // Check that cyclic values are equal.
-    var objStacked = stack.get(object);
-    var othStacked = stack.get(other);
-    if (objStacked && othStacked) {
-      return objStacked == other && othStacked == object;
+    // Assume cyclic values are equal.
+    var stacked = stack.get(object);
+    if (stacked && stack.get(other)) {
+      return stacked == other;
     }
     var result = true;
     stack.set(object, other);
@@ -7567,7 +7608,7 @@
       name = String(name);
     }
     if (/[^a-z0-9\-#$%&'*+.^_`|~!]/i.test(name) || name === '') {
-      throw new TypeError('Invalid character in header field name: "' + name + '"')
+      throw new TypeError('Invalid character in header field name')
     }
     return name.toLowerCase()
   }
@@ -7935,22 +7976,14 @@
     // Replace instances of \r\n and \n followed by at least one space or horizontal tab with a space
     // https://tools.ietf.org/html/rfc7230#section-3.2
     var preProcessedHeaders = rawHeaders.replace(/\r?\n[\t ]+/g, ' ');
-    // Avoiding split via regex to work around a common IE11 bug with the core-js 3.6.0 regex polyfill
-    // https://github.com/github/fetch/issues/748
-    // https://github.com/zloirock/core-js/issues/751
-    preProcessedHeaders
-      .split('\r')
-      .map(function(header) {
-        return header.indexOf('\n') === 0 ? header.substr(1, header.length) : header
-      })
-      .forEach(function(line) {
-        var parts = line.split(':');
-        var key = parts.shift().trim();
-        if (key) {
-          var value = parts.join(':').trim();
-          headers.append(key, value);
-        }
-      });
+    preProcessedHeaders.split(/\r?\n/).forEach(function(line) {
+      var parts = line.split(':');
+      var key = parts.shift().trim();
+      if (key) {
+        var value = parts.join(':').trim();
+        headers.append(key, value);
+      }
+    });
     return headers
   }
 
@@ -7967,7 +8000,7 @@
     this.type = 'default';
     this.status = options.status === undefined ? 200 : options.status;
     this.ok = this.status >= 200 && this.status < 300;
-    this.statusText = options.statusText === undefined ? '' : '' + options.statusText;
+    this.statusText = 'statusText' in options ? options.statusText : '';
     this.headers = new Headers$1(options.headers);
     this.url = options.url || '';
     this._initBody(bodyInit);
@@ -17973,7 +18006,17 @@
     src: null
   };
 
-  var _templateObject$1, _Uploader$propTypes;
+  var _Uploader$propTypes;
+
+  function _templateObject$1() {
+    var data = _taggedTemplateLiteral(["\n                    ", ";\n                    ", ";\n                    ", ";\n                    ", ";\n                    ", ";\n                "]);
+
+    _templateObject$1 = function _templateObject() {
+      return data;
+    };
+
+    return data;
+  }
   var validator = {
     isURL: isURL
   };
@@ -18599,7 +18642,7 @@
           "data-attr": "root"
         }, _.get(this.props.customAttributes, 'root', {}), {
           className: "\n                    uploader\n                    ".concat(_.get(this.props.customAttributes, 'root.className', ''), "\n                "),
-          css: css(_templateObject$1 || (_templateObject$1 = _taggedTemplateLiteral(["\n                    ", ";\n                    ", ";\n                    ", ";\n                    ", ";\n                    ", ";\n                "])), styles.uploader, this.props.fetching ? styles['uploader/fetching'] : null, this.props.compact ? styles['uploader/compact'] : null, this.props.withUrlInput ? styles['uploader/withUrl'] : null, withControls ? styles['uploader/withControls'] : null)
+          css: css(_templateObject$1(), styles.uploader, this.props.fetching ? styles['uploader/fetching'] : null, this.props.compact ? styles['uploader/compact'] : null, this.props.withUrlInput ? styles['uploader/withUrl'] : null, withControls ? styles['uploader/withControls'] : null)
         }), jsx("input", {
           "data-attr": "input",
           ref: function ref(obj) {
@@ -18705,19 +18748,21 @@
     }, {
       key: "extensions",
       value: function extensions() {
+        var additionalExtensions = this.props.additionalExtensions;
         return {
-          video: Constants.video.extensions,
-          image: Constants.image.extensions,
-          audio: Constants.audio.extensions
+          audio: [].concat(_toConsumableArray(Constants.audio.extensions), _toConsumableArray(_.get(additionalExtensions, 'audio') || [])),
+          image: [].concat(_toConsumableArray(Constants.image.extensions), _toConsumableArray(_.get(additionalExtensions, 'image') || [])),
+          video: [].concat(_toConsumableArray(Constants.video.extensions), _toConsumableArray(_.get(additionalExtensions, 'video') || []))
         };
       }
     }, {
       key: "mimeTypes",
       value: function mimeTypes() {
+        var additionalMimeTypes = this.props.additionalMimeTypes;
         return {
-          video: Constants.video.mimeTypes,
-          image: Constants.image.mimeTypes,
-          audio: Constants.audio.mimeTypes
+          audio: [].concat(_toConsumableArray(Constants.audio.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'audio') || [])),
+          image: [].concat(_toConsumableArray(Constants.image.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'image') || [])),
+          video: [].concat(_toConsumableArray(Constants.video.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'video') || []))
         };
       }
       /**
@@ -18810,6 +18855,16 @@
   }(React__default.Component);
   Uploader.propTypes = (_Uploader$propTypes = {
     // optional
+    additionalExtensions: PropTypes.shape({
+      audio: PropTypes.array,
+      image: PropTypes.array,
+      video: PropTypes.array
+    }),
+    additionalMimeTypes: PropTypes.shape({
+      audio: PropTypes.array,
+      image: PropTypes.array,
+      video: PropTypes.array
+    }),
     autoPlay: PropTypes.bool,
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
@@ -18839,6 +18894,8 @@
     onUrlInjectionError: PropTypes.func
   }, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onAudioLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
   Uploader.defaultProps = {
+    additionalExtensions: {},
+    additionalMimeTypes: {},
     autoPlay: null,
     // true for video, false for audio
     backgroundColor: 'transparent',
