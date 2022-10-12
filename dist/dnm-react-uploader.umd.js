@@ -19981,11 +19981,7 @@
 	  hoverPlay: true,
 	  imageCrop: null,
 	  maxSize: 10 * 1024 * 1024,
-	  maxSizes: PropTypes.shape({
-	    audio: 10 * 1024 * 1024,
-	    image: 10 * 1024 * 1024,
-	    video: 10 * 1024 * 1024
-	  }),
+	  maxSizes: {},
 	  onChange: function onChange(file, manual, type) {
 	    return null;
 	  },

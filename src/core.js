@@ -857,11 +857,7 @@ Uploader.defaultProps = {
     hoverPlay: true,
     imageCrop: null,
     maxSize: 10 * 1024 * 1024,
-    maxSizes: PropTypes.shape({
-        audio: 10 * 1024 * 1024,
-        image: 10 * 1024 * 1024,
-        video: 10 * 1024 * 1024,
-    }),
+    maxSizes: {},
     onChange: (file, manual, type) => null, // manual: does it follow a manual action (vs. injections, for instance) ; type: image|video|...|null
     onCropClick: () => null,
     onFileTooLargeError: (size, maxSize) => null,
