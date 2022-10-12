@@ -151,8 +151,8 @@ export default class Uploader extends React.Component {
     }
 
     change(file, manual = true, callback = data => null) {
-        let maxSize = this.props.maxSize;
         const fileTypes = this.getFileTypes(), type = this.guessType(file);
+        const maxSize = this.props.maxSizes[type] || this.props.maxSize;
         if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
         else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);
         else this.props.onChange(file, manual, type);
@@ -784,6 +784,11 @@ Uploader.propTypes = {
     hoverPlay: PropTypes.bool,
     imageCrop: PropTypes.object,
     maxSize: PropTypes.number,
+    maxSizes: PropTypes.shape({
+        audio: PropTypes.number,
+        image: PropTypes.number,
+        video: PropTypes.number,
+    }),
     onChange: PropTypes.func,
     onCropClick: PropTypes.func,
     onCutClick: PropTypes.func,
@@ -831,7 +836,12 @@ Uploader.defaultProps = {
     fileType: 'image', // may be one (or several) of: image, video
     hoverPlay: true,
     imageCrop: null,
-    maxSize: 10 * 1000 * 1000,
+    maxSize: 10 * 1024 * 1024,
+    maxSizes: PropTypes.shape({
+        audio: 10 * 1024 * 1024,
+        image: 10 * 1024 * 1024,
+        video: 10 * 1024 * 1024,
+    }),
     onChange: (file, manual, type) => null, // manual: does it follow a manual action (vs. injections, for instance) ; type: image|video|...|null
     onCropClick: () => null,
     onFileTooLargeError: (size, maxSize) => null,

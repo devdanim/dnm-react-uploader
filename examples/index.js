@@ -13,6 +13,13 @@ const catalogue = {
     urlSubmitText: 'Custom URL submit',
 };
 
+
+const maxSizes = {
+    audio: 10 * 1024 * 1024,
+    image: 2 * 1024 * 1024,
+    video: 20 * 1024 * 1024
+};
+
 class Page extends React.Component {
     constructor(props) {
         super(props);
@@ -46,7 +53,7 @@ class Page extends React.Component {
                     compact={false}
                     fileType={['image', 'video']}
                     catalogue={catalogue}
-                    maxSize={50 * 1000 * 1000}
+                    maxSizes={maxSizes}
                     onChange={(file, manual) => console.log('onChange', file, manual ? 'Done manually' : 'Done programmatically')}
                     onFirstLoad={() => console.log('onFirstLoad')}
                     onLoad={() => console.log('onLoad')}
@@ -55,7 +62,7 @@ class Page extends React.Component {
                         alert("Custom uploader click");
                         resolve(null);
                     })}
-                    onFileTooLargeError={() => alert('onFileTooLargeError')}
+                    onFileTooLargeError={(size, maxSize) => alert(`onFileTooLargeError1: ${size} > ${maxSize}`)}
                     onInvalidFileExtensionError={(actualExtension, expectedExtensions) => console.log('onInvalidFileExtensionError: actual extension is ', actualExtension, ' and the expected are ', expectedExtensions)}
                     onInvalidURLError={() => alert('onInvalidURLError')}
                     onURLInjectionError={() => alert('onURLInjectionError')}
@@ -74,11 +81,11 @@ class Page extends React.Component {
                     fileType="image"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Osmium_crystals.jpg/2880px-Osmium_crystals.jpg"
                     catalogue={catalogue}
-                    maxSize={50 * 1000 * 1000}
+                    maxSizes={maxSizes}
                     onChange={(file, manual) => console.log('onChange 2', file, manual ? 'Done manually' : 'Done programmatically')}
                     onFirstLoad={() => console.log('onFirstLoad 2 (but still showing loader since this a controlled prop)')}
                     onLoad={() => console.log('onLoad 2 (but still showing loader since this a controlled prop)')}
-                    onFileTooLargeError={() => alert('onFileTooLargeError 2')}
+                    onFileTooLargeError={(size, maxSize) => alert(`onFileTooLargeError2: ${size} > ${maxSize}`)}
                     onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError 2')}
                     onInvalidURLError={() => alert('onInvalidURLError 2')}
                     onURLInjectionError={() => alert('onURLInjectionError 2')}
@@ -112,7 +119,7 @@ class Page extends React.Component {
                                 })
                             }, 4000)
                         }}
-                        maxSize={500 * 1000 * 1000}
+                        maxSizes={maxSizes}
                         onChange={file => this.setState(prevState => ({
                             second: {
                                 ...prevState.second,
@@ -123,7 +130,7 @@ class Page extends React.Component {
                         fileType="audio"
                         onFirstLoad={() => console.log('onFirstLoad 3')}
                         onLoad={() => console.log('onLoad 3')}
-                        onFileTooLargeError={() => alert('onFileTooLargeError 3')}
+                        onFileTooLargeError={(size, maxSize) => alert(`onFileTooLargeError3: ${size} > ${maxSize}`)}
                         onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError 3')}
                         onInvalidURLError={() => alert('onInvalidURLError 3')}
                         onURLInjectionError={() => alert('onURLInjectionError 3')}

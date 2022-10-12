@@ -14423,9 +14423,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (data) {
         return null;
       };
-      var maxSize = this.props.maxSize;
       var fileTypes = this.getFileTypes(),
           type = this.guessType(file);
+      var maxSize = this.props.maxSizes[type] || this.props.maxSize;
       if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);else this.props.onChange(file, manual, type);
       callback(file);
       this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
@@ -15143,6 +15143,11 @@ Uploader.propTypes = (_Uploader$propTypes = {
   hoverPlay: PropTypes.bool,
   imageCrop: PropTypes.object,
   maxSize: PropTypes.number,
+  maxSizes: PropTypes.shape({
+    audio: PropTypes.number,
+    image: PropTypes.number,
+    video: PropTypes.number
+  }),
   onChange: PropTypes.func,
   onCropClick: PropTypes.func,
   onCutClick: PropTypes.func,
@@ -15185,7 +15190,12 @@ Uploader.defaultProps = {
   // may be one (or several) of: image, video
   hoverPlay: true,
   imageCrop: null,
-  maxSize: 10 * 1000 * 1000,
+  maxSize: 10 * 1024 * 1024,
+  maxSizes: PropTypes.shape({
+    audio: 10 * 1024 * 1024,
+    image: 10 * 1024 * 1024,
+    video: 10 * 1024 * 1024
+  }),
   onChange: function onChange(file, manual, type) {
     return null;
   },
