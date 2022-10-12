@@ -23,9 +23,10 @@ const external = {
         'lodash-es/upperCase',
         'lodash-es/upperFirst',
         'lodash-es/split',
-        'validator/lib/isURL'
+        'validator/lib/isURL',
+        'browser-image-compression',
     ],
-    umd: ['react', 'react-dom', 'prop-types']
+    umd: ['react', 'react-dom', 'prop-types', 'browser-image-compression']
 };
 
 const rollupConfig = ['es', 'umd'].map(format => ({
@@ -38,13 +39,15 @@ const rollupConfig = ['es', 'umd'].map(format => ({
             react: 'React',
             'react-dom': 'ReactDOM',
             'prop-types': 'PropTypes',
+            'browser-image-compression': 'imageCompression',
         } : null
     },
     external: external[format],
     plugins: [
         resolve(),
         babel({
-            exclude: 'node_modules/**'
+            exclude: 'node_modules/**',
+            runtimeHelpers: true,
         }),
         commonjs(),
         postcss({

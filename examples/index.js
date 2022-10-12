@@ -85,7 +85,10 @@ class Page extends React.Component {
                     onChange={(file, manual) => console.log('onChange 2', file, manual ? 'Done manually' : 'Done programmatically')}
                     onFirstLoad={() => console.log('onFirstLoad 2 (but still showing loader since this a controlled prop)')}
                     onLoad={() => console.log('onLoad 2 (but still showing loader since this a controlled prop)')}
-                    onFileTooLargeError={(size, maxSize) => alert(`onFileTooLargeError2: ${size} > ${maxSize}`)}
+                    onFileTooLargeError={(size, maxSize, compressionError) => {
+                        alert(`onFileTooLargeError2: ${size} > ${maxSize}`);
+                        console.error(compressionError);
+                    }}
                     onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError 2')}
                     onInvalidURLError={() => alert('onInvalidURLError 2')}
                     onURLInjectionError={() => alert('onURLInjectionError 2')}

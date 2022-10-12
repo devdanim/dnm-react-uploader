@@ -22,6 +22,8 @@ import split from 'lodash-es/split';
 import uniq from 'lodash-es/uniq';
 import upperFirst from 'lodash-es/upperFirst';
 import FastAverageColor from 'fast-average-color';
+import imageCompression from 'browser-image-compression';
+
 import 'whatwg-fetch'; // importing will automatically polyfill window.fetch and related APIs
 const _ = {
     camelCase,
@@ -150,12 +152,30 @@ export default class Uploader extends React.Component {
         return extensions;
     }
 
-    change(file, manual = true, callback = data => null) {
+    async change(file, manual = true, callback = data => null) {
         const fileTypes = this.getFileTypes(), type = this.guessType(file);
         const maxSize = this.props.maxSizes[type] || this.props.maxSize;
+
         if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
-        else if (maxSize && file.size >= maxSize) this.props.onFileTooLargeError(file.size, maxSize);
-        else this.props.onChange(file, manual, type);
+        else {
+            let compressionError = null;
+            if (maxSize && file.size >= maxSize) {
+                if (type === 'image') {
+                    try {
+                        const compressedFile = await imageCompression(file, {
+                            maxSizeMB: maxSize / 1024 / 1024,
+                            useWebWorker: true
+                        });
+                        if (compressedFile) file = compressedFile;                
+                    } catch (error) {
+                        compressionError = error;
+                    }
+                }
+            }
+            if (maxSize && file.size >= maxSize) {
+                this.props.onFileTooLargeError(file.size, maxSize, compressionError);
+            } else this.props.onChange(file, manual, type);
+        }
 
         callback(file);
 

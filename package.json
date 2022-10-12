@@ -1,6 +1,6 @@
 {
   "name": "dnm-react-uploader",
-  "version": "1.20.0",
+  "version": "1.21.0",
   "description": "React file uploader",
   "main": "dist/dnm-react-uploader.umd.min.js",
   "module": "dist/dnm-react-uploader.es.min.js",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.3",
+    "@babel/plugin-transform-runtime": "^7.19.1",
     "@babel/preset-env": "^7.4.3",
     "@babel/preset-react": "^7.0.0",
     "@svgr/cli": "^2.1.1",
@@ -58,6 +59,7 @@
   "dependencies": {
     "@dschoon/react-waves": "^4.0.3",
     "@emotion/core": "^10.0.22",
+    "browser-image-compression": "^2.0.0",
     "deasync": "^0.1.20",
     "fast-average-color": "^6.4.0",
     "lodash-es": "^4.17.11",
