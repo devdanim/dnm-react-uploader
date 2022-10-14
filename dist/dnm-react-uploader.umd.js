@@ -19163,46 +19163,51 @@
 	                }
 
 	                this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
-	                _context.next = 22;
+	                _context.next = 25;
 	                break;
 
 	              case 8:
 	                compressionError = null;
 
 	                if (!(maxSize && file.size >= maxSize)) {
-	                  _context.next = 21;
+	                  _context.next = 24;
 	                  break;
 	                }
 
 	                if (!(type === 'image')) {
-	                  _context.next = 21;
+	                  _context.next = 24;
 	                  break;
 	                }
 
-	                _context.prev = 11;
-	                _context.next = 14;
+	                compressedFile = null;
+	                this.props.onCompressStart(file);
+	                _context.prev = 13;
+	                _context.next = 16;
 	                return imageCompression(file, {
 	                  maxSizeMB: maxSize / 1024 / 1024,
 	                  useWebWorker: true
 	                });
 
-	              case 14:
+	              case 16:
 	                compressedFile = _context.sent;
 	                if (compressedFile) file = compressedFile;
-	                _context.next = 21;
+	                _context.next = 23;
 	                break;
 
-	              case 18:
-	                _context.prev = 18;
-	                _context.t0 = _context["catch"](11);
+	              case 20:
+	                _context.prev = 20;
+	                _context.t0 = _context["catch"](13);
 	                compressionError = _context.t0;
 
-	              case 21:
+	              case 23:
+	                this.props.onCompressEnd(compressedFile);
+
+	              case 24:
 	                if (maxSize && file.size >= maxSize) {
 	                  this.props.onFileTooLargeError(file.size, maxSize, compressionError);
 	                } else this.props.onChange(file, manual, type);
 
-	              case 22:
+	              case 25:
 	                callback(file);
 	                this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
 	                // reinit xhr
@@ -19211,12 +19216,12 @@
 
 	                this.xhr = null;
 
-	              case 26:
+	              case 29:
 	              case "end":
 	                return _context.stop();
 	            }
 	          }
-	        }, _callee, this, [[11, 18]]);
+	        }, _callee, this, [[13, 20]]);
 	      }));
 
 	      function change(_x) {
@@ -19939,6 +19944,8 @@
 	    video: PropTypes.number
 	  }),
 	  onChange: PropTypes.func,
+	  onCompressStart: PropTypes.func,
+	  onCompressEnd: PropTypes.func,
 	  onCropClick: PropTypes.func,
 	  onCutClick: PropTypes.func,
 	  onFileTooLargeError: PropTypes.func,
@@ -19986,6 +19993,12 @@
 	    return null;
 	  },
 	  // manual: does it follow a manual action (vs. injections, for instance) ; type: image|video|...|null
+	  onCompressStart: function onCompressStart() {
+	    return null;
+	  },
+	  onCompressEnd: function onCompressEnd() {
+	    return null;
+	  },
 	  onCropClick: function onCropClick() {
 	    return null;
 	  },

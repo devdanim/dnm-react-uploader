@@ -161,8 +161,10 @@ export default class Uploader extends React.Component {
             let compressionError = null;
             if (maxSize && file.size >= maxSize) {
                 if (type === 'image') {
+                    let compressedFile = null;
+                    this.props.onCompressStart(file);
                     try {
-                        const compressedFile = await imageCompression(file, {
+                        compressedFile = await imageCompression(file, {
                             maxSizeMB: maxSize / 1024 / 1024,
                             useWebWorker: true
                         });
@@ -170,6 +172,7 @@ export default class Uploader extends React.Component {
                     } catch (error) {
                         compressionError = error;
                     }
+                    this.props.onCompressEnd(compressedFile);
                 }
             }
             if (maxSize && file.size >= maxSize) {
@@ -810,6 +813,8 @@ Uploader.propTypes = {
         video: PropTypes.number,
     }),
     onChange: PropTypes.func,
+    onCompressStart: PropTypes.func,
+    onCompressEnd: PropTypes.func,
     onCropClick: PropTypes.func,
     onCutClick: PropTypes.func,
     onFileTooLargeError: PropTypes.func,
@@ -859,6 +864,8 @@ Uploader.defaultProps = {
     maxSize: 10 * 1024 * 1024,
     maxSizes: {},
     onChange: (file, manual, type) => null, // manual: does it follow a manual action (vs. injections, for instance) ; type: image|video|...|null
+    onCompressStart: () => null,
+    onCompressEnd: () => null,
     onCropClick: () => null,
     onFileTooLargeError: (size, maxSize) => null,
     onFirstLoad: () => null,
