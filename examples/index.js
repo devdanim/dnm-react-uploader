@@ -76,6 +76,7 @@ class Page extends React.Component {
                         }
                     }}
                     compact={false}
+                    extendedFileFormatSupport={true}
                     fetching={false}
                     croppable={true}
                     fileType="image"

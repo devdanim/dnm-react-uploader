@@ -3078,19 +3078,35 @@ var Video = function Video(props) {
 };
 
 var Constants = {
-  video: {
-    // see https://en.wikipedia.org/wiki/Video_file_format
-    mimeTypes: ['video/mp4', 'video/quicktime'],
-    extensions: ['mp4', 'mov']
+  browser: {
+    video: {
+      // see https://en.wikipedia.org/wiki/Video_file_format
+      mimeTypes: ["video/mp4", "video/quicktime"],
+      extensions: ["mp4", "mov"]
+    },
+    image: {
+      // see https://github.com/arthurvr/image-extensions/blob/master/image-extensions.json
+      mimeTypes: ["image/jpeg", "image/png"],
+      extensions: ["jpeg", "jpg", "png"]
+    },
+    audio: {
+      mimeTypes: ["audio/wav", "audio/x-wav", "audio/mpeg", "audio/mp3", "audio/mpeg3", "audio/x-mpeg", "audio/x-mp3", "audio/x-mpeg3"],
+      extensions: ["wav", "mp3"]
+    }
   },
-  image: {
-    // see https://github.com/arthurvr/image-extensions/blob/master/image-extensions.json
-    mimeTypes: ['image/jpeg', 'image/png'],
-    extensions: ['jpeg', 'jpg', 'png']
-  },
-  audio: {
-    mimeTypes: ['audio/wav', 'audio/x-wav', 'audio/mpeg', 'audio/mp3', 'audio/mpeg3', 'audio/x-mpeg', 'audio/x-mp3', 'audio/x-mpeg3'],
-    extensions: ['wav', 'mp3']
+  extended: {
+    video: {
+      mimeTypes: [],
+      extensions: []
+    },
+    image: {
+      mimeTypes: ["application/pdf", "application/postscript", "application/tif", "application/tiff", "application/vnd.3gpp.pic-bw-small", "application/x-pdf", "application/x-tif", "application/x-tiff", "image/avif", "image/avif-sequence", "image/bmp", "image/bmp2", "image/bmp3", "image/gif", "image/heic", "image/heif", "image/jbg", "image/jbig", "image/jng", "image/jpeg2000", "image/jpeg2000-image", "image/jxl", "image/jxr", "image/svg", "image/svg+xml", "image/tif", "image/tiff", "image/vnd.adobe.photoshop", "image/vnd.radiance", "image/webp", "image/x-adobe-dng", "image/x-canon-cr2", "image/x-canon-crw", "image/x-canon-raw", "image/x-dcraw", "image/x-exr", "image/x-fuji-raf", "image/x-icon", "image/x-kodak-dcr", "image/x-kodak-k25", "image/x-kodak-kdc", "image/x-minolta-mrw", "image/x-nikon-nef", "image/x-olympus-orf", "image/x-panasonic-raw", "image/x-pentax-pef", "image/x-sigma-x3f", "image/x-sony-arw", "image/x-sony-raw", "image/x-sony-sr2", "image/x-sony-srf", "image/x-targa", "image/x-tga"],
+      extensions: ["arw", "avif", "avifs", "bmp", "bmp2", "bmp3", "cr2", "crw", "dcr", "dng", "eps", "eps2", "eps3", "exr", "gif", "hdr", "heic", "heif", "ico", "jbg", "jbig", "jfif", "jng", "jp2", "jxl", "jxr", "k25", "kdc", "mrw", "nef", "openexr", "orf", "orf", "pdf", "pef", "ps", "ps2", "ps3", "psb", "psd", "raf", "raf", "raw", "sr2", "srf", "svg", "tga", "tif", "tiff", "webp", "x3f"]
+    },
+    audio: {
+      mimeTypes: [],
+      extensions: []
+    }
   }
 };
 
@@ -15966,22 +15982,26 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "extensions",
     value: function extensions() {
-      var additionalExtensions = this.props.additionalExtensions;
-      return {
-        audio: _.uniq([].concat(_toConsumableArray(Constants.audio.extensions), _toConsumableArray(_.get(additionalExtensions, 'audio') || []))),
-        image: _.uniq([].concat(_toConsumableArray(Constants.image.extensions), _toConsumableArray(_.get(additionalExtensions, 'image') || []))),
-        video: _.uniq([].concat(_toConsumableArray(Constants.video.extensions), _toConsumableArray(_.get(additionalExtensions, 'video') || [])))
-      };
+      var _this$props2 = this.props,
+          additionalExtensions = _this$props2.additionalExtensions,
+          extendedFileFormatSupport = _this$props2.extendedFileFormatSupport;
+      var extensions = {};
+      ['audio', 'image', 'video'].forEach(function (type) {
+        extensions[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].extensions), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].extensions : []), _toConsumableArray(_.get(additionalExtensions, type) || [])));
+      });
+      return extensions;
     }
   }, {
     key: "mimeTypes",
     value: function mimeTypes() {
-      var additionalMimeTypes = this.props.additionalMimeTypes;
-      return {
-        audio: _.uniq([].concat(_toConsumableArray(Constants.audio.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'audio') || []))),
-        image: _.uniq([].concat(_toConsumableArray(Constants.image.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'image') || []))),
-        video: _.uniq([].concat(_toConsumableArray(Constants.video.mimeTypes), _toConsumableArray(_.get(additionalMimeTypes, 'video') || [])))
-      };
+      var _this$props3 = this.props,
+          additionalMimeTypes = _this$props3.additionalMimeTypes,
+          extendedFileFormatSupport = _this$props3.extendedFileFormatSupport;
+      var mimeTypes = {};
+      ['audio', 'image', 'video'].forEach(function (type) {
+        extensions[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].mimeTypes), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].mimeTypes : []), _toConsumableArray(_.get(additionalMimeTypes, type) || [])));
+      });
+      return mimeTypes;
     }
     /**
      * Input may be a MIME Type, an extension, url string, base64, or even a type
@@ -15999,15 +16019,17 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "guessType",
     value: function guessType(input) {
+      var _input;
+
       if (!input) return null;
-      input = this.base64MimeType(input) || this.extension(input);
+      input = this.base64MimeType(input) || this.extension(input) || ((_input = input) === null || _input === void 0 ? void 0 : _input.type);
       var isExtension = !input.match(/\//);
 
       if (isExtension) {
-        var extensions = this.extensions();
+        var _extensions = this.extensions();
 
-        for (var k in extensions) {
-          var v = _.concat(extensions[k], _.map(extensions[k], function (ext) {
+        for (var k in _extensions) {
+          var v = _.concat(_extensions[k], _.map(_extensions[k], function (ext) {
             return ext.toUpperCase();
           })); // case insensitive
 
@@ -16094,6 +16116,11 @@ Uploader.propTypes = (_Uploader$propTypes = {
   croppable: PropTypes.bool,
   customAttributes: PropTypes.object,
   cuttable: PropTypes.bool,
+  extendedFileFormatSupport: PropTypes.oneOfType([PropTypes.shape({
+    audio: PropTypes.bool,
+    image: PropTypes.bool,
+    video: PropTypes.bool
+  }), PropTypes.bool]),
   fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   // expected file type
   hoverPlay: PropTypes.bool,
@@ -16144,6 +16171,7 @@ Uploader.defaultProps = {
   cuttable: false,
   cutIcon: null,
   // if let null, it will be default one
+  extendedFileFormatSupport: false,
   fileType: 'image',
   // may be one (or several) of: image, video
   hoverPlay: true,

@@ -155,7 +155,6 @@ export default class Uploader extends React.Component {
     async change(file, manual = true, callback = data => null) {
         const fileTypes = this.getFileTypes(), type = this.guessType(file);
         const maxSize = this.props.maxSizes[type] || this.props.maxSize;
-
         if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
         else {
             let compressionError = null;
@@ -697,23 +696,23 @@ export default class Uploader extends React.Component {
     }
 
     extensions() {
-        const { additionalExtensions } = this.props;
+        const { additionalExtensions, extendedFileFormatSupport } = this.props;
 
-        return {
-            audio: _.uniq([...Constants.audio.extensions, ...(_.get(additionalExtensions, 'audio') || [])]),
-            image: _.uniq([...Constants.image.extensions, ...(_.get(additionalExtensions, 'image') || [])]),
-            video: _.uniq([...Constants.video.extensions, ...(_.get(additionalExtensions, 'video') || [])]),
-        };
+        const extensions = {};
+        ['audio', 'image', 'video'].forEach(type => {
+            extensions[type] = _.uniq([...Constants.browser[type].extensions, ...(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].extensions : []), ...(_.get(additionalExtensions, type) || [])])
+        });
+        return extensions;
     }
 
     mimeTypes() {
-        const { additionalMimeTypes } = this.props;
+        const { additionalMimeTypes, extendedFileFormatSupport } = this.props;
 
-        return {
-            audio: _.uniq([...Constants.audio.mimeTypes, ...(_.get(additionalMimeTypes, 'audio') || [])]),
-            image: _.uniq([...Constants.image.mimeTypes, ...(_.get(additionalMimeTypes, 'image') || [])]),
-            video: _.uniq([...Constants.video.mimeTypes, ...(_.get(additionalMimeTypes, 'video') || [])]),
-        };
+        const mimeTypes = {};
+        ['audio', 'image', 'video'].forEach(type => {
+            extensions[type] = _.uniq([...Constants.browser[type].mimeTypes, ...(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].mimeTypes : []), ...(_.get(additionalMimeTypes, type) || [])])
+        });
+        return mimeTypes;
     }
 
     /**
@@ -731,7 +730,7 @@ export default class Uploader extends React.Component {
     guessType(input) {
         if (!input) return null;
 
-        input = this.base64MimeType(input) || this.extension(input);
+        input = this.base64MimeType(input) || this.extension(input) || input?.type;
 
         let isExtension = !input.match(/\//);
 
@@ -803,6 +802,14 @@ Uploader.propTypes = {
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
+    extendedFileFormatSupport: PropTypes.oneOfType([
+        PropTypes.shape({
+            audio: PropTypes.bool,
+            image: PropTypes.bool,
+            video: PropTypes.bool,
+        }),
+        PropTypes.bool,
+    ]),
     fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]), // expected file type
     hoverPlay: PropTypes.bool,
     imageCrop: PropTypes.object,
@@ -858,6 +865,7 @@ Uploader.defaultProps = {
     customAttributes: {},
     cuttable: false,
     cutIcon: null, // if let null, it will be default one
+    extendedFileFormatSupport: false,
     fileType: 'image', // may be one (or several) of: image, video
     hoverPlay: true,
     imageCrop: null,
