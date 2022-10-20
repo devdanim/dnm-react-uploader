@@ -113,6 +113,7 @@ export default class Uploader extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.src !== prevProps.src) {
+            this.lastChangeStart = new Date().getTime();
             this.updateImageBackground();
         }
 
@@ -153,6 +154,8 @@ export default class Uploader extends React.Component {
     }
 
     async change(file, manual = true, callback = data => null) {
+        const changeStartTime = new Date().getTime();
+        this.lastChangeStart = changeStartTime;
         const fileTypes = this.getFileTypes(), type = this.guessType(file);
         const maxSize = this.props.maxSizes[type] || this.props.maxSize;
         if (fileTypes.indexOf(type) === -1) this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
@@ -171,6 +174,8 @@ export default class Uploader extends React.Component {
                     } catch (error) {
                         compressionError = error;
                     }
+                    // If lastChangeStart has changed because of controlled or uncontrolled behavior, abort this change
+                    if (this.lastChangeStart > changeStartTime) return;
                     this.props.onCompressEnd(compressedFile);
                 }
             }

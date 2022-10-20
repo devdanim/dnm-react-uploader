@@ -15264,6 +15264,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       if (this.props.src !== prevProps.src) {
+        this.lastChangeStart = new Date().getTime();
         this.updateImageBackground();
       } // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
 
@@ -15317,6 +15318,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       var _change = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee(file) {
         var manual,
             callback,
+            changeStartTime,
             fileTypes,
             type,
             maxSize,
@@ -15331,60 +15333,70 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
                 callback = _args.length > 2 && _args[2] !== undefined ? _args[2] : function (data) {
                   return null;
                 };
+                changeStartTime = new Date().getTime();
+                this.lastChangeStart = changeStartTime;
                 fileTypes = this.getFileTypes(), type = this.guessType(file);
                 maxSize = this.props.maxSizes[type] || this.props.maxSize;
 
                 if (!(fileTypes.indexOf(type) === -1)) {
-                  _context.next = 8;
+                  _context.next = 10;
                   break;
                 }
 
                 this.props.onInvalidFileExtensionError(this.extension(file), this.getAcceptedExtensions());
-                _context.next = 25;
+                _context.next = 29;
                 break;
 
-              case 8:
+              case 10:
                 compressionError = null;
 
                 if (!(maxSize && file.size >= maxSize)) {
-                  _context.next = 24;
+                  _context.next = 28;
                   break;
                 }
 
                 if (!(type === 'image')) {
-                  _context.next = 24;
+                  _context.next = 28;
                   break;
                 }
 
                 compressedFile = null;
                 this.props.onCompressStart(file);
-                _context.prev = 13;
-                _context.next = 16;
+                _context.prev = 15;
+                _context.next = 18;
                 return imageCompression(file, {
                   maxSizeMB: maxSize / 1024 / 1024,
                   useWebWorker: true
                 });
 
-              case 16:
+              case 18:
                 compressedFile = _context.sent;
                 if (compressedFile) file = compressedFile;
-                _context.next = 23;
+                _context.next = 25;
                 break;
 
-              case 20:
-                _context.prev = 20;
-                _context.t0 = _context["catch"](13);
+              case 22:
+                _context.prev = 22;
+                _context.t0 = _context["catch"](15);
                 compressionError = _context.t0;
 
-              case 23:
+              case 25:
+                if (!(this.lastChangeStart > changeStartTime)) {
+                  _context.next = 27;
+                  break;
+                }
+
+                return _context.abrupt("return");
+
+              case 27:
                 this.props.onCompressEnd(compressedFile);
 
-              case 24:
+              case 28:
                 if (maxSize && file.size >= maxSize) {
                   this.props.onFileTooLargeError(file.size, maxSize, compressionError);
                 } else this.props.onChange(file, manual, type);
 
-              case 25:
+              case 29:
                 callback(file);
                 this.input.value = null; // clear input (same image set in twice would otherwise be ignored, for example)
                 // reinit xhr
@@ -15393,12 +15405,12 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
 
                 this.xhr = null;
 
-              case 29:
+              case 33:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[13, 20]]);
+        }, _callee, this, [[15, 22]]);
       }));
 
       function change(_x) {
