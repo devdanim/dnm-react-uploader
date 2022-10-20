@@ -19838,7 +19838,7 @@
 	          extendedFileFormatSupport = _this$props3.extendedFileFormatSupport;
 	      var mimeTypes = {};
 	      ['audio', 'image', 'video'].forEach(function (type) {
-	        extensions[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].mimeTypes), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].mimeTypes : []), _toConsumableArray(_.get(additionalMimeTypes, type) || [])));
+	        mimeTypes[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].mimeTypes), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].mimeTypes : []), _toConsumableArray(_.get(additionalMimeTypes, type) || [])));
 	      });
 	      return mimeTypes;
 	    }
@@ -19865,10 +19865,10 @@
 	      var isExtension = !input.match(/\//);
 
 	      if (isExtension) {
-	        var _extensions = this.extensions();
+	        var extensions = this.extensions();
 
-	        for (var k in _extensions) {
-	          var v = _.concat(_extensions[k], _.map(_extensions[k], function (ext) {
+	        for (var k in extensions) {
+	          var v = _.concat(extensions[k], _.map(extensions[k], function (ext) {
 	            return ext.toUpperCase();
 	          })); // case insensitive
 

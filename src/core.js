@@ -710,7 +710,7 @@ export default class Uploader extends React.Component {
 
         const mimeTypes = {};
         ['audio', 'image', 'video'].forEach(type => {
-            extensions[type] = _.uniq([...Constants.browser[type].mimeTypes, ...(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].mimeTypes : []), ...(_.get(additionalMimeTypes, type) || [])])
+            mimeTypes[type] = _.uniq([...Constants.browser[type].mimeTypes, ...(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].mimeTypes : []), ...(_.get(additionalMimeTypes, type) || [])])
         });
         return mimeTypes;
     }
