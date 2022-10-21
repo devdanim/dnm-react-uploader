@@ -15264,7 +15264,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       if (this.props.src !== prevProps.src) {
-        this.lastChangeStart = new Date().getTime();
+        if (this.props.src) this.lastChangeStart = new Date().getTime();
         this.updateImageBackground();
       } // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
 

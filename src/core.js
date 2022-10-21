@@ -113,7 +113,7 @@ export default class Uploader extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.src !== prevProps.src) {
-            this.lastChangeStart = new Date().getTime();
+            if (this.props.src) this.lastChangeStart = new Date().getTime();
             this.updateImageBackground();
         }
 
