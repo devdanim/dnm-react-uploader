@@ -140,7 +140,7 @@ class Page extends React.Component {
                         onURLInjectionError={() => alert('onURLInjectionError 3')}
                         onNotSupportedVideoLoad={(err) => console.error("Video source not supported", err)}
                         removeIcon={<Svg.Erase />}
-                        imageCrop={{x: 0, y: 0, width: 100, height: 100}}
+                        mediaCrop={{x: 0, y: 0, width: 100, height: 100}}
                         backgroundSize="contain"
                     />
                 </div>

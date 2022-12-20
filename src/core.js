@@ -416,7 +416,7 @@ export default class Uploader extends React.Component {
 
         if (this.props.src) {
             let cropStyle = null;
-            if(this.props.imageCrop && this.cropMedia && ((srcType === "image" && this.cropMedia.nodeName === "IMG") || (srcType === "video" && this.cropMedia.nodeName === "VIDEO"))) {
+            if(this.props.mediaCrop && this.cropMedia && ((srcType === "image" && this.cropMedia.nodeName === "IMG") || (srcType === "video" && this.cropMedia.nodeName === "VIDEO"))) {
                 let zoneWidth = this.zone.offsetWidth,
                     zoneHeight = this.zone.offsetHeight,
                     realWidth = srcType === "video" ? this.cropMedia.videoWidth : this.cropMedia.naturalWidth,
@@ -424,16 +424,16 @@ export default class Uploader extends React.Component {
                     displayWidth = srcType === "video" ? realWidth : this.cropMedia.offsetWidth,
                     displayHeight = srcType === "video" ? realHeight : this.cropMedia.offsetHeight,
                     // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
-                    imageCrop = {
-                        x: Math.min(this.props.imageCrop.x, realWidth),
-                        y: Math.min(this.props.imageCrop.y, realHeight),
-                        width: Math.min(this.props.imageCrop.width, realWidth - this.props.imageCrop.x),
-                        height: Math.min(this.props.imageCrop.height, realHeight - this.props.imageCrop.y),
+                    mediaCrop = {
+                        x: Math.min(this.props.mediaCrop.x, realWidth),
+                        y: Math.min(this.props.mediaCrop.y, realHeight),
+                        width: Math.min(this.props.mediaCrop.width, realWidth - this.props.mediaCrop.x),
+                        height: Math.min(this.props.mediaCrop.height, realHeight - this.props.mediaCrop.y),
                     },
-                    displayCropX = displayWidth * imageCrop.x / realWidth,
-                    displayCropY = displayHeight * imageCrop.y / realHeight,
-                    displayCropWidth = displayWidth * imageCrop.width / realWidth,
-                    displayCropHeight = displayHeight * imageCrop.height / realHeight,
+                    displayCropX = displayWidth * mediaCrop.x / realWidth,
+                    displayCropY = displayHeight * mediaCrop.y / realHeight,
+                    displayCropWidth = displayWidth * mediaCrop.width / realWidth,
+                    displayCropHeight = displayHeight * mediaCrop.height / realHeight,
                     displayCropRatio = displayCropWidth / displayCropHeight,
                     displayCropTop = displayCropY,
                     displayCropRight = displayCropX + displayCropWidth,
@@ -441,7 +441,7 @@ export default class Uploader extends React.Component {
                     displayCropLeft = displayCropX,
                     scale = null;
                     
-                if (imageCrop.width > 0 && imageCrop.height > 0) {
+                if (mediaCrop.width > 0 && mediaCrop.height > 0) {
                     // image fit to zone
                     if (this.props.backgroundSize === 'contain') {
                         if (zoneHeight * displayCropRatio > zoneWidth) scale = zoneWidth / displayCropWidth;
@@ -473,7 +473,7 @@ export default class Uploader extends React.Component {
             }
             switch (srcType) {
                 case 'image':
-                    if (this.state.loaded && this.state.mounted && this.props.imageCrop && this.zone) {
+                    if (this.state.loaded && this.state.mounted && this.props.mediaCrop && this.zone) {
                         media = (
                             <img
                                 alt=''
@@ -820,7 +820,7 @@ Uploader.propTypes = {
     ]),
     fileType: PropTypes.oneOfType([PropTypes.array, PropTypes.string]), // expected file type
     hoverPlay: PropTypes.bool,
-    imageCrop: PropTypes.object,
+    mediaCrop: PropTypes.object,
     maxSize: PropTypes.number,
     maxSizes: PropTypes.shape({
         audio: PropTypes.number,
@@ -876,7 +876,7 @@ Uploader.defaultProps = {
     extendedFileFormatSupport: false,
     fileType: 'image', // may be one (or several) of: image, video
     hoverPlay: true,
-    imageCrop: null,
+    mediaCrop: null,
     maxSize: 10 * 1024 * 1024,
     maxSizes: {},
     onChange: (file, manual, type) => null, // manual: does it follow a manual action (vs. injections, for instance) ; type: image|video|...|null
