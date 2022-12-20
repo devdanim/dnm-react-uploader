@@ -15726,13 +15726,13 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       if (this.props.src) {
         var cropStyle = null;
 
-        if (this.props.imageCrop && this.cropImg && (srcType === "image" && this.cropImg.nodeName === "IMG" || srcType === "video" && this.cropImg.nodeName === "VIDEO")) {
+        if (this.props.imageCrop && this.cropMedia && (srcType === "image" && this.cropMedia.nodeName === "IMG" || srcType === "video" && this.cropMedia.nodeName === "VIDEO")) {
           var zoneWidth = this.zone.offsetWidth,
               zoneHeight = this.zone.offsetHeight,
-              realWidth = srcType === "video" ? this.cropImg.videoWidth : this.cropImg.naturalWidth,
-              realHeight = srcType === "video" ? this.cropImg.videoHeight : this.cropImg.naturalHeight,
-              displayWidth = srcType === "video" ? realWidth : this.cropImg.offsetWidth,
-              displayHeight = srcType === "video" ? realHeight : this.cropImg.offsetHeight,
+              realWidth = srcType === "video" ? this.cropMedia.videoWidth : this.cropMedia.naturalWidth,
+              realHeight = srcType === "video" ? this.cropMedia.videoHeight : this.cropMedia.naturalHeight,
+              displayWidth = srcType === "video" ? realWidth : this.cropMedia.offsetWidth,
+              displayHeight = srcType === "video" ? realHeight : this.cropMedia.offsetHeight,
               // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
           imageCrop = {
             x: Math.min(this.props.imageCrop.x, realWidth),
@@ -15777,7 +15777,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               media = jsx("img", {
                 alt: "",
                 ref: function ref(obj) {
-                  return _this8.cropImg = obj;
+                  return _this8.cropMedia = obj;
                 },
                 crossOrigin: "anonymous",
                 src: this.props.src,
@@ -15823,7 +15823,8 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               onLoadedMetadata: this.handleVideoLoadMetadata,
               onError: this.handleVideoPlayerError,
               ref: function ref(obj) {
-                return _this8.video = obj;
+                _this8.video = obj;
+                _this8.cropMedia = obj;
               },
               style: cropStyle ? cropStyle : this.props.backgroundSize === 'cover' ? {
                 height: '100%'

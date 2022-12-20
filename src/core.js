@@ -416,13 +416,13 @@ export default class Uploader extends React.Component {
 
         if (this.props.src) {
             let cropStyle = null;
-            if(this.props.imageCrop && this.cropImg && ((srcType === "image" && this.cropImg.nodeName === "IMG") || (srcType === "video" && this.cropImg.nodeName === "VIDEO"))) {
+            if(this.props.imageCrop && this.cropMedia && ((srcType === "image" && this.cropMedia.nodeName === "IMG") || (srcType === "video" && this.cropMedia.nodeName === "VIDEO"))) {
                 let zoneWidth = this.zone.offsetWidth,
                     zoneHeight = this.zone.offsetHeight,
-                    realWidth = srcType === "video" ? this.cropImg.videoWidth : this.cropImg.naturalWidth,
-                    realHeight = srcType === "video" ? this.cropImg.videoHeight : this.cropImg.naturalHeight,
-                    displayWidth = srcType === "video" ? realWidth : this.cropImg.offsetWidth,
-                    displayHeight = srcType === "video" ? realHeight : this.cropImg.offsetHeight,
+                    realWidth = srcType === "video" ? this.cropMedia.videoWidth : this.cropMedia.naturalWidth,
+                    realHeight = srcType === "video" ? this.cropMedia.videoHeight : this.cropMedia.naturalHeight,
+                    displayWidth = srcType === "video" ? realWidth : this.cropMedia.offsetWidth,
+                    displayHeight = srcType === "video" ? realHeight : this.cropMedia.offsetHeight,
                     // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
                     imageCrop = {
                         x: Math.min(this.props.imageCrop.x, realWidth),
@@ -477,7 +477,7 @@ export default class Uploader extends React.Component {
                         media = (
                             <img
                                 alt=''
-                                ref={obj => this.cropImg = obj}
+                                ref={obj => this.cropMedia = obj}
                                 crossOrigin="anonymous"
                                 src={this.props.src}
                                 onLoad={this._forceUpdate}
@@ -522,7 +522,10 @@ export default class Uploader extends React.Component {
                             onLoadedData={this.handleVideoLoad}
                             onLoadedMetadata={this.handleVideoLoadMetadata}
                             onError={this.handleVideoPlayerError}
-                            ref={obj => this.video = obj}
+                            ref={obj => {
+                                this.video = obj;
+                                this.cropMedia = obj;
+                            }}
                             style={cropStyle ? cropStyle : this.props.backgroundSize === 'cover'
                                 ? {height: '100%'} // considering the majority of videos at landscape format
                                 : {maxHeight: '100%', maxWidth: '100%'}
