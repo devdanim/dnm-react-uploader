@@ -104,7 +104,8 @@ export default {
             width: 100%;
             height: 100%;
             cursor: pointer;
-            
+            z-index: 0;
+
             &:hover {
                 background: rgba(0, 0, 0, 0.5);
             }
@@ -160,6 +161,12 @@ export default {
                 max-width: none;
                 width: 100% !important;
             }
+        }
+
+        .uploader-string {
+            color: white;
+            z-index: 1;
+            user-select: none;
         }
 
         .wavesurfer-region {
@@ -244,6 +251,29 @@ export default {
         .uploader-zone-fog-controls-control {
             width: 1.5rem !important;
             height: 1.5rem !important;
+        }
+    `,
+    'uploader/disabled': css`
+        .uploader-zone {
+            cursor: not-allowed;
+        }
+        .uploader-zone-fog {
+            cursor: not-allowed;
+            &:hover {
+                background: rgba(0, 0, 0, 0.2);
+            }
+        }
+        .uploader-zone-fog-img {
+            fill: #707070;
+        }
+        .uploader-zone-fog-caption {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .uploader-zone-fog-text {
+            color: #707070;
+        }
+        .uploader-zone-fog-controls-control {
+            fill: #707070;
         }
     `,
 };

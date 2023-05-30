@@ -97,14 +97,14 @@ export default class Uploader extends React.Component {
     static getDerivedStateFromProps(nextProps, prevState) {
         return {
             // mirroring, see https://stackoverflow.com/a/50080417/6503789
-            ...nextProps.src !== _.get(prevState, '_src') ? {_src: nextProps.src} : null,
+            ...nextProps.src !== _.get(prevState, '_src') ? { _src: nextProps.src } : null,
             // derivation
-            ...nextProps.src !== _.get(prevState, '_src') ? {loaded: false, _forceUpdateCounter: 0} : null
+            ...nextProps.src !== _.get(prevState, '_src') ? { loaded: false, _forceUpdateCounter: 0 } : null
         };
     }
 
     componentDidMount() {
-        this.setState({mounted: true});
+        this.setState({ mounted: true });
         this.initializeDrag();
         this.updateImageBackground();
         window.addEventListener('resize', this.forceUpdateOnResize);
@@ -125,7 +125,7 @@ export default class Uploader extends React.Component {
         window.removeEventListener('resize', this.forceUpdateOnResize);
         window.removeEventListener('scroll', this.handleWindowScroll);
     }
-    
+
     // Hack: Force re-render by incrementing a counter to re-calculate the preview resizing infos after a window resize
     _forceUpdate() {
         const srcType = this.getSrcType();
@@ -170,7 +170,7 @@ export default class Uploader extends React.Component {
                             maxSizeMB: maxSize / 1024 / 1024,
                             useWebWorker: true
                         });
-                        if (compressedFile) file = compressedFile;                
+                        if (compressedFile) file = compressedFile;
                     } catch (error) {
                         compressionError = error;
                     }
@@ -203,7 +203,7 @@ export default class Uploader extends React.Component {
         if (onUploaderClick) {
             onUploaderClick().then((file) => {
                 if (file) this.change(file);
-            }).catch(e => {});
+            }).catch(e => { });
         } else this.input.click();
     }
 
@@ -219,14 +219,14 @@ export default class Uploader extends React.Component {
     }
 
     handleDragLeave() {
-        if (--this.dndCounter === 0) this.setState({beingDropTarget: false});
+        if (--this.dndCounter === 0) this.setState({ beingDropTarget: false });
     }
 
     handleDragEnter(ev) {
         ev.preventDefault(); // needed for IE
         if (this.dndCounter === undefined) this.dndCounter = 0;
         this.dndCounter++;
-        this.setState({beingDropTarget: true});
+        this.setState({ beingDropTarget: true });
     }
 
     handleMouseEnter() {
@@ -256,7 +256,7 @@ export default class Uploader extends React.Component {
     handleDrop(ev) {
         ev.preventDefault();
         this.dndCounter = 0;
-        this.setState({beingDropTarget: false});
+        this.setState({ beingDropTarget: false });
         const file = _.get(ev, 'dataTransfer.files.0');
         if (file) this.change(file);
     }
@@ -292,7 +292,7 @@ export default class Uploader extends React.Component {
             const img = new Image();
             const updateImageBackgroundInState = this.updateImageBackgroundInState;
             img.crossOrigin = 'anonymous';
-            img.onload = function() {
+            img.onload = function () {
                 const fac = new FastAverageColor();
                 const color = fac.getColor(img);
                 if (color) {
@@ -359,7 +359,7 @@ export default class Uploader extends React.Component {
 
     handleUrlChange(ev) {
         const value = ev.target.value;
-        this.setState({url: value});
+        this.setState({ url: value });
     }
 
     updateMediaLoop(media) {
@@ -391,7 +391,7 @@ export default class Uploader extends React.Component {
     }
 
     injectUrl(url, validate = false, callback = data => null) {
-        if (validate && ! validator.isURL(url)) {
+        if (validate && !validator.isURL(url)) {
             this.props.onInvalidUrlError(url);
 
             return;
@@ -400,7 +400,7 @@ export default class Uploader extends React.Component {
         this.get(url)
             .then(response => {
                 let name = _.last(_.split(url, '/')),
-                    file = new File([response], name, {type: response.type});
+                    file = new File([response], name, { type: response.type });
                 this.change(file, false, callback);
             }).catch(error => {
                 this.props.onUrlInjectionError(error, url);
@@ -416,7 +416,7 @@ export default class Uploader extends React.Component {
 
         if (this.props.src) {
             let cropStyle = null;
-            if(this.props.mediaCrop && this.cropMedia && ((srcType === "image" && this.cropMedia.nodeName === "IMG") || (srcType === "video" && this.cropMedia.nodeName === "VIDEO"))) {
+            if (this.props.mediaCrop && this.cropMedia && ((srcType === "image" && this.cropMedia.nodeName === "IMG") || (srcType === "video" && this.cropMedia.nodeName === "VIDEO"))) {
                 let zoneWidth = this.zone.offsetWidth,
                     zoneHeight = this.zone.offsetHeight,
                     realWidth = srcType === "video" ? this.cropMedia.videoWidth : this.cropMedia.naturalWidth,
@@ -440,7 +440,7 @@ export default class Uploader extends React.Component {
                     displayCropBottom = displayCropY + displayCropHeight,
                     displayCropLeft = displayCropX,
                     scale = null;
-                    
+
                 if (mediaCrop.width > 0 && mediaCrop.height > 0) {
                     // image fit to zone
                     if (this.props.backgroundSize === 'contain') {
@@ -527,8 +527,8 @@ export default class Uploader extends React.Component {
                                 this.cropMedia = obj;
                             }}
                             style={cropStyle ? cropStyle : this.props.backgroundSize === 'cover'
-                                ? {height: '100%'} // considering the majority of videos at landscape format
-                                : {maxHeight: '100%', maxWidth: '100%'}
+                                ? { height: '100%' } // considering the majority of videos at landscape format
+                                : { maxHeight: '100%', maxWidth: '100%' }
                             }
                         />
                     );
@@ -563,13 +563,13 @@ export default class Uploader extends React.Component {
 
         switch (srcType) {
             case 'image':
-                icon = <Svg.Image className="uploader-zone-fog-img" /> ;
+                icon = <Svg.Image className="uploader-zone-fog-img" />;
                 break;
             case 'video':
-                icon = <Svg.Video className="uploader-zone-fog-img" /> ;
-                break;     
-            case 'audio': 
-                icon = <Svg.Audio className="uploader-zone-fog-img" /> ;
+                icon = <Svg.Video className="uploader-zone-fog-img" />;
+                break;
+            case 'audio':
+                icon = <Svg.Audio className="uploader-zone-fog-img" />;
                 break;
         }
 
@@ -587,9 +587,10 @@ export default class Uploader extends React.Component {
                     ${this.props.compact ? styles['uploader/compact'] : null};
                     ${this.props.withUrlInput ? styles['uploader/withUrl'] : null};
                     ${withControls ? styles['uploader/withControls'] : null};
+                    ${this.props.disabled ? styles['uploader/disabled'] : null};
                 `}
             >
-                <input data-attr="input" ref={obj => this.input = obj} type="file" className="uploader-input" onChange={this.handleChange} />
+                <input data-attr="input" ref={obj => this.input = obj} type="file" disabled={this.props.disabled} className="uploader-input" onChange={this.handleChange} />
                 <div
                     ref={obj => this.zone = obj}
                     className={`
@@ -604,23 +605,23 @@ export default class Uploader extends React.Component {
                     onDrop={this.handleDrop}
                     style={this.props.src && srcType === 'image' ? { backgroundColor: this.state.imageBackgroundColor } : null}
                 >
-                    { media }
-                    <div className="uploader-zone-fog" onClick={this.handleClick}>
-                        { this.props.fetching === true &&
-                        <div className="uploader-zone-fog-loader">
-                            {this.props.catalogue.loading}
-                        </div>
+                    {media}
+                    <div className="uploader-zone-fog" onClick={this.props.disabled ? null : this.handleClick}>
+                        {this.props.fetching === true &&
+                            <div className="uploader-zone-fog-loader">
+                                {this.props.catalogue.loading}
+                            </div>
                         }
                         <div className="uploader-zone-fog-core">
-                            { !withControls ? (
+                            {!withControls ? (
                                 <React.Fragment>
-                                    { this.state.beingDropTarget
+                                    {this.state.beingDropTarget
                                         ? <Svg.CloudComputing className="uploader-zone-fog-img" />
                                         : icon
                                     }
                                 </React.Fragment>
-                            ) : null }
-                            { withControls === true &&
+                            ) : null}
+                            {withControls === true &&
                                 <React.Fragment>
                                     <div className="uploader-zone-fog-controls">
                                         {srcType === "image" && this.props.croppable === true &&
@@ -634,40 +635,40 @@ export default class Uploader extends React.Component {
                                             </span>
                                         }
                                         {this.props.removable === true &&
-                                        <span className="uploader-zone-fog-controls-control" onClick={this.handleRemoveClick}>
-                                            {this.props.removeIcon || <Svg.Garbage />}
-                                        </span>
+                                            <span className="uploader-zone-fog-controls-control" onClick={this.handleRemoveClick}>
+                                                {this.props.removeIcon || <Svg.Garbage />}
+                                            </span>
                                         }
                                     </div>
                                 </React.Fragment>
                             }
                         </div>
-                        { this.props.caption !== null &&
-                        <span className="uploader-zone-fog-caption" onClick={ev => ev.stopPropagation()}>{this.props.caption}</span>
+                        {this.props.caption !== null &&
+                            <span className="uploader-zone-fog-caption" onClick={ev => ev.stopPropagation()}>{this.props.caption}</span>
                         }
                     </div>
                 </div>
-                { this.props.withUrlInput === true &&
-                <div className="uploader-url">
-                    <input
-                        className="uploader-url-input"
-                        name="url"
-                        value={this.state.url}
-                        placeholder={this.props.catalogue.urlInputPlaceholder}
-                        type="text"
-                        onChange={this.handleUrlChange}
-                        onKeyPress={ev => {
-                            if (ev.which === 13) { // enter would otherwise submit form
-                                ev.preventDefault();
-                                this.handleInjectUrlClick();
-                            }
-                        }}
-                    />
-                    <span className="uploader-url-addon" onClick={this.handleInjectUrlClick}>
-                        <Svg.InternetGlobe className="uploader-url-addon-icon" />
-                        {this.props.catalogue.urlSubmitText}
-                    </span>
-                </div>
+                {this.props.withUrlInput === true &&
+                    <div className="uploader-url">
+                        <input
+                            className="uploader-url-input"
+                            name="url"
+                            value={this.state.url}
+                            placeholder={this.props.catalogue.urlInputPlaceholder}
+                            type="text"
+                            onChange={this.handleUrlChange}
+                            onKeyPress={ev => {
+                                if (ev.which === 13) { // enter would otherwise submit form
+                                    ev.preventDefault();
+                                    this.handleInjectUrlClick();
+                                }
+                            }}
+                        />
+                        <span className="uploader-url-addon" onClick={this.handleInjectUrlClick}>
+                            <Svg.InternetGlobe className="uploader-url-addon-icon" />
+                            {this.props.catalogue.urlSubmitText}
+                        </span>
+                    </div>
                 }
             </div>
         );
@@ -810,6 +811,7 @@ Uploader.propTypes = {
     croppable: PropTypes.bool,
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
+    disabled: PropTypes.bool,
     extendedFileFormatSupport: PropTypes.oneOfType([
         PropTypes.shape({
             audio: PropTypes.bool,
@@ -873,6 +875,7 @@ Uploader.defaultProps = {
     customAttributes: {},
     cuttable: false,
     cutIcon: null, // if let null, it will be default one
+    disabled: false,
     extendedFileFormatSupport: false,
     fileType: 'image', // may be one (or several) of: image, video
     hoverPlay: true,

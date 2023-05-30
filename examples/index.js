@@ -52,6 +52,7 @@ class Page extends React.Component {
                     }}
                     compact={false}
                     fileType={['image', 'video']}
+                    disabled={false}
                     catalogue={catalogue}
                     maxSizes={maxSizes}
                     onChange={(file, manual) => console.log('onChange', file, manual ? 'Done manually' : 'Done programmatically')}
@@ -76,6 +77,7 @@ class Page extends React.Component {
                         }
                     }}
                     compact={false}
+                    disabled={true}
                     extendedFileFormatSupport={true}
                     fetching={false}
                     croppable={true}
