@@ -15863,11 +15863,6 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               }
             }));
             break;
-
-          case 'string':
-            media = jsx("div", {
-              className: "uploader-string"
-            }, this.props.src);
         }
       }
 

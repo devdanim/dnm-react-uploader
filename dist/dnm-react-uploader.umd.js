@@ -19702,11 +19702,6 @@
 	              }
 	            }));
 	            break;
-
-	          case 'string':
-	            media = jsx("div", {
-	              className: "uploader-string"
-	            }, this.props.src);
 	        }
 	      }
 
