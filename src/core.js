@@ -408,8 +408,8 @@ export default class Uploader extends React.Component {
     }
 
     render() {
-        const srcType = this.getSrcType();
-        let media = null,
+        const srcType = this.getSrcType ? this.getSrcType() : null;
+               let media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable),
             autoPlay = null === this.props.autoPlay ? (srcType === 'video' ? true : false) : this.props.autoPlay;

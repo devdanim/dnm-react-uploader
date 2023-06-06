@@ -19557,7 +19557,7 @@
 	    value: function render() {
 	      var _this8 = this;
 
-	      var srcType = this.getSrcType();
+	      var srcType = this.getSrcType ? this.getSrcType() : null;
 	      var media = null,
 	          icon = null,
 	          withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable),
