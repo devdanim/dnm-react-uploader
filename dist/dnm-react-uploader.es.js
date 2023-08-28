@@ -3078,6 +3078,14 @@ var Video = function Video(props) {
   }));
 };
 
+var ImageAndVideo = function ImageAndVideo(props) {
+  return /*#__PURE__*/React.createElement("svg", _extends({
+    viewBox: "0 0 640 512"
+  }, props), /*#__PURE__*/React.createElement("path", {
+    d: "M608 0H160a32 32 0 0 0-32 32v96h160V64h192v320h128a32 32 0 0 0 32-32V32a32 32 0 0 0-32-32zM232 103a9 9 0 0 1-9 9h-30a9 9 0 0 1-9-9V73a9 9 0 0 1 9-9h30a9 9 0 0 1 9 9zm352 208a9 9 0 0 1-9 9h-30a9 9 0 0 1-9-9v-30a9 9 0 0 1 9-9h30a9 9 0 0 1 9 9zm0-104a9 9 0 0 1-9 9h-30a9 9 0 0 1-9-9v-30a9 9 0 0 1 9-9h30a9 9 0 0 1 9 9zm0-104a9 9 0 0 1-9 9h-30a9 9 0 0 1-9-9V73a9 9 0 0 1 9-9h30a9 9 0 0 1 9 9zm-168 57H32a32 32 0 0 0-32 32v288a32 32 0 0 0 32 32h384a32 32 0 0 0 32-32V192a32 32 0 0 0-32-32zM96 224a32 32 0 1 1-32 32 32 32 0 0 1 32-32zm288 224H64v-32l64-64 32 32 128-128 96 96z"
+  }));
+};
+
 var Constants = {
   browser: {
     video: {
@@ -15297,7 +15305,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     key: "getSrcType",
     value: function getSrcType() {
       var fileTypes = this.getFileTypes();
-      return this.guessType(this.props.srcType) || this.guessType(this.props.src) || (fileTypes.indexOf('video') !== -1 ? 'video' : fileTypes[0]);
+      return this.guessType(this.props.srcType) || this.guessType(this.props.src) || (fileTypes.indexOf('video') !== -1 ? fileTypes.indexOf('image') !== -1 ? 'iv' : 'video' : fileTypes[0]);
     }
   }, {
     key: "getAcceptedExtensions",
@@ -15523,7 +15531,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function _handleWindowScroll() {
       var srcType = this.getSrcType();
 
-      if (this.video && srcType === 'video') {
+      if (this.video && (srcType === 'video' || srcType === 'iv')) {
         var rect = this.video.getBoundingClientRect(); // https://stackoverflow.com/a/60018490
 
         if (rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth)) {
@@ -15722,18 +15730,18 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       var media = null,
           icon = null,
           withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable),
-          autoPlay = null === this.props.autoPlay ? srcType === 'video' ? true : false : this.props.autoPlay;
+          autoPlay = null === this.props.autoPlay ? srcType === 'video' ? true : srcType === 'iv' ? true : false : this.props.autoPlay;
 
       if (this.props.src) {
         var cropStyle = null;
 
-        if (this.props.mediaCrop && this.cropMedia && (srcType === "image" && this.cropMedia.nodeName === "IMG" || srcType === "video" && this.cropMedia.nodeName === "VIDEO")) {
+        if (this.props.mediaCrop && this.cropMedia && (srcType === "image" && this.cropMedia.nodeName === "IMG" || (srcType === "video" || srcType === "iv") && this.cropMedia.nodeName === "VIDEO")) {
           var zoneWidth = this.zone.offsetWidth,
               zoneHeight = this.zone.offsetHeight,
-              realWidth = srcType === "video" ? this.cropMedia.videoWidth : this.cropMedia.naturalWidth,
-              realHeight = srcType === "video" ? this.cropMedia.videoHeight : this.cropMedia.naturalHeight,
-              displayWidth = srcType === "video" ? realWidth : this.cropMedia.offsetWidth,
-              displayHeight = srcType === "video" ? realHeight : this.cropMedia.offsetHeight,
+              realWidth = srcType === "video" || srcType === 'iv' ? this.cropMedia.videoWidth : this.cropMedia.naturalWidth,
+              realHeight = srcType === "video" || srcType === 'iv' ? this.cropMedia.videoHeight : this.cropMedia.naturalHeight,
+              displayWidth = srcType === "video" || srcType === 'iv' ? realWidth : this.cropMedia.offsetWidth,
+              displayHeight = srcType === "video" || srcType === 'iv' ? realHeight : this.cropMedia.offsetHeight,
               // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
           mediaCrop = {
             x: Math.min(this.props.mediaCrop.x, realWidth),
@@ -15814,6 +15822,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
             break;
 
           case 'video':
+          case 'iv':
             media = jsx("video", {
               autoPlay: autoPlay,
               loop: true,
@@ -15879,6 +15888,12 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
           });
           break;
 
+        case 'iv':
+          icon = jsx(ImageAndVideo, {
+            className: "uploader-zone-fog-img"
+          });
+          break;
+
         case 'audio':
           icon = jsx(Audio, {
             className: "uploader-zone-fog-img"
@@ -15928,7 +15943,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       }, srcType === "image" && this.props.croppable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleCropClick
-      }, this.props.cropIcon || jsx(Crop, null)), (srcType === "video" || srcType === "audio") && this.props.cuttable === true && jsx("span", {
+      }, this.props.cropIcon || jsx(Crop, null)), (srcType === "video" || srcType === "audio" || srcType === 'iv') && this.props.cuttable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleCutClick
       }, this.props.cutIcon || jsx(Cut, null)), this.props.removable === true && jsx("span", {

@@ -141,7 +141,7 @@ export default class Uploader extends React.Component {
         const fileTypes = this.getFileTypes();
         return this.guessType(this.props.srcType)
             || this.guessType(this.props.src)
-            || (fileTypes.indexOf('video') !== -1 ? 'video' : fileTypes[0]);
+            || (fileTypes.indexOf('video') !== -1 ? fileTypes.indexOf('image') !== -1 ? 'iv' : 'video' : fileTypes[0]);
     }
 
     getAcceptedExtensions() {
@@ -267,7 +267,7 @@ export default class Uploader extends React.Component {
 
     _handleWindowScroll() {
         const srcType = this.getSrcType();
-        if (this.video && srcType === 'video') {
+        if (this.video && (srcType === 'video' || srcType === 'iv')) {
             const rect = this.video.getBoundingClientRect();
             // https://stackoverflow.com/a/60018490
             if ((rect.bottom >= 0 && rect.right >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight) && rect.left <= (window.innerWidth || document.documentElement.clientWidth))) {
@@ -409,20 +409,20 @@ export default class Uploader extends React.Component {
 
     render() {
         const srcType = this.getSrcType ? this.getSrcType() : null;
-               let media = null,
+        let media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable),
-            autoPlay = null === this.props.autoPlay ? (srcType === 'video' ? true : false) : this.props.autoPlay;
+            autoPlay = null === this.props.autoPlay ? (srcType === 'video' ? true : srcType === 'iv' ? true : false) : this.props.autoPlay;
 
         if (this.props.src) {
             let cropStyle = null;
-            if (this.props.mediaCrop && this.cropMedia && ((srcType === "image" && this.cropMedia.nodeName === "IMG") || (srcType === "video" && this.cropMedia.nodeName === "VIDEO"))) {
+            if (this.props.mediaCrop && this.cropMedia && ((srcType === "image" && this.cropMedia.nodeName === "IMG") || ((srcType === "video" || srcType === "iv") && this.cropMedia.nodeName === "VIDEO"))) {
                 let zoneWidth = this.zone.offsetWidth,
                     zoneHeight = this.zone.offsetHeight,
-                    realWidth = srcType === "video" ? this.cropMedia.videoWidth : this.cropMedia.naturalWidth,
-                    realHeight = srcType === "video" ? this.cropMedia.videoHeight : this.cropMedia.naturalHeight,
-                    displayWidth = srcType === "video" ? realWidth : this.cropMedia.offsetWidth,
-                    displayHeight = srcType === "video" ? realHeight : this.cropMedia.offsetHeight,
+                    realWidth = (srcType === "video" || srcType === 'iv') ? this.cropMedia.videoWidth : this.cropMedia.naturalWidth,
+                    realHeight = (srcType === "video" || srcType === 'iv') ? this.cropMedia.videoHeight : this.cropMedia.naturalHeight,
+                    displayWidth = (srcType === "video" || srcType === 'iv') ? realWidth : this.cropMedia.offsetWidth,
+                    displayHeight = (srcType === "video" || srcType === 'iv') ? realHeight : this.cropMedia.offsetHeight,
                     // Math.min usage is important, because any overflow would otherwise result in an ugly crop preview
                     mediaCrop = {
                         x: Math.min(this.props.mediaCrop.x, realWidth),
@@ -512,6 +512,7 @@ export default class Uploader extends React.Component {
                     }
                     break;
                 case 'video':
+                case 'iv':
                     media = (
                         <video
                             autoPlay={autoPlay}
@@ -567,6 +568,9 @@ export default class Uploader extends React.Component {
                 break;
             case 'video':
                 icon = <Svg.Video className="uploader-zone-fog-img" />;
+                break;
+            case 'iv':
+                icon = <Svg.ImageAndVideo className="uploader-zone-fog-img" />;
                 break;
             case 'audio':
                 icon = <Svg.Audio className="uploader-zone-fog-img" />;
@@ -629,7 +633,7 @@ export default class Uploader extends React.Component {
                                                 {this.props.cropIcon || <Svg.Crop />}
                                             </span>
                                         }
-                                        {(srcType === "video" || srcType === "audio") && this.props.cuttable === true &&
+                                        {(srcType === "video" || srcType === "audio" || srcType === 'iv') && this.props.cuttable === true &&
                                             <span className="uploader-zone-fog-controls-control" onClick={this.handleCutClick}>
                                                 {this.props.cutIcon || <Svg.Cut />}
                                             </span>
@@ -648,7 +652,8 @@ export default class Uploader extends React.Component {
                         }
                     </div>
                 </div>
-                {this.props.withUrlInput === true &&
+                {
+                    this.props.withUrlInput === true &&
                     <div className="uploader-url">
                         <input
                             className="uploader-url-input"
@@ -670,7 +675,7 @@ export default class Uploader extends React.Component {
                         </span>
                     </div>
                 }
-            </div>
+            </div >
         );
     }
 
