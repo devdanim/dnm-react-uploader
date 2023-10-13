@@ -1,5 +1,6 @@
 export {default as CloudComputing} from './CloudComputing.js';
 export {default as Cut} from './Cut.js';
+export {default as Edit} from './Edit.js';
 export {default as Crop} from './Crop.js';
 export {default as Garbage} from './Garbage.js';
 export {default as Erase} from './Erase.js';

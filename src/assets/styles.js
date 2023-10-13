@@ -209,10 +209,7 @@ export default {
             flex-flow: row wrap;
             position: relative;
             bottom: 0.3rem;
-            
-            > * {
-                margin: 0 0.3rem;
-            }
+            gap: 1rem;
         }
         .uploader-zone-fog-or {
             display: flex;

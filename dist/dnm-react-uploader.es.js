@@ -3004,7 +3004,7 @@ var styles = {
   uploader: css(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n        position: relative;\n        \n        img {\n            max-height: 100%;\n            max-width: 100%;\n            height: auto;\n            width: auto;\n        }\n        \n        .uploader-url-addon {\n            display: flex;\n            align-items: center;\n            padding: .375rem .75rem;\n            margin-bottom: 0;\n            font-weight: 400;\n            line-height: 1.5;\n            color: #495057;\n            text-align: center;\n            white-space: nowrap;\n            background-color: #e9ecef;\n            border: 1px solid #ced4da;\n            border-left-width: 0;\n            border-top-right-radius: 0;\n            border-top-left-radius: 0;\n            border-bottom-left-radius: 0;\n            border-bottom-right-radius: .25rem;\n            \n            svg {\n                margin-right: 0.6rem;\n                fill: #495057;\n                height: 1.4rem;\n            }\n        }\n        \n        .uploader-url-input {\n            display: block;\n            height: calc(1.5em + .75rem + 2px);\n            padding: .375rem .75rem;\n            font-weight: 400;\n            font-size: 1rem;\n            line-height: 1.5;\n            color: #495057;\n            background-color: #fff;\n            background-clip: padding-box;\n            border: 1px solid #ced4da;\n            border-radius: .25rem;\n            border-top-left-radius: 0;\n            border-top-right-radius: 0;\n            border-bottom-right-radius: 0;\n            position: relative;\n            flex-grow: 1;\n            margin-bottom: 0;\n            \n            &:focus {\n                outline: none;\n            }\n        }\n        \n        .uploader-url {\n            width: 100%;\n            display: flex;\n            justify-content: center;\n            align-items: stretch;\n            flex-flow: row;\n            cursor: pointer;\n        }\n        \n        .uploader-zone {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row wrap;\n            width: 100%;\n            height: 14rem;\n            overflow: hidden;\n            position: relative;\n            color: white;\n        }\n    \n        .uploader-zone-fog {\n            display: flex;\n            justify-content: space-evenly;\n            align-items: center;\n            flex-flow: column;\n            background: rgba(0, 0, 0, 0.2);\n            position: absolute;\n            top: 0;\n            left: 0;\n            width: 100%;\n            height: 100%;\n            cursor: pointer;\n            z-index: 0;\n\n            &:hover {\n                background: rgba(0, 0, 0, 0.5);\n            }\n        }\n        \n        .uploader-zone-fog-core {\n            display: flex;\n            justify-content: space-evenly;\n            align-items: center;\n            flex-flow: column;\n            width: 100%;\n            height: 100%;\n        }\n        \n        .uploader-zone-fog-text {\n            width: 80%;\n            text-align: center;\n            position: relative;\n            bottom: 1rem;\n            margin-top: 1rem;\n            text-shadow: 0 0 0.5rem black;\n        }\n        \n        .uploader-zone-fog-img {\n            width: 5rem;\n            fill: white;\n        }\n        \n        .uploader-zone-fog-caption {\n            background: rgba(0, 0, 0, 0.3);\n            padding: 0.2rem 0.4rem;\n            font-size: 75%;\n            color: white;\n            border-radius: 0.3rem 0.3rem 0px 0px;\n            position: absolute;\n            bottom: 0px;\n            left: 50%;\n            transform: translateX(-50%);\n        }\n        \n        .uploader-input {\n            position: fixed;\n            top: -9999px;\n            left: -9999px;\n        }\n\n        .uploader-waveform {\n            width: 100%;\n            padding: 0;\n            margin: 0;\n            z-index: 0;\n            canvas {\n                max-width: none;\n                width: 100% !important;\n            }\n        }\n\n        .uploader-string {\n            color: white;\n            z-index: 1;\n            user-select: none;\n        }\n\n        .wavesurfer-region {\n            z-index: 3 !important;\n          }\n          \n        .wavesurfer-handle {\n            background-color: rgba(146, 210, 117, 0.9) !important;\n            width: 4px !important;\n        }\n    "]))),
   'uploader/fetching': css(_templateObject3 || (_templateObject3 = _taggedTemplateLiteral(["\n        .uploader-zone-fog-core {\n            position: fixed;\n            top: -9999px;\n            left: -9999px;\n        }\n    "]))),
   'uploader/withUrl': css(_templateObject4 || (_templateObject4 = _taggedTemplateLiteral(["\n        .uploader-zone {\n            border-top-left-radius: 0.25rem !important;\n            border-top-right-radius: 0.25rem !important;\n            border-bottom-left-radius: 0 !important;\n            border-bottom-right-radius: 0 !important;\n        }\n    "]))),
-  'uploader/withControls': css(_templateObject5 || (_templateObject5 = _taggedTemplateLiteral(["\n        .uploader-zone-fog-text {\n            margin-top: 0;\n            bottom: 0;\n        }\n        .uploader-zone-fog-img {\n            width: 2.6rem;\n            top: 0.3rem;\n        }\n        .uploader-zone-fog-controls {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row wrap;\n            position: relative;\n            bottom: 0.3rem;\n            \n            > * {\n                margin: 0 0.3rem;\n            }\n        }\n        .uploader-zone-fog-or {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row;\n            font-size: 80%;\n            width: 100%;\n        }\n        .uploader-zone-fog-or-wing {\n            flex-grow: 1;\n            height: 0;\n            border-style: solid;\n            border-width: .06rem 0 0 0;\n            border-color: white;\n        }\n        .uploader-zone-fog-or-body {\n            padding: 0.5rem 0.7rem;\n            user-select: none;\n        }\n        .uploader-zone-fog-controls-control {\n            height: 2rem;\n            width: 2rem;\n            fill: white;\n        }\n    "]))),
+  'uploader/withControls': css(_templateObject5 || (_templateObject5 = _taggedTemplateLiteral(["\n        .uploader-zone-fog-text {\n            margin-top: 0;\n            bottom: 0;\n        }\n        .uploader-zone-fog-img {\n            width: 2.6rem;\n            top: 0.3rem;\n        }\n        .uploader-zone-fog-controls {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row wrap;\n            position: relative;\n            bottom: 0.3rem;\n            gap: 1rem;\n        }\n        .uploader-zone-fog-or {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            flex-flow: row;\n            font-size: 80%;\n            width: 100%;\n        }\n        .uploader-zone-fog-or-wing {\n            flex-grow: 1;\n            height: 0;\n            border-style: solid;\n            border-width: .06rem 0 0 0;\n            border-color: white;\n        }\n        .uploader-zone-fog-or-body {\n            padding: 0.5rem 0.7rem;\n            user-select: none;\n        }\n        .uploader-zone-fog-controls-control {\n            height: 2rem;\n            width: 2rem;\n            fill: white;\n        }\n    "]))),
   'uploader/compact': css(_templateObject6 || (_templateObject6 = _taggedTemplateLiteral(["\n        .uploader-zone {\n            border-radius: .5rem;\n            height: 4rem;\n        }\n        .uploader-zone-fog-img {\n            width: 2rem;\n            top: 0;\n        }\n        .uploader-zone-fog-controls-control {\n            width: 1.5rem !important;\n            height: 1.5rem !important;\n        }\n    "]))),
   'uploader/disabled': css(_templateObject7 || (_templateObject7 = _taggedTemplateLiteral(["\n        .uploader-zone {\n            cursor: not-allowed;\n        }\n        .uploader-zone-fog {\n            cursor: not-allowed;\n            &:hover {\n                background: rgba(0, 0, 0, 0.2);\n            }\n        }\n        .uploader-zone-fog-img {\n            fill: #707070;\n        }\n        .uploader-zone-fog-caption {\n            background: rgba(0, 0, 0, 0.1);\n        }\n        .uploader-zone-fog-text {\n            color: #707070;\n        }\n        .uploader-zone-fog-controls-control {\n            fill: #707070;\n        }\n    "])))
 };
@@ -3025,6 +3025,14 @@ var Cut = function Cut(props) {
   }, props), /*#__PURE__*/React.createElement("path", {
     d: "M278.06 256L444.48 89.57c4.69-4.69 4.69-12.29 0-16.97-32.8-32.8-85.99-32.8-118.79 0L210.18 188.12l-24.86-24.86c4.31-10.92 6.68-22.81 6.68-35.26 0-53.02-42.98-96-96-96S0 74.98 0 128s42.98 96 96 96c4.54 0 8.99-.32 13.36-.93L142.29 256l-32.93 32.93c-4.37-.61-8.83-.93-13.36-.93-53.02 0-96 42.98-96 96s42.98 96 96 96 96-42.98 96-96c0-12.45-2.37-24.34-6.68-35.26l24.86-24.86L325.69 439.4c32.8 32.8 85.99 32.8 118.79 0 4.69-4.68 4.69-12.28 0-16.97L278.06 256zM96 160c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32zm0 256c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32z",
     className: ""
+  }));
+};
+
+var Edit = function Edit(props) {
+  return /*#__PURE__*/React.createElement("svg", _extends({
+    viewBox: "0 0 20 20"
+  }, props), /*#__PURE__*/React.createElement("path", {
+    d: "M12.92 2.873a2.975 2.975 0 0 1 4.207 4.207l-.669.669l-4.207-4.207l.67-.669ZM11.544 4.25l-7.999 7.999a2.438 2.438 0 0 0-.655 1.194l-.878 3.95a.5.5 0 0 0 .597.597l3.926-.873a2.518 2.518 0 0 0 1.234-.678l7.982-7.982l-4.207-4.207Z"
   }));
 };
 
@@ -15231,6 +15239,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
     _this.handleCropClick = _this.handleCropClick.bind(_assertThisInitialized(_this));
     _this.handleCutClick = _this.handleCutClick.bind(_assertThisInitialized(_this));
+    _this.handleEditClick = _this.handleEditClick.bind(_assertThisInitialized(_this));
     _this.handleDragLeave = _this.handleDragLeave.bind(_assertThisInitialized(_this));
     _this.handleDragEnter = _this.handleDragEnter.bind(_assertThisInitialized(_this));
     _this.handleMouseOver = _this.handleMouseOver.bind(_assertThisInitialized(_this));
@@ -15459,6 +15468,13 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     value: function handleCutClick(ev) {
       ev.stopPropagation();
       this.props.onCutClick();
+    }
+  }, {
+    key: "handleEditClick",
+    value: function handleEditClick(ev) {
+      ev.stopPropagation();
+      console.log('in');
+      this.props.onEditClick();
     }
   }, {
     key: "handleDragLeave",
@@ -15943,10 +15959,13 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       }, srcType === "image" && this.props.croppable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleCropClick
-      }, this.props.cropIcon || jsx(Crop, null)), (srcType === "video" || srcType === "audio" || srcType === 'iv') && this.props.cuttable === true && jsx("span", {
+      }, this.props.cropIcon || jsx(Crop, null)), srcType === "audio" && this.props.cuttable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleCutClick
-      }, this.props.cutIcon || jsx(Cut, null)), this.props.removable === true && jsx("span", {
+      }, this.props.cutIcon || jsx(Cut, null)), (srcType === "video" || srcType === 'iv') && this.props.editable === true && jsx("span", {
+        className: "uploader-zone-fog-controls-control",
+        onClick: this.handleEditClick
+      }, this.props.editIcon || jsx(Edit, null)), this.props.removable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleRemoveClick
       }, this.props.removeIcon || jsx(Garbage, null))))), this.props.caption !== null && jsx("span", {
@@ -16144,6 +16163,7 @@ Uploader.propTypes = (_Uploader$propTypes = {
   corsProof: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
   // func is a callback with src as its unique arg (e.g. we want to apply the CORS trick only for some urls, and not for others...)
   croppable: PropTypes.bool,
+  editable: PropTypes.bool,
   customAttributes: PropTypes.object,
   cuttable: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -16175,7 +16195,7 @@ Uploader.propTypes = (_Uploader$propTypes = {
   onRemoveClick: PropTypes.func,
   onUploaderClick: PropTypes.func,
   onUrlInjectionError: PropTypes.func
-}, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onAudioLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
+}, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onEditClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onAudioLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
 Uploader.defaultProps = {
   additionalExtensions: {},
   additionalMimeTypes: {},
@@ -16195,6 +16215,9 @@ Uploader.defaultProps = {
   },
   compact: false,
   corsProof: true,
+  editable: false,
+  editIcon: null,
+  // if let null, it will be default one
   croppable: false,
   cropIcon: null,
   // if let null, it will be default one
@@ -16250,6 +16273,9 @@ Uploader.defaultProps = {
     return null;
   },
   onCutClick: function onCutClick() {
+    return null;
+  },
+  onEditClick: function onEditClick() {
     return null;
   },
   onAudioLoad: function onAudioLoad() {

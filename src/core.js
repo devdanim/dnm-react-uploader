@@ -67,6 +67,7 @@ export default class Uploader extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleCropClick = this.handleCropClick.bind(this);
         this.handleCutClick = this.handleCutClick.bind(this);
+        this.handleEditClick = this.handleEditClick.bind(this);
         this.handleDragLeave = this.handleDragLeave.bind(this);
         this.handleDragEnter = this.handleDragEnter.bind(this);
         this.handleMouseOver = this.handleMouseOver.bind(this);
@@ -216,6 +217,12 @@ export default class Uploader extends React.Component {
     handleCutClick(ev) {
         ev.stopPropagation();
         this.props.onCutClick();
+    }
+
+    handleEditClick(ev) {
+        ev.stopPropagation();
+        console.log('in');
+        this.props.onEditClick();
     }
 
     handleDragLeave() {
@@ -633,9 +640,14 @@ export default class Uploader extends React.Component {
                                                 {this.props.cropIcon || <Svg.Crop />}
                                             </span>
                                         }
-                                        {(srcType === "video" || srcType === "audio" || srcType === 'iv') && this.props.cuttable === true &&
+                                        {srcType === "audio" && this.props.cuttable === true &&
                                             <span className="uploader-zone-fog-controls-control" onClick={this.handleCutClick}>
                                                 {this.props.cutIcon || <Svg.Cut />}
+                                            </span>
+                                        }
+                                        {(srcType === "video" || srcType === 'iv') && this.props.editable === true &&
+                                            <span className="uploader-zone-fog-controls-control" onClick={this.handleEditClick}>
+                                                {this.props.editIcon || <Svg.Edit />}
                                             </span>
                                         }
                                         {this.props.removable === true &&
@@ -814,6 +826,7 @@ Uploader.propTypes = {
     compact: PropTypes.bool,
     corsProof: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]), // func is a callback with src as its unique arg (e.g. we want to apply the CORS trick only for some urls, and not for others...)
     croppable: PropTypes.bool,
+    editable: PropTypes.bool,
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
     disabled: PropTypes.bool,
@@ -848,6 +861,7 @@ Uploader.propTypes = {
     onUploaderClick: PropTypes.func,
     onUrlInjectionError: PropTypes.func,
     onCutClick: PropTypes.func,
+    onEditClick: PropTypes.func,
     onAudioLoad: PropTypes.func,
     onVideoLoad: PropTypes.func,
     range: PropTypes.array,
@@ -875,6 +889,8 @@ Uploader.defaultProps = {
     },
     compact: false,
     corsProof: true,
+    editable: false,
+    editIcon: null, // if let null, it will be default one
     croppable: false,
     cropIcon: null, // if let null, it will be default one
     customAttributes: {},
@@ -901,6 +917,7 @@ Uploader.defaultProps = {
     onUploaderClick: null, // Useful with electron to use a custom file dialog
     onUrlInjectionError: (error, url) => null,
     onCutClick: () => null,
+    onEditClick: () => null,
     onAudioLoad: () => null,
     onVideoLoad: () => null,
     range: null,

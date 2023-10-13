@@ -67,8 +67,8 @@ class Page extends React.Component {
                     onInvalidFileExtensionError={(actualExtension, expectedExtensions) => console.log('onInvalidFileExtensionError: actual extension is ', actualExtension, ' and the expected are ', expectedExtensions)}
                     onInvalidURLError={() => alert('onInvalidURLError')}
                     onURLInjectionError={() => alert('onURLInjectionError')}
-                    additionalExtensions={{video: ['avi', 'avi']}} // Leave the 'avi' duplicate as it is, to ensure that the extensions are unique in the array provided by onInvalidFileExtensionError
-                    additionalMimeTypes={{video: ['video/avi']}} // Leave the 'mp4' duplicate as it is, to ensure that the extensions are unique in the array provided by onInvalidFileExtensionError
+                    additionalExtensions={{ video: ['avi', 'avi'] }} // Leave the 'avi' duplicate as it is, to ensure that the extensions are unique in the array provided by onInvalidFileExtensionError
+                    additionalMimeTypes={{ video: ['video/avi'] }} // Leave the 'mp4' duplicate as it is, to ensure that the extensions are unique in the array provided by onInvalidFileExtensionError
                 />
                 <Uploader
                     customAttributes={{
@@ -95,6 +95,19 @@ class Page extends React.Component {
                     onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError 2')}
                     onInvalidURLError={() => alert('onInvalidURLError 2')}
                     onURLInjectionError={() => alert('onURLInjectionError 2')}
+                />
+                <Uploader
+                    customAttributes={{
+                        root: {
+                            id: 'first-uploader'
+                        }
+                    }}
+                    compact={false}
+                    cuttable={true}
+                    editable={true}
+                    removable={true}
+                    fileType="video"
+                    src="https://upload.wikimedia.org/wikipedia/en/transcoded/6/6c/20th_Century_Studios_logo_animation_and_fanfare_%28since_2020%29.webm/20th_Century_Studios_logo_animation_and_fanfare_%28since_2020%29.webm.720p.vp9.webm"
                 />
                 <div id="second-uploader-parent">
                     <Uploader
@@ -142,7 +155,7 @@ class Page extends React.Component {
                         onURLInjectionError={() => alert('onURLInjectionError 3')}
                         onNotSupportedVideoLoad={(err) => console.error("Video source not supported", err)}
                         removeIcon={<Svg.Erase />}
-                        mediaCrop={{x: 0, y: 0, width: 100, height: 100}}
+                        mediaCrop={{ x: 0, y: 0, width: 100, height: 100 }}
                         backgroundSize="contain"
                     />
                 </div>
