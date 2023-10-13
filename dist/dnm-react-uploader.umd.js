@@ -19288,13 +19288,18 @@
 	    value: function handleClick(ev) {
 	      var _this3 = this;
 
-	      var onUploaderClick = this.props.onUploaderClick;
+	      var _this$props = this.props,
+	          onUploaderClick = _this$props.onUploaderClick,
+	          disabledUploader = _this$props.disabledUploader;
 
 	      if (onUploaderClick) {
 	        onUploaderClick().then(function (file) {
 	          if (file) _this3.change(file);
 	        })["catch"](function (e) {});
-	      } else this.input.click();
+	      } else {
+	        if (disabledUploader) return;
+	        this.input.click();
+	      }
 	    }
 	  }, {
 	    key: "handleCropClick",
@@ -19312,7 +19317,6 @@
 	    key: "handleEditClick",
 	    value: function handleEditClick(ev) {
 	      ev.stopPropagation();
-	      console.log('in');
 	      this.props.onEditClick();
 	    }
 	  }, {
@@ -19399,9 +19403,9 @@
 	  }, {
 	    key: "handleLoad",
 	    value: function handleLoad() {
-	      var _this$props = this.props,
-	          onFirstLoad = _this$props.onFirstLoad,
-	          onLoad = _this$props.onLoad;
+	      var _this$props2 = this.props,
+	          onFirstLoad = _this$props2.onFirstLoad,
+	          onLoad = _this$props2.onLoad;
 
 	      if (typeof this.firstLoadDone === 'undefined') {
 	        this.firstLoadDone = true;
@@ -19870,9 +19874,9 @@
 	  }, {
 	    key: "extensions",
 	    value: function extensions() {
-	      var _this$props2 = this.props,
-	          additionalExtensions = _this$props2.additionalExtensions,
-	          extendedFileFormatSupport = _this$props2.extendedFileFormatSupport;
+	      var _this$props3 = this.props,
+	          additionalExtensions = _this$props3.additionalExtensions,
+	          extendedFileFormatSupport = _this$props3.extendedFileFormatSupport;
 	      var extensions = {};
 	      ['audio', 'image', 'video'].forEach(function (type) {
 	        extensions[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].extensions), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].extensions : []), _toConsumableArray(_.get(additionalExtensions, type) || [])));
@@ -19882,9 +19886,9 @@
 	  }, {
 	    key: "mimeTypes",
 	    value: function mimeTypes() {
-	      var _this$props3 = this.props,
-	          additionalMimeTypes = _this$props3.additionalMimeTypes,
-	          extendedFileFormatSupport = _this$props3.extendedFileFormatSupport;
+	      var _this$props4 = this.props,
+	          additionalMimeTypes = _this$props4.additionalMimeTypes,
+	          extendedFileFormatSupport = _this$props4.extendedFileFormatSupport;
 	      var mimeTypes = {};
 	      ['audio', 'image', 'video'].forEach(function (type) {
 	        mimeTypes[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].mimeTypes), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].mimeTypes : []), _toConsumableArray(_.get(additionalMimeTypes, type) || [])));
@@ -20006,6 +20010,7 @@
 	  customAttributes: PropTypes.object,
 	  cuttable: PropTypes.bool,
 	  disabled: PropTypes.bool,
+	  disabledUploader: PropTypes.bool,
 	  extendedFileFormatSupport: PropTypes.oneOfType([PropTypes.shape({
 	    audio: PropTypes.bool,
 	    image: PropTypes.bool,
@@ -20065,6 +20070,7 @@
 	  cutIcon: null,
 	  // if let null, it will be default one
 	  disabled: false,
+	  disabledUploader: false,
 	  extendedFileFormatSupport: false,
 	  fileType: 'image',
 	  // may be one (or several) of: image, video

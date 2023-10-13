@@ -106,6 +106,7 @@ class Page extends React.Component {
                     cuttable={true}
                     editable={true}
                     removable={true}
+                    disabledUploader={true}
                     fileType="video"
                     src="https://upload.wikimedia.org/wikipedia/en/transcoded/6/6c/20th_Century_Studios_logo_animation_and_fanfare_%28since_2020%29.webm/20th_Century_Studios_logo_animation_and_fanfare_%28since_2020%29.webm.720p.vp9.webm"
                 />

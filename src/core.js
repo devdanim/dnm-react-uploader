@@ -200,12 +200,15 @@ export default class Uploader extends React.Component {
     }
 
     handleClick(ev) {
-        const { onUploaderClick } = this.props;
+        const { onUploaderClick, disabledUploader } = this.props;
         if (onUploaderClick) {
             onUploaderClick().then((file) => {
                 if (file) this.change(file);
             }).catch(e => { });
-        } else this.input.click();
+        } else {
+            if (disabledUploader) return;
+            this.input.click();
+        }
     }
 
     handleCropClick(ev) {
@@ -221,7 +224,6 @@ export default class Uploader extends React.Component {
 
     handleEditClick(ev) {
         ev.stopPropagation();
-        console.log('in');
         this.props.onEditClick();
     }
 
@@ -830,6 +832,7 @@ Uploader.propTypes = {
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
     disabled: PropTypes.bool,
+    disabledUploader: PropTypes.bool,
     extendedFileFormatSupport: PropTypes.oneOfType([
         PropTypes.shape({
             audio: PropTypes.bool,
@@ -897,6 +900,7 @@ Uploader.defaultProps = {
     cuttable: false,
     cutIcon: null, // if let null, it will be default one
     disabled: false,
+    disabledUploader: false,
     extendedFileFormatSupport: false,
     fileType: 'image', // may be one (or several) of: image, video
     hoverPlay: true,
