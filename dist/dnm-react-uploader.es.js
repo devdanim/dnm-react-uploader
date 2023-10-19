@@ -15963,10 +15963,10 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       }, srcType === "image" && this.props.croppable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleCropClick
-      }, this.props.cropIcon || jsx(Crop, null)), srcType === "audio" && this.props.cuttable === true && jsx("span", {
+      }, this.props.cropIcon || jsx(Crop, null)), this.props.cuttable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleCutClick
-      }, this.props.cutIcon || jsx(Cut, null)), (srcType === "video" || srcType === 'iv') && this.props.editable === true && jsx("span", {
+      }, this.props.cutIcon || jsx(Cut, null)), this.props.editable === true && jsx("span", {
         className: "uploader-zone-fog-controls-control",
         onClick: this.handleEditClick
       }, this.props.editIcon || jsx(Edit, null)), this.props.removable === true && jsx("span", {

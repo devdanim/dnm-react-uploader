@@ -642,12 +642,12 @@ export default class Uploader extends React.Component {
                                                 {this.props.cropIcon || <Svg.Crop />}
                                             </span>
                                         }
-                                        {srcType === "audio" && this.props.cuttable === true &&
+                                        {this.props.cuttable === true &&
                                             <span className="uploader-zone-fog-controls-control" onClick={this.handleCutClick}>
                                                 {this.props.cutIcon || <Svg.Cut />}
                                             </span>
                                         }
-                                        {(srcType === "video" || srcType === 'iv') && this.props.editable === true &&
+                                        {this.props.editable === true &&
                                             <span className="uploader-zone-fog-controls-control" onClick={this.handleEditClick}>
                                                 {this.props.editIcon || <Svg.Edit />}
                                             </span>
