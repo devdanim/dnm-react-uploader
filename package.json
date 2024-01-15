@@ -1,6 +1,6 @@
 {
   "name": "dnm-react-uploader",
-  "version": "1.25.3",
+  "version": "1.25.4",
   "description": "React file uploader",
   "main": "dist/dnm-react-uploader.umd.min.js",
   "module": "dist/dnm-react-uploader.es.min.js",
@@ -57,8 +57,8 @@
     "rollup-plugin-terser": "^5.2.0"
   },
   "dependencies": {
-    "@dschoon/react-waves": "^4.0.3",
     "@emotion/core": "^10.0.22",
+    "@wavesurfer/react": "^1.0.4",
     "browser-image-compression": "^2.0.0",
     "deasync": "^0.1.20",
     "fast-average-color": "^6.4.0",

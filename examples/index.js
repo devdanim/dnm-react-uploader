@@ -33,7 +33,7 @@ class Page extends React.Component {
                 src: 'https://s3.eu-west-3.amazonaws.com/com.danim.test/fireplace.mp3',
                 // srcType: 'image/png'
             },
-            range: [10, 60]
+            range: [0, 60]
         };
     }
 

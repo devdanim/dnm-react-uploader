@@ -8,9 +8,9 @@ const distName = 'dnm-react-uploader';
 
 const external = {
     es: [
-        'react', 
-        'react-dom', 
-        'prop-types', 
+        'react',
+        'react-dom',
+        'prop-types',
         'lodash-es/camelCase',
         'lodash-es/concat',
         'lodash-es/debounce',
@@ -25,8 +25,9 @@ const external = {
         'lodash-es/split',
         'validator/lib/isURL',
         'browser-image-compression',
+        '@wavesurfer/react'
     ],
-    umd: ['react', 'react-dom', 'prop-types', 'browser-image-compression']
+    umd: ['react', 'react-dom', 'prop-types', 'browser-image-compression', '@wavesurfer/react']
 };
 
 const rollupConfig = ['es', 'umd'].map(format => ({
@@ -40,6 +41,7 @@ const rollupConfig = ['es', 'umd'].map(format => ({
             'react-dom': 'ReactDOM',
             'prop-types': 'PropTypes',
             'browser-image-compression': 'imageCompression',
+            '@wavesurfer/react': 'WavesurferPlayer'
         } : null
     },
     external: external[format],
