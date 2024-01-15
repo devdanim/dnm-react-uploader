@@ -325,6 +325,7 @@ export default class Uploader extends React.Component {
         if (this.audio) {
             const { onAudioLoad } = this.props;
             this.audio.addEventListener('timeupdate', () => this.updateMediaLoop(this.audio), false);
+            this.updatePlayerVolume();
             onAudioLoad(this.audio);
         }
         this.handleLoad();
@@ -332,6 +333,12 @@ export default class Uploader extends React.Component {
 
     handleImageLoad() {
         this.handleLoad();
+    }
+
+    updatePlayerVolume = () => {
+        const { volume } = this.props;
+        const volumeDbToLinear = Math.pow(10, volume / 20);
+        if (this.audio && volume) this.audio.volume = volumeDbToLinear;
     }
 
     handleVideoLoad() {
@@ -551,6 +558,7 @@ export default class Uploader extends React.Component {
                             className="uploader-waveform"
                             height={this.zone ? this.zone.clientHeight : 100}
                             range={this.props.range}
+                            volume={this.props.volume}
                             src={this.props.src}
                             onReady={this.handleAudioLoad}
                         />
@@ -871,6 +879,7 @@ Uploader.propTypes = {
     removable: PropTypes.bool,
     src: PropTypes.string,
     srcType: PropTypes.string, // mime
+    volume: PropTypes.number,
     withUrlInput: PropTypes.bool,
 };
 
@@ -929,5 +938,6 @@ Uploader.defaultProps = {
     removeIcon: null, // if let null, it will be default one
     src: null,
     srcType: null, // e.g. video, video/mp4 (which is a more detailed MIME), etc.
+    volume: 1,
     withUrlInput: false,
 };

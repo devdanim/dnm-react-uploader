@@ -23,27 +23,6 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-var defineProperty = createCommonjsModule(function (module) {
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
-});
-
-var _defineProperty = unwrapExports(defineProperty);
-
 var arrayLikeToArray = createCommonjsModule(function (module) {
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
@@ -335,6 +314,27 @@ module.exports = _getPrototypeOf, module.exports.__esModule = true, module.expor
 });
 
 var _getPrototypeOf = unwrapExports(getPrototypeOf);
+
+var defineProperty = createCommonjsModule(function (module) {
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
+});
+
+var _defineProperty = unwrapExports(defineProperty);
 
 var runtime_1 = createCommonjsModule(function (module) {
 /**
@@ -5357,8 +5357,6 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
       });
       onReady(wavesurfer);
 
-      _this.redraw();
-
       _this.setState({
         wavesurfer: wavesurfer,
         wavesurferRegions: wavesurferRegions
@@ -5369,8 +5367,6 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
       wavesurfer: null,
       wavesurferRegions: null
     };
-    _this._redraw = _this._redraw.bind(_assertThisInitialized(_this));
-    _this.redraw = debounce(_this._redraw, 250);
     return _this;
   }
 
@@ -5382,35 +5378,57 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
-      var height = this.props.height;
+      var _this$state = this.state,
+          wavesurfer = _this$state.wavesurfer,
+          wavesurferRegions = _this$state.wavesurferRegions;
+      var _this$props2 = this.props,
+          range = _this$props2.range,
+          volume = _this$props2.volume;
+      var volumeDbToLinear = Math.pow(10, volume / 20);
 
-      if (prevProps.height !== height) {
-        this.redraw();
+      if (wavesurfer) {
+        if (prevProps.range !== range) wavesurfer.seekTo(Math.min(1, Math.max(0, range[0])));
+
+        if (prevProps.volume !== volumeDbToLinear) {
+          wavesurfer.setVolume(volumeDbToLinear);
+        }
+      }
+
+      if (wavesurferRegions && prevProps.range !== range) {
+        wavesurferRegions.clearRegions();
+        wavesurferRegions.addRegion({
+          id: 'cut',
+          start: range ? range[0] : 0,
+          end: range ? range[1] : 0,
+          color: 'rgba(146, 210, 117, 0.3)',
+          resize: false,
+          drag: false
+        });
       }
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
+      var _this$state2 = this.state,
+          wavesurfer = _this$state2.wavesurfer,
+          wavesurferRegions = _this$state2.wavesurferRegions;
       window.removeEventListener('resize', this.redraw);
-    }
-  }, {
-    key: "_redraw",
-    value: function _redraw() {
-      var height = this.props.height;
-      var wavesurfer = this.state.wavesurfer;
 
       if (wavesurfer) {
-        wavesurfer.setHeight(height);
-        wavesurfer.drawBuffer();
+        wavesurfer.destroy();
+      }
+
+      if (wavesurferRegions) {
+        wavesurferRegions.destroy();
       }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$props2 = this.props,
-          src = _this$props2.src,
-          className = _this$props2.className,
-          height = _this$props2.height;
+      var _this$props3 = this.props,
+          src = _this$props3.src,
+          className = _this$props3.className,
+          height = _this$props3.height;
       return /*#__PURE__*/React.createElement("div", {
         className: className
       }, /*#__PURE__*/React.createElement(WavesurferPlayer, {
@@ -5486,6 +5504,13 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, Uploader);
 
     _this = _super.call(this, props);
+
+    _defineProperty(_assertThisInitialized(_this), "updatePlayerVolume", function () {
+      var volume = _this.props.volume;
+      var volumeDbToLinear = Math.pow(10, volume / 20);
+      if (_this.audio && volume) _this.audio.volume = volumeDbToLinear;
+    });
+
     _this.state = {
       beingDropTarget: false,
       height: null,
@@ -5890,6 +5915,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
         this.audio.addEventListener('timeupdate', function () {
           return _this4.updateMediaLoop(_this4.audio);
         }, false);
+        this.updatePlayerVolume();
         onAudioLoad(this.audio);
       }
 
@@ -6143,6 +6169,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               className: "uploader-waveform",
               height: this.zone ? this.zone.clientHeight : 100,
               range: this.props.range,
+              volume: this.props.volume,
               src: this.props.src,
               onReady: this.handleAudioLoad
             }), jsx("audio", {
@@ -6468,7 +6495,7 @@ Uploader.propTypes = (_Uploader$propTypes = {
   onRemoveClick: PropTypes.func,
   onUploaderClick: PropTypes.func,
   onUrlInjectionError: PropTypes.func
-}, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onEditClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onAudioLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
+}, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onEditClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onAudioLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "volume", PropTypes.number), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
 Uploader.defaultProps = {
   additionalExtensions: {},
   additionalMimeTypes: {},
@@ -6565,6 +6592,7 @@ Uploader.defaultProps = {
   src: null,
   srcType: null,
   // e.g. video, video/mp4 (which is a more detailed MIME), etc.
+  volume: 1,
   withUrlInput: false
 };
 

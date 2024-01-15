@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import WavesurferPlayer from '@wavesurfer/react'
 import Regions from 'wavesurfer.js/dist/plugins/regions.esm.js';
-import debounce from 'lodash-es/debounce';
 
 export default class Waveform extends React.Component {
 
@@ -12,8 +11,6 @@ export default class Waveform extends React.Component {
       wavesurfer: null,
       wavesurferRegions: null
     }
-    this._redraw = this._redraw.bind(this);
-    this.redraw = debounce(this._redraw, 250);
   }
 
   componentDidMount() {
@@ -21,22 +18,36 @@ export default class Waveform extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { height } = this.props;
-    if (prevProps.height !== height) {
-      this.redraw();
+    const { wavesurfer, wavesurferRegions } = this.state;
+    const { range, volume } = this.props;
+    const volumeDbToLinear = Math.pow(10, volume / 20);
+    if (wavesurfer) {
+      if (prevProps.range !== range) wavesurfer.seekTo(Math.min(1, Math.max(0, range[0])));
+      if (prevProps.volume !== volumeDbToLinear) {
+        wavesurfer.setVolume(volumeDbToLinear);
+      }
+    }
+    if (wavesurferRegions && prevProps.range !== range) {
+      wavesurferRegions.clearRegions();
+      wavesurferRegions.addRegion({
+        id: 'cut',
+        start: range ? range[0] : 0,
+        end: range ? range[1] : 0,
+        color: 'rgba(146, 210, 117, 0.3)',
+        resize: false,
+        drag: false
+      })
     }
   }
 
   componentWillUnmount() {
+    const { wavesurfer, wavesurferRegions } = this.state;
     window.removeEventListener('resize', this.redraw);
-  }
-
-  _redraw() {
-    const { height } = this.props;
-    const { wavesurfer } = this.state;
     if (wavesurfer) {
-      wavesurfer.setHeight(height);
-      wavesurfer.drawBuffer();
+      wavesurfer.destroy();
+    }
+    if (wavesurferRegions) {
+      wavesurferRegions.destroy();
     }
   }
 
@@ -52,7 +63,6 @@ export default class Waveform extends React.Component {
       drag: false
     })
     onReady(wavesurfer);
-    this.redraw()
     this.setState(({ wavesurfer, wavesurferRegions }));
   }
 
