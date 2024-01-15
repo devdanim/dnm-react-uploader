@@ -5381,17 +5381,10 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
       var _this$state = this.state,
           wavesurfer = _this$state.wavesurfer,
           wavesurferRegions = _this$state.wavesurferRegions;
-      var _this$props2 = this.props,
-          range = _this$props2.range,
-          volume = _this$props2.volume;
-      var volumeDbToLinear = Math.pow(10, volume / 20);
+      var range = this.props.range;
 
       if (wavesurfer) {
         if (prevProps.range !== range) wavesurfer.seekTo(Math.min(1, Math.max(0, range[0])));
-
-        if (prevProps.volume !== volumeDbToLinear) {
-          wavesurfer.setVolume(volumeDbToLinear);
-        }
       }
 
       if (wavesurferRegions && prevProps.range !== range) {
@@ -5425,10 +5418,10 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props3 = this.props,
-          src = _this$props3.src,
-          className = _this$props3.className,
-          height = _this$props3.height;
+      var _this$props2 = this.props,
+          src = _this$props2.src,
+          className = _this$props2.className,
+          height = _this$props2.height;
       return /*#__PURE__*/React.createElement("div", {
         className: className
       }, /*#__PURE__*/React.createElement(WavesurferPlayer, {
@@ -5506,9 +5499,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this, props);
 
     _defineProperty(_assertThisInitialized(_this), "updatePlayerVolume", function () {
-      var volume = _this.props.volume;
-      var volumeDbToLinear = Math.pow(10, volume / 20);
-      if (_this.audio && volume) _this.audio.volume = volumeDbToLinear;
+      var gain = _this.props.gain;
+      var dbToLinear = Math.pow(10, gain / 20);
+      if (_this.audio && gain) _this.audio.volume = dbToLinear;
     });
 
     _this.state = {
@@ -6169,7 +6162,6 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
               className: "uploader-waveform",
               height: this.zone ? this.zone.clientHeight : 100,
               range: this.props.range,
-              volume: this.props.volume,
               src: this.props.src,
               onReady: this.handleAudioLoad
             }), jsx("audio", {
@@ -6495,7 +6487,7 @@ Uploader.propTypes = (_Uploader$propTypes = {
   onRemoveClick: PropTypes.func,
   onUploaderClick: PropTypes.func,
   onUrlInjectionError: PropTypes.func
-}, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onEditClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onAudioLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "volume", PropTypes.number), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
+}, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onEditClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onAudioLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "gain", PropTypes.number), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
 Uploader.defaultProps = {
   additionalExtensions: {},
   additionalMimeTypes: {},
@@ -6586,13 +6578,13 @@ Uploader.defaultProps = {
     return null;
   },
   range: null,
+  gain: 0,
   removable: false,
   removeIcon: null,
   // if let null, it will be default one
   src: null,
   srcType: null,
   // e.g. video, video/mp4 (which is a more detailed MIME), etc.
-  volume: 1,
   withUrlInput: false
 };
 

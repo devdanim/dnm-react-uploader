@@ -19,13 +19,9 @@ export default class Waveform extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { wavesurfer, wavesurferRegions } = this.state;
-    const { range, volume } = this.props;
-    const volumeDbToLinear = Math.pow(10, volume / 20);
+    const { range } = this.props;
     if (wavesurfer) {
       if (prevProps.range !== range) wavesurfer.seekTo(Math.min(1, Math.max(0, range[0])));
-      if (prevProps.volume !== volumeDbToLinear) {
-        wavesurfer.setVolume(volumeDbToLinear);
-      }
     }
     if (wavesurferRegions && prevProps.range !== range) {
       wavesurferRegions.clearRegions();

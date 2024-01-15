@@ -128,7 +128,7 @@ class Page extends React.Component {
                         onCropClick={() => alert('onCropClick 3')}
                         cuttable
                         range={this.state.range}
-                        volume={0}
+                        gain={0}
                         onCutClick={() => {
                             alert('onCutClick 3')
                             console.log('Fireplace replaced with rain in 4s')
