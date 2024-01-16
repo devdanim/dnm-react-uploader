@@ -13,15 +13,11 @@ export default class Waveform extends React.Component {
     }
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.redraw);
-  }
-
   componentDidUpdate(prevProps) {
     const { wavesurfer, wavesurferRegions } = this.state;
     const { range } = this.props;
     if (wavesurfer) {
-      if (prevProps.range !== range) wavesurfer.seekTo(Math.min(1, Math.max(0, range[0])));
+      if (range && prevProps.range !== range) wavesurfer.seekTo(Math.min(1, Math.max(0, range[0])));
     }
     if (wavesurferRegions && prevProps.range !== range) {
       wavesurferRegions.clearRegions();
@@ -38,7 +34,6 @@ export default class Waveform extends React.Component {
 
   componentWillUnmount() {
     const { wavesurfer, wavesurferRegions } = this.state;
-    window.removeEventListener('resize', this.redraw);
     if (wavesurfer) {
       wavesurfer.destroy();
     }
@@ -59,7 +54,7 @@ export default class Waveform extends React.Component {
       drag: false
     })
     onReady(wavesurfer);
-    this.setState(({ wavesurfer, wavesurferRegions }));
+    this.setState({ wavesurfer, wavesurferRegions });
   }
 
 

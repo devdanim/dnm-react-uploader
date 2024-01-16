@@ -5371,11 +5371,6 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
   }
 
   _createClass(Waveform, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      window.addEventListener('resize', this.redraw);
-    }
-  }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       var _this$state = this.state,
@@ -5384,7 +5379,7 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
       var range = this.props.range;
 
       if (wavesurfer) {
-        if (prevProps.range !== range) wavesurfer.seekTo(Math.min(1, Math.max(0, range[0])));
+        if (range && prevProps.range !== range) wavesurfer.seekTo(Math.min(1, Math.max(0, range[0])));
       }
 
       if (wavesurferRegions && prevProps.range !== range) {
@@ -5405,7 +5400,6 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
       var _this$state2 = this.state,
           wavesurfer = _this$state2.wavesurfer,
           wavesurferRegions = _this$state2.wavesurferRegions;
-      window.removeEventListener('resize', this.redraw);
 
       if (wavesurfer) {
         wavesurfer.destroy();
