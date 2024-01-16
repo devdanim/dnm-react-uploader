@@ -76,7 +76,7 @@ export default class Waveform extends React.Component {
           zoom={0}
           hideScrollbar={true}
           interact={false}
-          progressColor={'#46be8ae6'}
+          progressColor={'#aeb3b7'}
           onReady={this.onReady}
         />
       </div>
