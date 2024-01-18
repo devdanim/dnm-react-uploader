@@ -127,7 +127,7 @@ class Page extends React.Component {
                         croppable
                         onCropClick={() => alert('onCropClick 3')}
                         cuttable
-                        range={null}
+                        range={[3, null]}
                         gain={0}
                         onCutClick={() => {
                             alert('onCutClick 3')

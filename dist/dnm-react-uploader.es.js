@@ -5343,9 +5343,7 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this, props);
 
     _defineProperty(_assertThisInitialized(_this), "onReady", function (wavesurfer) {
-      var _this$props = _this.props,
-          onReady = _this$props.onReady,
-          range = _this$props.range;
+      var range = _this.props.range;
       var wavesurferRegions = wavesurfer.registerPlugin(r.create());
       wavesurferRegions.addRegion({
         id: 'cut',
@@ -5355,7 +5353,6 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
         resize: false,
         drag: false
       });
-      onReady(wavesurfer);
 
       _this.setState({
         wavesurfer: wavesurfer,
@@ -5412,10 +5409,10 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props2 = this.props,
-          src = _this$props2.src,
-          className = _this$props2.className,
-          height = _this$props2.height;
+      var _this$props = this.props,
+          src = _this$props.src,
+          className = _this$props.className,
+          height = _this$props.height;
       return /*#__PURE__*/React.createElement("div", {
         className: className
       }, /*#__PURE__*/React.createElement(WavesurferPlayer, {
@@ -5438,16 +5435,12 @@ var Waveform = /*#__PURE__*/function (_React$Component) {
 Waveform.propTypes = {
   className: PropTypes.string,
   height: PropTypes.number,
-  onReady: PropTypes.func,
   range: PropTypes.array,
   src: PropTypes.string
 };
 Waveform.defaultProps = {
   className: '',
   height: 100,
-  onReady: function onReady() {
-    return null;
-  },
   range: null,
   src: null
 };
@@ -5498,6 +5491,15 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       if (_this.audio && gain) _this.audio.volume = dbToLinear;
     });
 
+    _defineProperty(_assertThisInitialized(_this), "getFormattedRange", function () {
+      var range = _this.props.range;
+      var videoDuration = _this.state.videoDuration;
+      if (!range) return [0, videoDuration];
+      var inValue = range[0] || 0;
+      var outValue = range[1] || videoDuration;
+      return [inValue, outValue];
+    });
+
     _this.state = {
       beingDropTarget: false,
       height: null,
@@ -5508,7 +5510,8 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       width: null,
       imageBackgroundColor: 'rgba(0, 0, 0, 0)',
       imageIsDark: false,
-      _forceUpdateCounter: 0
+      _forceUpdateCounter: 0,
+      videoDuration: 0
     };
     _this.change = _this.change.bind(_assertThisInitialized(_this));
     _this.getFileTypes = _this.getFileTypes.bind(_assertThisInitialized(_this));
@@ -5898,11 +5901,16 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       var _this4 = this;
 
       if (this.audio) {
+        var _this$audio;
+
         var onAudioLoad = this.props.onAudioLoad;
         this.audio.addEventListener('timeupdate', function () {
           return _this4.updateMediaLoop(_this4.audio);
         }, false);
         this.updatePlayerVolume();
+        this.setState({
+          videoDuration: ((_this$audio = this.audio) === null || _this$audio === void 0 ? void 0 : _this$audio.duration) || 0
+        });
         onAudioLoad(this.audio);
       }
 
@@ -5919,10 +5927,15 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       var _this5 = this;
 
       if (this.video) {
+        var _this$video;
+
         var onVideoLoad = this.props.onVideoLoad;
         this.video.addEventListener('timeupdate', function () {
           return _this5.updateMediaLoop(_this5.video);
         }, false);
+        this.setState({
+          videoDuration: ((_this$video = this.video) === null || _this$video === void 0 ? void 0 : _this$video.duration) || 0
+        });
         onVideoLoad(this.video);
       }
 
@@ -6028,6 +6041,7 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       var _this8 = this;
 
       var srcType = this.getSrcType ? this.getSrcType() : null;
+      var range = this.getFormattedRange();
       var media = null,
           icon = null,
           withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable),
@@ -6155,15 +6169,15 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
             }, jsx(Waveform, {
               className: "uploader-waveform",
               height: this.zone ? this.zone.clientHeight : 100,
-              range: this.props.range,
-              src: this.props.src,
-              onReady: this.handleAudioLoad
+              range: range,
+              src: this.props.src
             }), jsx("audio", {
               autoPlay: autoPlay,
               ref: function ref(obj) {
                 return _this8.audio = obj;
               },
               src: this.props.src,
+              onLoadedData: this.handleAudioLoad,
               loop: true,
               controls: true,
               style: {

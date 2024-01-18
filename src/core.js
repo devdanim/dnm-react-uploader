@@ -56,6 +56,7 @@ export default class Uploader extends React.Component {
             imageBackgroundColor: 'rgba(0, 0, 0, 0)',
             imageIsDark: false,
             _forceUpdateCounter: 0,
+            videoDuration: 0
         };
 
         this.change = this.change.bind(this);
@@ -326,6 +327,7 @@ export default class Uploader extends React.Component {
             const { onAudioLoad } = this.props;
             this.audio.addEventListener('timeupdate', () => this.updateMediaLoop(this.audio), false);
             this.updatePlayerVolume();
+            this.setState({ videoDuration: this.audio?.duration || 0 })
             onAudioLoad(this.audio);
         }
         this.handleLoad();
@@ -345,6 +347,7 @@ export default class Uploader extends React.Component {
         if (this.video) {
             const { onVideoLoad } = this.props;
             this.video.addEventListener('timeupdate', () => this.updateMediaLoop(this.video), false);
+            this.setState({ videoDuration: this.video?.duration || 0 })
             onVideoLoad(this.video);
         }
         this.handleLoad();
@@ -423,8 +426,18 @@ export default class Uploader extends React.Component {
             });
     }
 
+    getFormattedRange = () => {
+        const { range } = this.props;
+        const { videoDuration } = this.state
+        if (!range) return [0, videoDuration]
+
+        let inValue = range[0] || 0;
+        let outValue = range[1] || videoDuration;
+        return [inValue, outValue]
+    }
     render() {
         const srcType = this.getSrcType ? this.getSrcType() : null;
+        const range = this.getFormattedRange();
         let media = null,
             icon = null,
             withControls = this.props.src && (this.props.removable || this.props.croppable || this.props.cuttable),
@@ -557,14 +570,14 @@ export default class Uploader extends React.Component {
                         <Waveform
                             className="uploader-waveform"
                             height={this.zone ? this.zone.clientHeight : 100}
-                            range={this.props.range}
+                            range={range}
                             src={this.props.src}
-                            onReady={this.handleAudioLoad}
                         />
                         <audio
                             autoPlay={autoPlay}
                             ref={obj => this.audio = obj}
                             src={this.props.src}
+                            onLoadedData={this.handleAudioLoad}
                             loop
                             controls
                             style={{
