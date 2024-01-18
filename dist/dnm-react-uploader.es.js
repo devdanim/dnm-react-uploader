@@ -5903,11 +5903,13 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
       if (this.audio) {
         var _this$audio;
 
-        var onAudioLoad = this.props.onAudioLoad;
+        var _this$props3 = this.props,
+            onAudioLoad = _this$props3.onAudioLoad,
+            gain = _this$props3.gain;
         this.audio.addEventListener('timeupdate', function () {
           return _this4.updateMediaLoop(_this4.audio);
         }, false);
-        this.updatePlayerVolume();
+        if (gain) this.updatePlayerVolume();
         this.setState({
           videoDuration: ((_this$audio = this.audio) === null || _this$audio === void 0 ? void 0 : _this$audio.duration) || 0
         });
@@ -6330,9 +6332,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "extensions",
     value: function extensions() {
-      var _this$props3 = this.props,
-          additionalExtensions = _this$props3.additionalExtensions,
-          extendedFileFormatSupport = _this$props3.extendedFileFormatSupport;
+      var _this$props4 = this.props,
+          additionalExtensions = _this$props4.additionalExtensions,
+          extendedFileFormatSupport = _this$props4.extendedFileFormatSupport;
       var extensions = {};
       ['audio', 'image', 'video'].forEach(function (type) {
         extensions[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].extensions), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].extensions : []), _toConsumableArray(_.get(additionalExtensions, type) || [])));
@@ -6342,9 +6344,9 @@ var Uploader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "mimeTypes",
     value: function mimeTypes() {
-      var _this$props4 = this.props,
-          additionalMimeTypes = _this$props4.additionalMimeTypes,
-          extendedFileFormatSupport = _this$props4.extendedFileFormatSupport;
+      var _this$props5 = this.props,
+          additionalMimeTypes = _this$props5.additionalMimeTypes,
+          extendedFileFormatSupport = _this$props5.extendedFileFormatSupport;
       var mimeTypes = {};
       ['audio', 'image', 'video'].forEach(function (type) {
         mimeTypes[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].mimeTypes), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].mimeTypes : []), _toConsumableArray(_.get(additionalMimeTypes, type) || [])));
@@ -6586,7 +6588,7 @@ Uploader.defaultProps = {
     return null;
   },
   range: null,
-  gain: 0,
+  gain: null,
   removable: false,
   removeIcon: null,
   // if let null, it will be default one

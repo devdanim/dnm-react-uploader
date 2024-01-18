@@ -324,9 +324,9 @@ export default class Uploader extends React.Component {
 
     handleAudioLoad() {
         if (this.audio) {
-            const { onAudioLoad } = this.props;
+            const { onAudioLoad, gain } = this.props;
             this.audio.addEventListener('timeupdate', () => this.updateMediaLoop(this.audio), false);
-            this.updatePlayerVolume();
+            if (gain) this.updatePlayerVolume();
             this.setState({ videoDuration: this.audio?.duration || 0 })
             onAudioLoad(this.audio);
         }
@@ -946,7 +946,7 @@ Uploader.defaultProps = {
     onAudioLoad: () => null,
     onVideoLoad: () => null,
     range: null,
-    gain: 0,
+    gain: null,
     removable: false,
     removeIcon: null, // if let null, it will be default one
     src: null,
