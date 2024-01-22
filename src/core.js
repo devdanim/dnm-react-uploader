@@ -243,7 +243,7 @@ export default class Uploader extends React.Component {
         const srcType = this.getSrcType();
         if (!this.playing && this.props.hoverPlay && srcType === 'audio') {
             this.playing = true;
-            if (this.audio) this.audio.play();
+            if (this.audio && this.audio.paused) this.audio.play();
         }
     }
 
@@ -251,7 +251,7 @@ export default class Uploader extends React.Component {
         const srcType = this.getSrcType();
         if (!this.playing && this.props.hoverPlay && srcType === 'audio') {
             this.playing = true;
-            if (this.audio) this.audio.play();
+            if (this.audio && this.audio.paused) this.audio.play();
         }
     }
 
@@ -259,7 +259,7 @@ export default class Uploader extends React.Component {
         const srcType = this.getSrcType();
         if (this.playing && this.props.hoverPlay && srcType === 'audio') {
             this.playing = false;
-            if (this.audio) this.audio.pause();
+            if (this.audio && !this.audio.paused) this.audio.pause();
         }
     }
 
@@ -324,9 +324,9 @@ export default class Uploader extends React.Component {
 
     handleAudioLoad() {
         if (this.audio) {
-            const { onAudioLoad, gain } = this.props;
+            const { onAudioLoad } = this.props;
             this.audio.addEventListener('timeupdate', () => this.updateMediaLoop(this.audio), false);
-            if (gain) this.updatePlayerVolume();
+            this.updatePlayerVolume();
             this.setState({ videoDuration: this.audio?.duration || 0 })
             onAudioLoad(this.audio);
         }
@@ -341,6 +341,7 @@ export default class Uploader extends React.Component {
         const { gain } = this.props;
         const dbToLinear = Math.pow(10, gain / 20);
         if (this.audio && gain) this.audio.volume = dbToLinear;
+        if (this.audio) this.audio.volume = gain ? dbToLinear : 0.5;
     }
 
     handleVideoLoad() {
@@ -384,7 +385,7 @@ export default class Uploader extends React.Component {
     updateMediaLoop(media) {
         const { range } = this.props;
         if (media && range) {
-            if (media.currentTime < range[0] || media.currentTime > range[1]) media.currentTime = range[0];
+            if (media.currentTime < range[0] || range[1] && media.currentTime > range[1]) media.currentTime = range[0];
         }
     }
 
@@ -571,15 +572,15 @@ export default class Uploader extends React.Component {
                             className="uploader-waveform"
                             height={this.zone ? this.zone.clientHeight : 100}
                             range={range}
+                            onReady={this.handleAudioLoad}
                             src={this.props.src}
                         />
                         <audio
                             autoPlay={autoPlay}
+                            controls
                             ref={obj => this.audio = obj}
                             src={this.props.src}
-                            onLoadedData={this.handleAudioLoad}
                             loop
-                            controls
                             style={{
                                 position: 'fixed',
                                 top: '-9999px',

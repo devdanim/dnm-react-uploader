@@ -9182,7 +9182,9 @@
 	    _this = _super.call(this, props);
 
 	    _defineProperty(_assertThisInitialized(_this), "onReady", function (wavesurfer) {
-	      var range = _this.props.range;
+	      var _this$props = _this.props,
+	          range = _this$props.range,
+	          onReady = _this$props.onReady;
 	      var wavesurferRegions = wavesurfer.registerPlugin(r.create());
 	      wavesurferRegions.addRegion({
 	        id: 'cut',
@@ -9197,6 +9199,8 @@
 	        wavesurfer: wavesurfer,
 	        wavesurferRegions: wavesurferRegions
 	      });
+
+	      if (onReady) _this.props.onReady();
 	    });
 
 	    _this.state = {
@@ -9248,10 +9252,10 @@
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      var _this$props = this.props,
-	          src = _this$props.src,
-	          className = _this$props.className,
-	          height = _this$props.height;
+	      var _this$props2 = this.props,
+	          src = _this$props2.src,
+	          className = _this$props2.className,
+	          height = _this$props2.height;
 	      return /*#__PURE__*/React__default.createElement("div", {
 	        className: className
 	      }, /*#__PURE__*/React__default.createElement(WavesurferPlayer, {
@@ -9275,13 +9279,15 @@
 	  className: PropTypes.string,
 	  height: PropTypes.number,
 	  range: PropTypes.array,
-	  src: PropTypes.string
+	  src: PropTypes.string,
+	  onReady: PropTypes.func
 	};
 	Waveform.defaultProps = {
 	  className: '',
 	  height: 100,
 	  range: null,
-	  src: null
+	  src: null,
+	  onReady: function onReady() {}
 	};
 
 	var _templateObject$1, _Uploader$propTypes;
@@ -9328,6 +9334,7 @@
 	      var gain = _this.props.gain;
 	      var dbToLinear = Math.pow(10, gain / 20);
 	      if (_this.audio && gain) _this.audio.volume = dbToLinear;
+	      if (_this.audio) _this.audio.volume = gain ? dbToLinear : 0.5;
 	    });
 
 	    _defineProperty(_assertThisInitialized(_this), "getFormattedRange", function () {
@@ -9627,7 +9634,7 @@
 
 	      if (!this.playing && this.props.hoverPlay && srcType === 'audio') {
 	        this.playing = true;
-	        if (this.audio) this.audio.play();
+	        if (this.audio && this.audio.paused) this.audio.play();
 	      }
 	    }
 	  }, {
@@ -9637,7 +9644,7 @@
 
 	      if (!this.playing && this.props.hoverPlay && srcType === 'audio') {
 	        this.playing = true;
-	        if (this.audio) this.audio.play();
+	        if (this.audio && this.audio.paused) this.audio.play();
 	      }
 	    }
 	  }, {
@@ -9647,7 +9654,7 @@
 
 	      if (this.playing && this.props.hoverPlay && srcType === 'audio') {
 	        this.playing = false;
-	        if (this.audio) this.audio.pause();
+	        if (this.audio && !this.audio.paused) this.audio.pause();
 	      }
 	    }
 	  }, {
@@ -9742,13 +9749,11 @@
 	      if (this.audio) {
 	        var _this$audio;
 
-	        var _this$props3 = this.props,
-	            onAudioLoad = _this$props3.onAudioLoad,
-	            gain = _this$props3.gain;
+	        var onAudioLoad = this.props.onAudioLoad;
 	        this.audio.addEventListener('timeupdate', function () {
 	          return _this4.updateMediaLoop(_this4.audio);
 	        }, false);
-	        if (gain) this.updatePlayerVolume();
+	        this.updatePlayerVolume();
 	        this.setState({
 	          videoDuration: ((_this$audio = this.audio) === null || _this$audio === void 0 ? void 0 : _this$audio.duration) || 0
 	        });
@@ -9824,7 +9829,7 @@
 	      var range = this.props.range;
 
 	      if (media && range) {
-	        if (media.currentTime < range[0] || media.currentTime > range[1]) media.currentTime = range[0];
+	        if (media.currentTime < range[0] || range[1] && media.currentTime > range[1]) media.currentTime = range[0];
 	      }
 	    }
 	  }, {
@@ -10011,16 +10016,16 @@
 	              className: "uploader-waveform",
 	              height: this.zone ? this.zone.clientHeight : 100,
 	              range: range,
+	              onReady: this.handleAudioLoad,
 	              src: this.props.src
 	            }), jsx("audio", {
 	              autoPlay: autoPlay,
+	              controls: true,
 	              ref: function ref(obj) {
 	                return _this8.audio = obj;
 	              },
 	              src: this.props.src,
-	              onLoadedData: this.handleAudioLoad,
 	              loop: true,
-	              controls: true,
 	              style: {
 	                position: 'fixed',
 	                top: '-9999px',
@@ -10171,9 +10176,9 @@
 	  }, {
 	    key: "extensions",
 	    value: function extensions() {
-	      var _this$props4 = this.props,
-	          additionalExtensions = _this$props4.additionalExtensions,
-	          extendedFileFormatSupport = _this$props4.extendedFileFormatSupport;
+	      var _this$props3 = this.props,
+	          additionalExtensions = _this$props3.additionalExtensions,
+	          extendedFileFormatSupport = _this$props3.extendedFileFormatSupport;
 	      var extensions = {};
 	      ['audio', 'image', 'video'].forEach(function (type) {
 	        extensions[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].extensions), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].extensions : []), _toConsumableArray(_.get(additionalExtensions, type) || [])));
@@ -10183,9 +10188,9 @@
 	  }, {
 	    key: "mimeTypes",
 	    value: function mimeTypes() {
-	      var _this$props5 = this.props,
-	          additionalMimeTypes = _this$props5.additionalMimeTypes,
-	          extendedFileFormatSupport = _this$props5.extendedFileFormatSupport;
+	      var _this$props4 = this.props,
+	          additionalMimeTypes = _this$props4.additionalMimeTypes,
+	          extendedFileFormatSupport = _this$props4.extendedFileFormatSupport;
 	      var mimeTypes = {};
 	      ['audio', 'image', 'video'].forEach(function (type) {
 	        mimeTypes[type] = _.uniq([].concat(_toConsumableArray(Constants.browser[type].mimeTypes), _toConsumableArray(extendedFileFormatSupport === true || _.get(extendedFileFormatSupport, type) === true ? Constants.extended[type].mimeTypes : []), _toConsumableArray(_.get(additionalMimeTypes, type) || [])));
