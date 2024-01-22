@@ -9333,7 +9333,6 @@
 	    _defineProperty(_assertThisInitialized(_this), "updatePlayerVolume", function () {
 	      var gain = _this.props.gain;
 	      var dbToLinear = Math.pow(10, gain / 20);
-	      if (_this.audio && gain) _this.audio.volume = dbToLinear;
 	      if (_this.audio) _this.audio.volume = gain ? dbToLinear : 0.5;
 	    });
 

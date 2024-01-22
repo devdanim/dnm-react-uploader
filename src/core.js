@@ -340,7 +340,6 @@ export default class Uploader extends React.Component {
     updatePlayerVolume = () => {
         const { gain } = this.props;
         const dbToLinear = Math.pow(10, gain / 20);
-        if (this.audio && gain) this.audio.volume = dbToLinear;
         if (this.audio) this.audio.volume = gain ? dbToLinear : 0.5;
     }
 
