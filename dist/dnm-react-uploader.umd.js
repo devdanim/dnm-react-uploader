@@ -9412,8 +9412,9 @@
 	      if (this.props.src !== prevProps.src) {
 	        if (this.props.src) this.lastChangeStart = new Date().getTime();
 	        this.updateImageBackground();
-	      } // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
+	      }
 
+	      if (this.props.gain && this.props.gain !== prevProps.gain) this.updatePlayerVolume(); // If the user decided to redisplay the loader, but the source has not changed since, immediately trigger onLoad event
 
 	      if (this.props.fetching && !prevProps.fetching && this.props.src && prevProps.src === this.props.src && this.state.loaded) this.props.onLoad();
 	    }
