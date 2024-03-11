@@ -161,6 +161,59 @@ class Page extends React.Component {
                         backgroundSize="contain"
                     />
                 </div>
+                <div id="second-uploader-parent">
+                    <Uploader
+                        // heavy on purpose, to check loading look
+                        src={this.state.second.src}
+                        srcType={this.state.second.srcType}
+                        customAttributes={{
+                            root: {
+                                id: 'third-uploader'
+                            }
+                        }}
+                        catalogue={catalogue}
+                        compact={true}
+                        removable
+                        onRemoveClick={() => alert('onRemoveClick 3')}
+                        croppable
+                        onCropClick={() => alert('onCropClick 3')}
+                        cuttable
+                        downloadable
+                        downloadIcon={<Svg.Edit />}
+                        range={[3, null]}
+                        gain={-20}
+                        onCutClick={() => {
+                            alert('onCutClick 3')
+                            console.log('Fireplace replaced with rain in 4s')
+                            setTimeout(() => {
+                                this.setState({
+                                    second: {
+                                        src: 'https://s3.eu-west-3.amazonaws.com/com.danim.test/rain.mp3',
+                                    }
+                                })
+                            }, 4000)
+                        }}
+                        maxSizes={maxSizes}
+                        onChange={file => this.setState(prevState => ({
+                            second: {
+                                ...prevState.second,
+                                src: URL.createObjectURL(file),
+                                srcType: file.type,
+                            }
+                        }))}
+                        fileType="audio"
+                        onFirstLoad={() => console.log('onFirstLoad 3')}
+                        onLoad={() => console.log('onLoad 3')}
+                        onFileTooLargeError={(size, maxSize) => alert(`onFileTooLargeError3: ${size} > ${maxSize}`)}
+                        onInvalidFileExtensionError={() => alert('onInvalidFileExtensionError 3')}
+                        onInvalidURLError={() => alert('onInvalidURLError 3')}
+                        onURLInjectionError={() => alert('onURLInjectionError 3')}
+                        onNotSupportedVideoLoad={(err) => console.error("Video source not supported", err)}
+                        removeIcon={<Svg.Erase />}
+                        mediaCrop={{ x: 0, y: 0, width: 100, height: 100 }}
+                        backgroundSize="contain"
+                    />
+                </div>
             </React.Fragment>
         );
     }

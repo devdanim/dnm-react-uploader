@@ -10104,7 +10104,14 @@
 	      }, srcType === "image" && this.props.croppable === true && jsx("span", {
 	        className: "uploader-zone-fog-controls-control",
 	        onClick: this.handleCropClick
-	      }, this.props.cropIcon || jsx(Crop, null)), this.props.cuttable === true && jsx("span", {
+	      }, this.props.cropIcon || jsx(Crop, null)), this.props.downloadable === true && jsx("span", {
+	        className: "uploader-zone-fog-controls-control",
+	        onClick: function onClick(e) {
+	          e.stopPropagation();
+
+	          _this8.handleClick();
+	        }
+	      }, this.props.downloadIcon || jsx(Edit, null)), this.props.cuttable === true && jsx("span", {
 	        className: "uploader-zone-fog-controls-control",
 	        onClick: this.handleCutClick
 	      }, this.props.cutIcon || jsx(Cut, null)), this.props.editable === true && jsx("span", {
@@ -10308,6 +10315,7 @@
 	  corsProof: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
 	  // func is a callback with src as its unique arg (e.g. we want to apply the CORS trick only for some urls, and not for others...)
 	  croppable: PropTypes.bool,
+	  downloadable: PropTypes.bool,
 	  editable: PropTypes.bool,
 	  customAttributes: PropTypes.object,
 	  cuttable: PropTypes.bool,
@@ -10366,6 +10374,9 @@
 	  // if let null, it will be default one
 	  croppable: false,
 	  cropIcon: null,
+	  // if let null, it will be default one
+	  downloadable: false,
+	  downloadIcon: null,
 	  // if let null, it will be default one
 	  customAttributes: {},
 	  cuttable: false,

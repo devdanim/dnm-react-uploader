@@ -663,6 +663,17 @@ export default class Uploader extends React.Component {
                                                 {this.props.cropIcon || <Svg.Crop />}
                                             </span>
                                         }
+                                        {this.props.downloadable === true &&
+                                            <span
+                                                className="uploader-zone-fog-controls-control"
+                                                onClick={e => {
+                                                    e.stopPropagation();
+                                                    this.handleClick();
+                                                }}
+                                            >
+                                                {this.props.downloadIcon || <Svg.Edit />}
+                                            </span>
+                                        }
                                         {this.props.cuttable === true &&
                                             <span className="uploader-zone-fog-controls-control" onClick={this.handleCutClick}>
                                                 {this.props.cutIcon || <Svg.Cut />}
@@ -849,6 +860,7 @@ Uploader.propTypes = {
     compact: PropTypes.bool,
     corsProof: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]), // func is a callback with src as its unique arg (e.g. we want to apply the CORS trick only for some urls, and not for others...)
     croppable: PropTypes.bool,
+    downloadable: PropTypes.bool,
     editable: PropTypes.bool,
     customAttributes: PropTypes.object,
     cuttable: PropTypes.bool,
@@ -918,6 +930,8 @@ Uploader.defaultProps = {
     editIcon: null, // if let null, it will be default one
     croppable: false,
     cropIcon: null, // if let null, it will be default one
+    downloadable: false,
+    downloadIcon: null, // if let null, it will be default one
     customAttributes: {},
     cuttable: false,
     cutIcon: null, // if let null, it will be default one
