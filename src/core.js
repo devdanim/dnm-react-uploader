@@ -887,7 +887,6 @@ Uploader.propTypes = {
     onCompressStart: PropTypes.func,
     onCompressEnd: PropTypes.func,
     onCropClick: PropTypes.func,
-    onCutClick: PropTypes.func,
     onFileTooLargeError: PropTypes.func,
     onFirstLoad: PropTypes.func,
     onInvalidFileExtensionError: PropTypes.func,
