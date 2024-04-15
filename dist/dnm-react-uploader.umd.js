@@ -9290,7 +9290,7 @@
 	  onReady: function onReady() {}
 	};
 
-	var _templateObject$1, _Uploader$propTypes;
+	var _templateObject$1;
 
 	function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
@@ -9986,7 +9986,7 @@
 	          case 'iv':
 	            media = jsx("video", {
 	              autoPlay: autoPlay,
-	              loop: true,
+	              loop: this.props.loop,
 	              muted: true,
 	              crossOrigin: "anonymous",
 	              src: this.props.src,
@@ -10025,7 +10025,7 @@
 	                return _this8.audio = obj;
 	              },
 	              src: this.props.src,
-	              loop: true,
+	              loop: this.props.loop,
 	              style: {
 	                position: 'fixed',
 	                top: '-9999px',
@@ -10294,7 +10294,7 @@
 
 	  return Uploader;
 	}(React__default.Component);
-	Uploader.propTypes = (_Uploader$propTypes = {
+	Uploader.propTypes = {
 	  // optional
 	  additionalExtensions: PropTypes.shape({
 	    audio: PropTypes.array,
@@ -10307,6 +10307,7 @@
 	    video: PropTypes.array
 	  }),
 	  autoPlay: PropTypes.bool,
+	  loop: PropTypes.bool,
 	  backgroundColor: PropTypes.string,
 	  backgroundSize: PropTypes.oneOf(['contain', 'cover']),
 	  caption: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -10340,7 +10341,6 @@
 	  onCompressStart: PropTypes.func,
 	  onCompressEnd: PropTypes.func,
 	  onCropClick: PropTypes.func,
-	  onCutClick: PropTypes.func,
 	  onFileTooLargeError: PropTypes.func,
 	  onFirstLoad: PropTypes.func,
 	  onInvalidFileExtensionError: PropTypes.func,
@@ -10348,13 +10348,25 @@
 	  onLoad: PropTypes.func,
 	  onRemoveClick: PropTypes.func,
 	  onUploaderClick: PropTypes.func,
-	  onUrlInjectionError: PropTypes.func
-	}, _defineProperty(_Uploader$propTypes, "onCutClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onEditClick", PropTypes.func), _defineProperty(_Uploader$propTypes, "onAudioLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "onVideoLoad", PropTypes.func), _defineProperty(_Uploader$propTypes, "range", PropTypes.array), _defineProperty(_Uploader$propTypes, "removable", PropTypes.bool), _defineProperty(_Uploader$propTypes, "src", PropTypes.string), _defineProperty(_Uploader$propTypes, "srcType", PropTypes.string), _defineProperty(_Uploader$propTypes, "gain", PropTypes.number), _defineProperty(_Uploader$propTypes, "withUrlInput", PropTypes.bool), _Uploader$propTypes);
+	  onUrlInjectionError: PropTypes.func,
+	  onCutClick: PropTypes.func,
+	  onEditClick: PropTypes.func,
+	  onAudioLoad: PropTypes.func,
+	  onVideoLoad: PropTypes.func,
+	  range: PropTypes.array,
+	  removable: PropTypes.bool,
+	  src: PropTypes.string,
+	  srcType: PropTypes.string,
+	  // mime
+	  gain: PropTypes.number,
+	  withUrlInput: PropTypes.bool
+	};
 	Uploader.defaultProps = {
 	  additionalExtensions: {},
 	  additionalMimeTypes: {},
 	  autoPlay: null,
 	  // true for video, false for audio
+	  loop: true,
 	  backgroundColor: 'transparent',
 	  backgroundSize: 'cover',
 	  caption: null,

@@ -546,7 +546,7 @@ export default class Uploader extends React.Component {
                     media = (
                         <video
                             autoPlay={autoPlay}
-                            loop
+                            loop={this.props.loop}
                             muted
                             crossOrigin="anonymous"
                             src={this.props.src}
@@ -580,7 +580,7 @@ export default class Uploader extends React.Component {
                             controls
                             ref={obj => this.audio = obj}
                             src={this.props.src}
-                            loop
+                            loop={this.props.loop}
                             style={{
                                 position: 'fixed',
                                 top: '-9999px',
@@ -853,6 +853,7 @@ Uploader.propTypes = {
         video: PropTypes.array,
     }),
     autoPlay: PropTypes.bool,
+    loop: PropTypes.bool,
     backgroundColor: PropTypes.string,
     backgroundSize: PropTypes.oneOf(['contain', 'cover']),
     caption: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
@@ -911,6 +912,7 @@ Uploader.defaultProps = {
     additionalExtensions: {},
     additionalMimeTypes: {},
     autoPlay: null, // true for video, false for audio
+    loop: true,
     backgroundColor: 'transparent',
     backgroundSize: 'cover',
     caption: null,
